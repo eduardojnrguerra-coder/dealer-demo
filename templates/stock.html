@@ -5,38 +5,74 @@
   <section class="panel">
     <div class="panel-heading gap-4">
       <div>
-        <p class="eyebrow">Floor Stock</p>
-        <h2>Used Vehicle Manager stock command view</h2>
+        <p class="eyebrow">Stock Control</p>
+        <h2>Profit decision board</h2>
       </div>
       <div class="flex flex-wrap gap-2" id="stockFilters">
-        {% for filter in ["All Stock", "In Stock", "Reserved", "Sold", "Aged Stock", "Low Margin"] %}
+        {% for filter in ["All Stock", "Needs Attention", "Aging Stock", "Low Margin", "High Margin", "Fast Movers"] %}
         <button class="filter-btn {% if loop.first %}active{% endif %}" type="button" data-filter="{{ filter }}">{{ filter }}</button>
         {% endfor %}
       </div>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+    <div class="grid gap-4 lg:grid-cols-3">
+      <div class="summary-card">
+        <span>Total stock value</span>
+        <strong>{{ stock_profit_summary.total_stock_value|currency }}</strong>
+      </div>
+      <div class="summary-card">
+        <span>Total potential profit</span>
+        <strong>{{ stock_profit_summary.total_potential_profit|currency }}</strong>
+      </div>
+      <div class="summary-card border-red-200 bg-red-50">
+        <span class="text-red-700">Estimated profit at risk</span>
+        <strong class="text-red-800">{{ stock_profit_summary.estimated_profit_at_risk|currency }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
+    <aside class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Stock Performance</p>
+          <h2>Management insights</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for insight in stock_insights %}
+        <div class="alert-row {% if loop.index <= 2 %}warning{% else %}info{% endif %}">
+          <strong>{{ insight }}</strong>
+          <span>{% if loop.index == 1 %}Prioritise pricing, promotion, or Sales Executive focus.{% elif loop.index == 2 %}Protect Gross Profit before discounting further.{% elif loop.index == 3 %}Keep momentum with active buyer follow-ups.{% else %}Review price position and marketing visibility today.{% endif %}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </aside>
+
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <div class="summary-card"><span>Total stock records</span><strong>{{ vehicles|length }}</strong></div>
-      <div class="summary-card"><span>In stock</span><strong>{{ stock_summary["In Stock"] }}</strong></div>
-      <div class="summary-card"><span>Reserved</span><strong>{{ stock_summary["Reserved"] }}</strong></div>
+      <div class="summary-card"><span>Available floor stock</span><strong>{{ stock_summary["In Stock"] }}</strong></div>
+      <div class="summary-card"><span>Reserved units</span><strong>{{ stock_summary["Reserved"] }}</strong></div>
       <div class="summary-card"><span>Delivery pack units</span><strong>{{ stock_summary["Sold"] }}</strong></div>
     </div>
   </section>
 
   <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" id="stockGrid">
-    {% for vehicle in vehicles %}
-      {% set profit = vehicle.selling_price - vehicle.cost_price %}
-      {% set margin = (profit / vehicle.selling_price * 100) %}
-      <article class="vehicle-card"
+    {% for vehicle in stock_vehicles %}
+      <article class="vehicle-card {% if vehicle.needs_attention %}needs-attention-card{% endif %}"
         data-status="{{ vehicle.status }}"
-        data-aged="{{ 'true' if vehicle.days_in_stock > 60 else 'false' }}"
-        data-low-margin="{{ 'true' if margin < 11 else 'false' }}"
+        data-aged="{{ 'true' if vehicle.is_aged else 'false' }}"
+        data-low-margin="{{ 'true' if vehicle.is_low_margin else 'false' }}"
+        data-high-margin="{{ 'true' if vehicle.is_high_margin else 'false' }}"
+        data-fast-mover="{{ 'true' if vehicle.is_fast_mover else 'false' }}"
+        data-needs-attention="{{ 'true' if vehicle.needs_attention else 'false' }}"
         data-vehicle='{{ vehicle|tojson }}'>
         <div class="relative rounded-lg bg-slate-100 p-4">
           <img class="h-32 w-full object-contain" src="{{ url_for('static', filename='images/' ~ vehicle.image) }}" alt="{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}">
           <div class="absolute left-3 top-3 flex flex-wrap gap-2">
             <span class="badge status-{{ vehicle.status|lower|replace(' ', '-') }}">{{ vehicle.status }}</span>
-            {% if vehicle.days_in_stock > 60 %}<span class="badge danger">Aged</span>{% endif %}
-            {% if margin < 11 %}<span class="badge warning">Low margin</span>{% endif %}
+            {% if vehicle.is_aged %}<span class="badge danger">Aging Stock</span>{% endif %}
+            {% if vehicle.is_low_margin %}<span class="badge warning">Low Margin</span>{% endif %}
           </div>
         </div>
         <div class="mt-4">
@@ -48,11 +84,18 @@
           <div><dt>Mileage</dt><dd>{{ vehicle.mileage|number }} km</dd></div>
           <div><dt>Colour</dt><dd>{{ vehicle.color }}</dd></div>
           <div><dt>Selling price</dt><dd>{{ vehicle.selling_price|currency }}</dd></div>
-          <div><dt>Expected profit</dt><dd>{{ profit|currency }}</dd></div>
-          <div><dt>Days in stock</dt><dd>{{ vehicle.days_in_stock }}</dd></div>
-          <div><dt>Margin</dt><dd>{{ "%.1f"|format(margin) }}%</dd></div>
+          <div><dt>Expected profit</dt><dd>{{ vehicle.profit|currency }}</dd></div>
+          <div><dt>Days in stock</dt><dd class="{% if vehicle.is_aged %}text-red-700{% endif %}">{{ vehicle.days_in_stock }}</dd></div>
+          <div><dt>Margin</dt><dd class="{% if vehicle.is_low_margin %}text-amber-700{% endif %}">{{ "%.1f"|format(vehicle.margin) }}%</dd></div>
         </dl>
-        <button class="mt-5 w-full rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-ocean" type="button" data-open-detail>Open stock record</button>
+
+        <div class="mt-5 grid grid-cols-2 gap-2">
+          <button class="stock-action-btn primary" type="button" data-demo-action>Send to Sales Team</button>
+          <button class="stock-action-btn" type="button" data-demo-action>Discount / Adjust Price</button>
+          <button class="stock-action-btn" type="button" data-demo-action>Promote Vehicle</button>
+          <button class="stock-action-btn" type="button" data-demo-action>Book Test Drive</button>
+        </div>
+        <button class="mt-3 w-full rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-ocean" type="button" data-open-detail>Open stock record</button>
       </article>
     {% endfor %}
   </section>

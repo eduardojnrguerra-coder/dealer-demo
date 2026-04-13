@@ -440,11 +440,68 @@ def stock():
     context = dealership_data()
     vehicles = context["vehicles"]
     stock_summary = Counter(vehicle.get("status", "Unknown") for vehicle in vehicles)
+    stock_vehicles = []
+    for vehicle in vehicles:
+        selling_price = vehicle.get("selling_price", 0) or 0
+        cost_price = vehicle.get("cost_price", 0) or 0
+        profit = selling_price - cost_price
+        margin = (profit / selling_price * 100) if selling_price else 0
+        days_in_stock = vehicle.get("days_in_stock", 0) or 0
+        stock_vehicles.append(
+            {
+                **vehicle,
+                "profit": profit,
+                "margin": margin,
+                "is_aged": days_in_stock > 60,
+                "is_low_margin": margin < 10,
+                "is_high_margin": margin >= 15,
+                "is_fast_mover": days_in_stock <= 30 and vehicle.get("status") != "Sold",
+                "needs_attention": days_in_stock > 60 or margin < 10,
+            }
+        )
+
+    total_stock_value = sum(
+        item.get("selling_price", 0) for item in stock_vehicles if item.get("status") != "Sold"
+    )
+    total_potential_profit = sum(
+        item["profit"] for item in stock_vehicles if item.get("status") != "Sold"
+    )
+    estimated_profit_at_risk = sum(
+        item["profit"] for item in stock_vehicles if item["is_aged"] and item.get("status") != "Sold"
+    )
+    aged_count = len([item for item in stock_vehicles if item["is_aged"] and item.get("status") != "Sold"])
+    low_margin_count = len(
+        [item for item in stock_vehicles if item["is_low_margin"] and item.get("status") != "Sold"]
+    )
+    fastest = min(
+        [item for item in stock_vehicles if item.get("status") != "Sold"],
+        key=lambda item: item.get("days_in_stock", 0),
+        default=None,
+    )
+    slowest = max(
+        [item for item in stock_vehicles if item.get("status") != "Sold"],
+        key=lambda item: item.get("days_in_stock", 0),
+        default=None,
+    )
+    stock_profit_summary = {
+        "total_stock_value": total_stock_value,
+        "total_potential_profit": total_potential_profit,
+        "estimated_profit_at_risk": estimated_profit_at_risk,
+    }
+    stock_insights = [
+        f"{aged_count} vehicles older than 60 days",
+        f"{low_margin_count} vehicles below 10% margin",
+        f"Top mover: {fastest.get('make', 'Vehicle')} {fastest.get('model', '')} ({fastest.get('days_in_stock', 0)} days)" if fastest else "Top mover: no active stock",
+        f"Slow mover: {slowest.get('make', 'Vehicle')} {slowest.get('model', '')} ({slowest.get('days_in_stock', 0)} days)" if slowest else "Slow mover: no active stock",
+    ]
     return render_template(
         "stock.html",
         page_title="Vehicle Stock",
         active_page="Stock",
         stock_summary=stock_summary,
+        stock_vehicles=stock_vehicles,
+        stock_profit_summary=stock_profit_summary,
+        stock_insights=stock_insights,
         **context,
     )
 

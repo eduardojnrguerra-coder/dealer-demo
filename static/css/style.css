@@ -586,6 +586,14 @@ body {
   padding: 1rem;
 }
 
+.vehicle-card:hover {
+  border-color: rgb(37 99 235);
+}
+
+.vehicle-card.needs-attention-card {
+  border-color: rgb(253 230 138);
+}
+
 .vehicle-card dt {
   color: rgb(100 116 139);
   font-size: 0.72rem;
@@ -596,6 +604,36 @@ body {
   color: rgb(15 23 42);
   font-weight: 900;
   margin-top: 0.12rem;
+}
+
+.stock-action-btn {
+  border: 1px solid rgb(203 213 225);
+  border-radius: 8px;
+  color: rgb(51 65 85);
+  font-size: 0.72rem;
+  font-weight: 900;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.55rem;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.stock-action-btn:hover {
+  background: rgb(239 246 255);
+  border-color: #0f4c81;
+  color: #0f4c81;
+  transform: translateY(-1px);
+}
+
+.stock-action-btn.primary {
+  background: rgb(15 76 129);
+  border-color: rgb(15 76 129);
+  color: white;
+}
+
+.stock-action-btn.is-confirmed {
+  background: rgb(236 253 245);
+  border-color: rgb(167 243 208);
+  color: rgb(4 120 87);
 }
 
 .kanban {
