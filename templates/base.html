@@ -31,10 +31,14 @@
       <div class="flex h-full flex-col">
         <div class="border-b border-white/10 px-6 py-5">
           <a href="{{ url_for('dashboard') }}" class="flex items-center gap-3">
-            <span class="grid h-11 w-11 place-items-center rounded-lg bg-ocean text-lg font-black">A</span>
+            <img 
+            src="{{ url_for('static', filename='images/pinex-logo.svg') }}" 
+            alt="PineX Logo"
+            class="h-11 w-11 rounded-lg object-contain bg-white/10 p-1"
+        />
             <span>
-              <span class="block text-lg font-bold tracking-tight">{{ app_name }}</span>
-              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Dealer operating system</span>
+              <span class="block text-lg font-bold tracking-tight">{{ PineX Systems }}</span>
+              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Powered by PineX Systems</span>
             </span>
           </a>
         </div>

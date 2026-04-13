@@ -116,7 +116,7 @@ def dealership_data():
 @app.context_processor
 def inject_globals():
     return {
-        "app_name": "Arcta DealerOS",
+        "app_name": "PineX Systems",
         "current_year": date.today().year,
     }
 
