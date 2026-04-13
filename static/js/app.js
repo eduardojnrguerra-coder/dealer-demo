@@ -3,6 +3,8 @@ const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const quickActionButton = document.getElementById('quickActionButton');
 const quickActionMenu = document.getElementById('quickActionMenu');
+const notificationButton = document.getElementById('notificationButton');
+const notificationMenu = document.getElementById('notificationMenu');
 const globalSearch = document.getElementById('globalSearch');
 const searchResults = document.getElementById('searchResults');
 const searchDataElement = document.getElementById('global-search-data');
@@ -23,10 +25,18 @@ overlay?.addEventListener('click', closeSidebar);
 quickActionButton?.addEventListener('click', (event) => {
   event.stopPropagation();
   quickActionMenu?.classList.toggle('hidden');
+  notificationMenu?.classList.add('hidden');
+});
+
+notificationButton?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  notificationMenu?.classList.toggle('hidden');
+  quickActionMenu?.classList.add('hidden');
 });
 
 document.addEventListener('click', () => {
   quickActionMenu?.classList.add('hidden');
+  notificationMenu?.classList.add('hidden');
 });
 
 const searchRecords = searchDataElement ? JSON.parse(searchDataElement.textContent) : [];
@@ -69,4 +79,12 @@ document.querySelectorAll('[data-counter]').forEach((element) => {
   }
 
   requestAnimationFrame(tick);
+});
+
+document.querySelectorAll('[data-view-mode]').forEach((button) => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('[data-view-mode]').forEach((item) => item.classList.remove('active'));
+    button.classList.add('active');
+    document.body.dataset.viewMode = button.dataset.viewMode;
+  });
 });

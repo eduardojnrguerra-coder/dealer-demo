@@ -1,6 +1,6 @@
-# Arcta DealerOS
+# PineX Systems
 
-Arcta DealerOS is a polished, client-facing Flask demo for a modern South African car dealership management system. It shows how a Dealer Principal, Used Vehicle Manager, Stock Controller, Sales Executives, and F&I team can manage floor stock, active leads, Deal Jackets, bookings, recon, deliveries, and Gross Profit visibility from one operating system.
+PineX Systems is a polished, client-facing Flask demo for a modern South African car dealership management system. It shows how a Dealer Principal, Used Vehicle Manager, Stock Controller, Sales Executives, and F&I team can manage floor stock, active leads, Deal Files, bookings, workshop queues, handovers, and Gross Profit visibility from one operating system.
 
 The app uses mock demo data only. There is no database or real authentication in version 1, which keeps it simple to run locally and easy to deploy as a live preview.
 
@@ -9,12 +9,12 @@ The app uses mock demo data only. There is no database or real authentication in
 - Premium login screen with demo entry
 - Executive dashboard with KPI cards, Chart.js charts, operational flags, stock ageing, deal funnel, recent activity, and follow-ups
 - Vehicle stock command view with 24 realistic vehicles, filters, badges, margins, aged stock flags, and a detail modal
-- Kanban-style sales pipeline with 24 active and closed leads
-- Customer desk and Deal Jacket profile view
+- Kanban-style Deal Flow with 24 active and closed leads
+- Buyer desk and Deal File profile view
 - Dedicated F&I desk for bank status, instalment estimates, settlement figures, required documents, insurance, and payout notes
 - Trade-in appraisal page for service history, tyre/body/interior condition, and valuation status
 - Recon / workshop prep board with Job Cards and Roadworthy flow
-- Delivery planning board for sold units progressing toward handover
+- Handover Board for sold units progressing toward delivery
 - Integrations hub with brand-safe placeholder connector cards
 - Weekly calendar and operational booking view
 - Sales team leaderboard with conversion, activity, closed deals, and gross profit
@@ -41,6 +41,7 @@ dealer_demo/
   Procfile
   README.md
   data/
+    branding.json
     demo_data.json
   static/
     css/
@@ -120,7 +121,7 @@ python app.py
 http://localhost:5000
 ```
 
-Use the **Enter Demo** button on the login page to open the dashboard. The sidebar includes the full operational demo: Dashboard, Stock, Sales Pipeline, Customers, Deal Jackets, F&I Desk, Trade-ins, Calendar, Recon Board, Delivery Planning, Sales Team, Reports, Integrations, and Settings.
+Use the **Enter Demo** button on the login page to open the dashboard. The sidebar includes the full operational demo: Dashboard, Stock, Deal Flow, Buyers, Deal Files, F&I Desk, Trade-ins, Calendar, Workshop Queue, Handover Board, Sales Team, Reports, Integrations, and Settings.
 
 ## Deploying to Render
 
@@ -150,10 +151,10 @@ python-3.11.9
 
 ## Demo Notes
 
-- All vehicles, leads, Deal Jackets, finance applications, bookings, trade-ins, recon items, delivery planning records, sales activity, and KPI values are mock data.
+- All vehicles, leads, Deal Files, finance applications, bookings, trade-ins, workshop queue items, handover records, sales activity, and KPI values are mock data.
 - Login is intentionally mocked for client preview purposes.
 - There is no database in version 1.
-- Stock filters, pipeline summaries, charts, global search, modal details, navigation, and quick actions are interactive enough for a live sales demo without adding unnecessary complexity.
+- Stock filters, Deal Flow summaries, charts, global search, modal details, navigation, and quick actions are interactive enough for a live sales demo without adding unnecessary complexity.
 
 ## Suggested Next Improvements
 

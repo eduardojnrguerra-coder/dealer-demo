@@ -9,6 +9,13 @@ from flask import Flask, jsonify, render_template
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_FILE = BASE_DIR / "data" / "demo_data.json"
+BRANDING_FILE = BASE_DIR / "data" / "branding.json"
+
+DEFAULT_BRANDING = {
+    "company_name": "PineX Systems",
+    "system_tagline": "Powered by PineX Systems",
+    "logo": "images/pinex-logo.svg",
+}
 
 app = Flask(__name__)
 
@@ -16,6 +23,22 @@ app = Flask(__name__)
 def load_data():
     with DATA_FILE.open("r", encoding="utf-8") as file:
         return json.load(file)
+
+
+def load_branding():
+    branding = DEFAULT_BRANDING.copy()
+    try:
+        with BRANDING_FILE.open("r", encoding="utf-8") as file:
+            configured = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return branding
+
+    if isinstance(configured, dict):
+        for key in DEFAULT_BRANDING:
+            value = configured.get(key)
+            if isinstance(value, str) and value.strip():
+                branding[key] = value.strip()
+    return branding
 
 
 def currency(value):
@@ -28,6 +51,14 @@ def number(value):
 
 app.jinja_env.filters["currency"] = currency
 app.jinja_env.filters["number"] = number
+
+
+def lead_needs_followup(lead):
+    last_contact = lead.get("last_contact", "").lower()
+    return (
+        lead.get("stage") not in {"Sold", "Lost"}
+        and any(marker in last_contact for marker in ["3 days", "4 days", "5 days", "6 days"])
+    )
 
 
 def dealership_data():
@@ -52,8 +83,31 @@ def dealership_data():
         len([doc for doc in jacket.get("documents", []) if not doc.get("received")])
         for jacket in deal_jackets
     )
+    unfollowed_leads = [lead for lead in leads if lead_needs_followup(lead)]
+    stuck_finance = [app for app in finance_applications if app.get("status") != "Approved"]
+    stuck_deals = [
+        lead for lead in leads if lead.get("stage") in {"Finance Review", "Negotiation"}
+    ]
+    aged_vehicles = [vehicle for vehicle in vehicles if vehicle["days_in_stock"] > 60]
+    deals_closed_today = [
+        lead for lead in leads if lead.get("stage") == "Sold" and "today" in lead.get("last_contact", "").lower()
+    ]
 
     monthly_profit = sum(vehicle["selling_price"] - vehicle["cost_price"] for vehicle in sold_this_month)
+    average_deal_value = (
+        sum(lead["value"] for lead in active_leads) / len(active_leads) if active_leads else 0
+    )
+    gross_profit_rate = (
+        monthly_profit / sum(vehicle["selling_price"] for vehicle in sold_this_month)
+        if sold_this_month
+        else 0.14
+    )
+    gross_profit_today = (
+        int((monthly_profit / len(sold_this_month)) * len(deals_closed_today))
+        if sold_this_month
+        else 0
+    )
+    estimated_lost_profit = int(len(unfollowed_leads) * average_deal_value * gross_profit_rate)
     kpis = {
         "stock_count": len([v for v in vehicles if v["status"] in {"In Stock", "Reserved"}]),
         "sold_month": len(sold_this_month),
@@ -66,6 +120,52 @@ def dealership_data():
         "delivery_ready": len([item for item in delivery_planning if item["status"] == "Ready for Handover"]),
         "docs_outstanding": docs_outstanding,
     }
+    today_performance = {
+        "deals_closed": len(deals_closed_today),
+        "gross_profit": gross_profit_today,
+        "deals_stuck": len(stuck_finance),
+        "overdue_followups": len(unfollowed_leads) + len(data.get("overdue", [])),
+    }
+    missed_opportunities = {
+        "unfollowed_leads": len(unfollowed_leads),
+        "average_deal_value": int(average_deal_value),
+        "estimated_lost_profit": estimated_lost_profit,
+        "leads": unfollowed_leads,
+    }
+    alert_counts = {
+        "leads_not_contacted": len(unfollowed_leads),
+        "deals_stuck": len(stuck_deals),
+        "aged_vehicles": len(aged_vehicles),
+    }
+    notifications = []
+    if unfollowed_leads:
+        notifications.append(
+            {
+                "type": "urgent",
+                "title": "Lead not contacted",
+                "detail": f"{unfollowed_leads[0]['customer']} needs a Sales Executive call now.",
+            }
+        )
+    if stuck_finance:
+        notifications.append(
+            {
+                "type": "warning",
+                "title": "Deal awaiting finance",
+                "detail": f"{stuck_finance[0]['customer']} is still at {stuck_finance[0]['status']}.",
+            }
+        )
+    ready_delivery = next(
+        (item for item in delivery_planning if item.get("status") == "Ready for Handover"),
+        delivery_planning[0] if delivery_planning else None,
+    )
+    if ready_delivery:
+        notifications.append(
+            {
+                "type": "success",
+                "title": "Vehicle ready for delivery",
+                "detail": f"{ready_delivery['vehicle']} is ready for handover.",
+            }
+        )
 
     search_records = []
     for vehicle in vehicles:
@@ -88,7 +188,7 @@ def dealership_data():
         search_records.append(
             {
                 "label": f"{jacket['id']} - {jacket['customer']} - {jacket['stock_number']}",
-                "type": "Deal Jacket",
+                "type": "Deal File",
                 "url": f"/deal-jackets/{jacket['id']}",
             }
         )
@@ -110,13 +210,19 @@ def dealership_data():
         "delivery_planning": delivery_planning,
         "integrations": data.get("integrations", []),
         "search_records": search_records,
+        "today_performance": today_performance,
+        "missed_opportunities": missed_opportunities,
+        "alert_counts": alert_counts,
+        "notifications": notifications,
     }
 
 
 @app.context_processor
 def inject_globals():
+    branding = load_branding()
     return {
-        "app_name": "PineX Systems",
+        "branding": branding,
+        "app_name": branding["company_name"],
         "current_year": date.today().year,
     }
 
@@ -130,7 +236,7 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     context = dealership_data()
-    return render_template("dashboard.html", page_title="Dashboard", active_page="Dashboard", **context)
+    return render_template("dashboard.html", page_title="Dealer Control Room", active_page="Dashboard", **context)
 
 
 @app.route("/stock")
@@ -166,8 +272,8 @@ def pipeline():
         grouped.setdefault(lead["stage"], []).append(lead)
     return render_template(
         "pipeline.html",
-        page_title="Sales Pipeline",
-        active_page="Sales Pipeline",
+        page_title="Deal Flow",
+        active_page="Deal Flow",
         columns=columns,
         grouped_leads=grouped,
         **context,
@@ -177,7 +283,7 @@ def pipeline():
 @app.route("/customers")
 def customers():
     context = dealership_data()
-    return render_template("customers.html", page_title="Customers", active_page="Customers", **context)
+    return render_template("customers.html", page_title="Buyers", active_page="Buyers", **context)
 
 
 @app.route("/deal-jackets")
@@ -188,8 +294,8 @@ def deal_jackets(jacket_id=None):
     selected = next((jacket for jacket in jackets if jacket["id"] == jacket_id), jackets[0] if jackets else None)
     return render_template(
         "deal_jackets.html",
-        page_title="Deal Jackets",
-        active_page="Deal Jackets",
+        page_title="Deal Files",
+        active_page="Deal Files",
         selected_jacket=selected,
         **context,
     )
@@ -239,8 +345,8 @@ def recon_board():
         grouped.setdefault(item["stage"], []).append(item)
     return render_template(
         "recon_board.html",
-        page_title="Recon Board",
-        active_page="Recon Board",
+        page_title="Workshop Queue",
+        active_page="Workshop Queue",
         recon_stages=stages,
         grouped_recon=grouped,
         **context,
@@ -252,8 +358,8 @@ def delivery_planning():
     context = dealership_data()
     return render_template(
         "delivery_planning.html",
-        page_title="Delivery Planning",
-        active_page="Delivery Planning",
+        page_title="Handover Board",
+        active_page="Handover Board",
         **context,
     )
 

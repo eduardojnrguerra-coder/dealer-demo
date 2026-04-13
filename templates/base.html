@@ -31,14 +31,14 @@
       <div class="flex h-full flex-col">
         <div class="border-b border-white/10 px-6 py-5">
           <a href="{{ url_for('dashboard') }}" class="flex items-center gap-3">
-            <img 
-            src="{{ url_for('static', filename='images/pinex-logo.svg') }}" 
-            alt="PineX Logo"
-            class="h-11 w-11 rounded-lg object-contain bg-white/10 p-1"
-        />
+            <img
+              src="{{ url_for('static', filename=branding.logo) }}"
+              alt="{{ branding.company_name }} logo"
+              class="h-11 w-11 rounded-lg bg-white object-contain p-1"
+            >
             <span>
-              <span class="block text-lg font-bold tracking-tight">{{ PineX Systems }}</span>
-              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Powered by PineX Systems</span>
+              <span class="block text-lg font-bold tracking-tight">{{ branding.company_name }}</span>
+              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">{{ branding.system_tagline }}</span>
             </span>
           </a>
         </div>
@@ -46,14 +46,14 @@
           {% set items = [
             ('Dashboard', 'dashboard'),
             ('Stock', 'stock'),
-            ('Sales Pipeline', 'pipeline'),
-            ('Customers', 'customers'),
-            ('Deal Jackets', 'deal_jackets'),
+            ('Deal Flow', 'pipeline'),
+            ('Buyers', 'customers'),
+            ('Deal Files', 'deal_jackets'),
             ('F&I Desk', 'fi_desk'),
             ('Trade-ins', 'trade_ins'),
             ('Calendar', 'calendar'),
-            ('Recon Board', 'recon_board'),
-            ('Delivery Planning', 'delivery_planning'),
+            ('Workshop Queue', 'recon_board'),
+            ('Handover Board', 'delivery_planning'),
             ('Sales Team', 'sales_team'),
             ('Reports', 'reports'),
             ('Integrations', 'integrations'),
@@ -72,7 +72,7 @@
             <div class="h-2 rounded-full bg-blue-400" style="width: 72%"></div>
           </div>
           <p class="mt-3 text-xs text-slate-300">17 of 24 units closed this month</p>
-          <p class="mt-2 text-xs text-slate-400">Dealer Principal view</p>
+          <p class="mt-2 text-xs text-slate-400">Dealer Principal control room</p>
         </div>
       </div>
     </aside>
@@ -95,11 +95,25 @@
             </div>
           </div>
             <div class="flex items-center gap-2">
+              <div class="relative">
               <button id="notificationButton" class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm" type="button" aria-label="Notifications">
                 <span>Alerts</span>
-                <span class="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-red-600 text-[10px] text-white">4</span>
+                <span class="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-red-600 text-[10px] text-white">{{ notifications|default([])|length }}</span>
               </button>
-              <div class="hidden rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-sm font-black text-ocean md:block">Dealer Principal</div>
+              <div id="notificationMenu" class="absolute right-0 top-[calc(100%+0.45rem)] z-40 hidden w-80 rounded-lg border border-slate-200 bg-white p-3 shadow-premium">
+                <p class="mb-2 text-xs font-black uppercase tracking-wide text-slate-400">Decision alerts</p>
+                {% for item in notifications|default([]) %}
+                <div class="notification-item {{ item.type }}">
+                  <strong>{{ item.title }}</strong>
+                  <span>{{ item.detail }}</span>
+                </div>
+                {% endfor %}
+              </div>
+              </div>
+              <div class="view-toggle hidden rounded-lg border border-slate-200 bg-slate-50 p-1 md:flex">
+                <button class="active" type="button" data-view-mode="principal">Dealer Principal View</button>
+                <button type="button" data-view-mode="salesman">Salesman View</button>
+              </div>
               <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">MV</div>
             </div>
           </div>
@@ -131,10 +145,10 @@
             <div class="relative">
               <button id="quickActionButton" class="h-full w-full rounded-lg bg-ocean px-4 py-3 text-sm font-black text-white shadow-sm transition hover:bg-blue-800" type="button">Quick Action</button>
               <div id="quickActionMenu" class="absolute right-0 top-[calc(100%+0.35rem)] z-40 hidden w-60 rounded-lg border border-slate-200 bg-white p-2 shadow-premium">
-                <a href="{{ url_for('stock') }}">Add floor stock note</a>
-                <a href="{{ url_for('deal_jackets') }}">Open Deal Jacket</a>
-                <a href="{{ url_for('fi_desk') }}">Request F&I documents</a>
-                <a href="{{ url_for('delivery_planning') }}">Book delivery slot</a>
+                <a href="{{ url_for('pipeline') }}">Add New Lead</a>
+                <a href="{{ url_for('calendar') }}">Book Test Drive</a>
+                <a href="{{ url_for('deal_jackets') }}">Start Deal</a>
+                <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>
               </div>
             </div>
           </div>

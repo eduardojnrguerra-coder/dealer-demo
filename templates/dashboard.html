@@ -2,6 +2,104 @@
 
 {% block content %}
 <div class="space-y-6">
+  <section class="panel bg-slate-950 text-white">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow text-blue-200">Dealer Control Room</p>
+        <h2 class="text-white">TODAY'S PERFORMANCE</h2>
+      </div>
+      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Money, problems, missed opportunities</span>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <article class="performance-card success">
+        <span>Deals Closed Today</span>
+        <strong data-counter="{{ today_performance.deals_closed }}">{{ today_performance.deals_closed }}</strong>
+        <small>Sold units logged today</small>
+      </article>
+      <article class="performance-card success">
+        <span>Gross Profit Today</span>
+        <strong data-counter="{{ today_performance.gross_profit }}" data-prefix="R">{{ today_performance.gross_profit|currency }}</strong>
+        <small>Estimated front-end GP</small>
+      </article>
+      <article class="performance-card danger">
+        <span>Deals Stuck (F&I / Docs)</span>
+        <strong data-counter="{{ today_performance.deals_stuck }}">{{ today_performance.deals_stuck }}</strong>
+        <small>Pending bank approval or documents</small>
+      </article>
+      <article class="performance-card danger">
+        <span>Overdue Follow-ups</span>
+        <strong data-counter="{{ today_performance.overdue_followups }}">{{ today_performance.overdue_followups }}</strong>
+        <small>Sales Executive action required</small>
+      </article>
+    </div>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[0.78fr_1.22fr]">
+    <section class="panel missed-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow text-red-700">Missed Opportunities</p>
+          <h2>Profit at risk</h2>
+        </div>
+        <span class="red-badge">{{ missed_opportunities.unfollowed_leads }} unfollowed leads</span>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="rounded-lg bg-red-50 p-4">
+          <span class="text-xs font-black uppercase tracking-wide text-red-700">Estimated lost profit</span>
+          <strong class="mt-2 block text-3xl font-black text-red-800" data-counter="{{ missed_opportunities.estimated_lost_profit }}" data-prefix="R">{{ missed_opportunities.estimated_lost_profit|currency }}</strong>
+          <p class="mt-2 text-sm font-semibold text-red-700">Based on average deal value and current GP rate.</p>
+        </div>
+        <div class="rounded-lg bg-slate-50 p-4">
+          <span class="text-xs font-black uppercase tracking-wide text-slate-500">Average deal value</span>
+          <strong class="mt-2 block text-3xl font-black text-slate-950">{{ missed_opportunities.average_deal_value|currency }}</strong>
+          <p class="mt-2 text-sm font-semibold text-slate-600">Used to value stale lead risk.</p>
+        </div>
+      </div>
+      <div class="mt-4 space-y-3">
+        {% for lead in missed_opportunities.leads[:3] %}
+        <div class="flex items-center justify-between gap-3 rounded-lg border border-red-100 bg-white p-3">
+          <div>
+            <p class="font-black text-slate-950">{{ lead.customer }}</p>
+            <p class="text-sm text-slate-500">{{ lead.vehicle }} - {{ lead.last_contact }}</p>
+          </div>
+          <span class="red-badge">Call now</span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Alert Indicators</p>
+          <h2>Problems that cost money</h2>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <article class="alert-indicator">
+          <span class="red-badge">{{ alert_counts.leads_not_contacted }}</span>
+          <strong>Leads not contacted</strong>
+          <small>Hot or warm buyers slipping away</small>
+        </article>
+        <article class="alert-indicator">
+          <span class="red-badge">{{ alert_counts.deals_stuck }}</span>
+          <strong>Deals stuck in Deal Flow</strong>
+          <small>F&I, negotiation, or missing docs</small>
+        </article>
+        <article class="alert-indicator">
+          <span class="red-badge">{{ alert_counts.aged_vehicles }}</span>
+          <strong>Vehicles ageing over 60 days</strong>
+          <small>Floor Stock tying up cash</small>
+        </article>
+      </div>
+      <div class="mt-5 grid gap-3 md:grid-cols-3">
+        <span class="automation-label success">Auto-follow-up sent</span>
+        <span class="automation-label warning">Finance reminder triggered</span>
+        <span class="automation-label success">Customer notified</span>
+      </div>
+    </section>
+  </div>
+
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
     <div class="metric-card">
       <span>Floor Stock</span>
@@ -24,7 +122,7 @@
       <small>Bank approval or docs pending</small>
     </div>
     <div class="metric-card">
-      <span>Vehicles in Recon</span>
+      <span>Vehicles in Workshop Queue</span>
       <strong class="kpi-value" data-counter="{{ kpis.recon_units }}">{{ kpis.recon_units }}</strong>
       <small>Active Job Cards</small>
     </div>
@@ -38,8 +136,8 @@
   <section class="panel">
     <div class="panel-heading">
       <div>
-        <p class="eyebrow">Today at a glance</p>
-        <h2>Operational rhythm</h2>
+        <p class="eyebrow">Operational Snapshot</p>
+        <h2>Today's dealership rhythm</h2>
       </div>
       <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Dealer Principal view</span>
     </div>
@@ -91,7 +189,10 @@
       </div>
       <div class="space-y-3">
         {% for flag in data.operational_flags %}
-        <div class="alert-row {{ flag.severity }}"><strong>{{ flag.title }}</strong><span>{{ flag.detail }}</span></div>
+        <div class="alert-row {{ flag.severity }}">
+          <strong>{{ flag.title }}</strong>
+          <span>{{ flag.detail }}</span>
+        </div>
         {% endfor %}
       </div>
     </section>
@@ -102,13 +203,13 @@
           <p class="eyebrow">Deal Desk</p>
           <h2>Recent deal movement</h2>
         </div>
-        <a class="text-sm font-bold text-ocean" href="{{ url_for('deal_jackets') }}">Open Deal Jackets</a>
+        <a class="text-sm font-bold text-ocean" href="{{ url_for('deal_jackets') }}">Open Deal Files</a>
       </div>
       <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div class="timeline">
           {% for item in data.recent_activity %}
           <div class="timeline-item">
-            <p class="text-xs font-black text-ocean">{{ item.time }} · {{ item.actor }}</p>
+            <p class="text-xs font-black text-ocean">{{ item.time }} - {{ item.actor }}</p>
             <p class="mt-1 text-sm font-bold text-slate-900">{{ item.action }}</p>
             <p class="mt-1 text-xs font-semibold text-slate-500">{{ item.meta }}</p>
           </div>
@@ -174,10 +275,10 @@
     <section class="panel">
       <div class="panel-heading">
         <div>
-          <p class="eyebrow">Customer Rhythm</p>
-          <h2>Today's follow-ups</h2>
+          <p class="eyebrow">Buyer Follow-ups</p>
+          <h2>Today's calls that protect GP</h2>
         </div>
-        <a class="text-sm font-bold text-ocean" href="{{ url_for('pipeline') }}">Open pipeline</a>
+        <a class="text-sm font-bold text-ocean" href="{{ url_for('pipeline') }}">Open Deal Flow</a>
       </div>
       <div class="space-y-3">
         {% for followup in followups %}
@@ -186,7 +287,7 @@
           <p class="mt-1 text-sm text-slate-500">{{ followup.vehicle }}</p>
           <div class="mt-4 flex items-center justify-between">
             <span class="rounded-lg bg-white px-3 py-1 text-sm font-bold text-ocean">{{ followup.due_time }}</span>
-            <span class="text-xs font-semibold text-slate-500">{{ followup.salesperson }}</span>
+            <span class="automation-label success">Auto-follow-up sent</span>
           </div>
         </article>
         {% endfor %}

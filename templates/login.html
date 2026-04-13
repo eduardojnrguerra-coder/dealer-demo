@@ -13,10 +13,14 @@
       <div class="absolute inset-0 login-visual"></div>
       <div class="relative z-10 max-w-2xl">
         <div class="flex items-center gap-3">
-          <span class="grid h-12 w-12 place-items-center rounded-lg bg-blue-600 text-xl font-black">A</span>
+          <img
+            src="{{ url_for('static', filename=branding.logo) }}"
+            alt="{{ branding.company_name }} logo"
+            class="h-12 w-12 rounded-lg bg-white object-contain p-1"
+          >
           <div>
-            <p class="text-2xl font-bold tracking-tight">{{ app_name }}</p>
-            <p class="text-sm uppercase tracking-[0.2em] text-blue-200">Premium dealership operating system</p>
+            <p class="text-2xl font-bold tracking-tight">{{ branding.company_name }}</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-blue-200">{{ branding.system_tagline }}</p>
           </div>
         </div>
         <h1 class="mt-16 max-w-xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">One command view for stock, sales, bookings, and profit.</h1>
@@ -28,7 +32,7 @@
           </div>
           <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
             <p class="text-3xl font-bold">9</p>
-            <p class="mt-1 text-sm text-slate-300">Pipeline stages</p>
+            <p class="mt-1 text-sm text-slate-300">Deal Flow stages</p>
           </div>
           <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
             <p class="text-3xl font-bold">5</p>
