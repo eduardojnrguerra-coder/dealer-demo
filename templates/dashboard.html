@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+    <div class="metric-card">
+      <span>Floor Stock</span>
+      <strong class="kpi-value" data-counter="{{ kpis.stock_count }}">{{ kpis.stock_count }}</strong>
+      <small>Retail-ready and reserved units</small>
+    </div>
+    <div class="metric-card">
+      <span>Units Delivered This Month</span>
+      <strong class="kpi-value" data-counter="{{ kpis.sold_month }}">{{ kpis.sold_month }}</strong>
+      <small>Closed and handed over</small>
+    </div>
+    <div class="metric-card">
+      <span>Gross Profit This Month</span>
+      <strong class="kpi-value" data-counter="{{ kpis.gross_profit }}" data-prefix="R">{{ kpis.gross_profit|currency }}</strong>
+      <small>Front-end GP from sold units</small>
+    </div>
+    <div class="metric-card">
+      <span>Deals Awaiting F&I</span>
+      <strong class="kpi-value" data-counter="{{ kpis.pending_finance }}">{{ kpis.pending_finance }}</strong>
+      <small>Bank approval or docs pending</small>
+    </div>
+    <div class="metric-card">
+      <span>Vehicles in Recon</span>
+      <strong class="kpi-value" data-counter="{{ kpis.recon_units }}">{{ kpis.recon_units }}</strong>
+      <small>Active Job Cards</small>
+    </div>
+    <div class="metric-card">
+      <span>Docs Outstanding</span>
+      <strong class="kpi-value" data-counter="{{ kpis.docs_outstanding }}">{{ kpis.docs_outstanding }}</strong>
+      <small>ID, Proof of Residence, insurance</small>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Today at a glance</p>
+        <h2>Operational rhythm</h2>
+      </div>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Dealer Principal view</span>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+      {% for item in data.today_glance %}
+      <article class="glance-card">
+        <span>{{ item.label }}</span>
+        <strong data-counter="{{ item.value }}">{{ item.value }}</strong>
+        <small>{{ item.detail }}</small>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Retail performance</p>
+          <h2>Monthly unit sales trend</h2>
+        </div>
+        <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Target: 24 units</span>
+      </div>
+      <div class="h-72">
+        <canvas id="monthlySalesChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Gross Profit</p>
+          <h2>GP by Sales Executive</h2>
+        </div>
+      </div>
+      <div class="h-72">
+        <canvas id="grossProfitChart"></canvas>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Operational Flags</p>
+          <h2>Items needing management attention</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for flag in data.operational_flags %}
+        <div class="alert-row {{ flag.severity }}"><strong>{{ flag.title }}</strong><span>{{ flag.detail }}</span></div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Deal Desk</p>
+          <h2>Recent deal movement</h2>
+        </div>
+        <a class="text-sm font-bold text-ocean" href="{{ url_for('deal_jackets') }}">Open Deal Jackets</a>
+      </div>
+      <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div class="timeline">
+          {% for item in data.recent_activity %}
+          <div class="timeline-item">
+            <p class="text-xs font-black text-ocean">{{ item.time }} · {{ item.actor }}</p>
+            <p class="mt-1 text-sm font-bold text-slate-900">{{ item.action }}</p>
+            <p class="mt-1 text-xs font-semibold text-slate-500">{{ item.meta }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr><th>Customer</th><th>Vehicle</th><th>Status</th><th class="text-right">Value</th></tr>
+            </thead>
+            <tbody>
+              {% for deal in recent_deals %}
+              <tr>
+                <td>{{ deal.customer }}</td>
+                <td>{{ deal.vehicle }}</td>
+                <td><span class="status-pill">{{ deal.status }}</span></td>
+                <td class="text-right font-bold">{{ deal.value|currency }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-3">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Stock Ageing</p>
+          <h2>Floor Stock exposure</h2>
+        </div>
+      </div>
+      <div class="h-64">
+        <canvas id="stockAgeingChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Deal Funnel</p>
+          <h2>Conversion checkpoints</h2>
+        </div>
+      </div>
+      <div class="space-y-4">
+        {% for stage in data.deal_funnel %}
+        <div>
+          <div class="flex items-center justify-between text-sm font-bold">
+            <span>{{ stage.stage }}</span>
+            <span>{{ stage.rate }}%</span>
+          </div>
+          <div class="mt-2 h-2 rounded-full bg-slate-100">
+            <div class="h-2 rounded-full bg-ocean" style="width: {{ stage.rate }}%"></div>
+          </div>
+          <p class="mt-1 text-xs font-semibold text-slate-500">{{ stage.count }} deals at this checkpoint</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Customer Rhythm</p>
+          <h2>Today's follow-ups</h2>
+        </div>
+        <a class="text-sm font-bold text-ocean" href="{{ url_for('pipeline') }}">Open pipeline</a>
+      </div>
+      <div class="space-y-3">
+        {% for followup in followups %}
+        <article class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p class="text-sm font-bold text-slate-950">{{ followup.customer }}</p>
+          <p class="mt-1 text-sm text-slate-500">{{ followup.vehicle }}</p>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="rounded-lg bg-white px-3 py-1 text-sm font-bold text-ocean">{{ followup.due_time }}</span>
+            <span class="text-xs font-semibold text-slate-500">{{ followup.salesperson }}</span>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

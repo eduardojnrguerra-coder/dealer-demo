@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">F&I Desk</p>
+        <h2>Pending finance applications</h2>
+      </div>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">{{ finance_applications|length }} active applications</span>
+    </div>
+    <div class="grid gap-4 xl:grid-cols-2">
+      {% for app in finance_applications %}
+      <article class="workflow-card">
+        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+          <div>
+            <p class="text-xs font-black uppercase tracking-wide text-ocean">{{ app.bank }}</p>
+            <h3 class="mt-1 text-lg font-black text-slate-950">{{ app.customer }}</h3>
+            <p class="text-sm text-slate-500">{{ app.vehicle }}</p>
+          </div>
+          <span class="status-pill">{{ app.status }}</span>
+        </div>
+        <div class="mt-5 grid gap-3 sm:grid-cols-3">
+          <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs font-bold text-slate-500">Amount</span><strong class="block">{{ app.amount|currency }}</strong></div>
+          <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs font-bold text-slate-500">Instalment Estimate</span><strong class="block">{{ app.estimate|currency }}</strong></div>
+          <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs font-bold text-slate-500">Settlement Figure</span><strong class="block">{{ app.settlement|currency }}</strong></div>
+        </div>
+        <div class="mt-5 grid gap-3 md:grid-cols-2">
+          <div>
+            <p class="text-xs font-black uppercase tracking-wide text-slate-400">Required documents</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {% if app.documents %}
+                {% for doc in app.documents %}<span class="badge doc-missing">{{ doc }}</span>{% endfor %}
+              {% else %}
+                <span class="badge doc-good">All received</span>
+              {% endif %}
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-black uppercase tracking-wide text-slate-400">Insurance and payout</p>
+            <p class="mt-2 text-sm font-bold text-slate-700">{{ app.insurance }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ app.payout }}</p>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

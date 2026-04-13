@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Recon / Workshop Prep</p>
+        <h2>Vehicle preparation board</h2>
+      </div>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">{{ recon_board|length }} active Job Cards</span>
+    </div>
+    <div class="prep-board">
+      {% for stage in recon_stages %}
+      <div class="prep-column">
+        <div class="mb-4 flex items-center justify-between">
+          <h3>{{ stage }}</h3>
+          <span class="status-pill">{{ grouped_recon[stage]|length }}</span>
+        </div>
+        <div class="space-y-3">
+          {% for item in grouped_recon[stage] %}
+          <article class="workflow-card">
+            <p class="text-xs font-black uppercase tracking-wide text-ocean">{{ item.stock_number }} · {{ item.job_card }}</p>
+            <h4 class="mt-2 font-black text-slate-950">{{ item.vehicle }}</h4>
+            <div class="mt-4 space-y-2 text-sm">
+              <p><strong>Owner:</strong> {{ item.owner }}</p>
+              <p><strong>Due:</strong> {{ item.due }}</p>
+              <p><strong>Prep note:</strong> {{ item.blocker }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Premium bakkie illustration">
+  <rect width="760" height="360" rx="28" fill="#eaf0f6"/>
+  <path d="M99 211h563c25 0 45 20 45 45v25H62v-33c0-20 17-37 37-37Z" fill="#1f2937"/>
+  <path d="M181 119c24-30 57-45 99-45h87c41 0 74 20 98 61l45 77H118l63-93Z" fill="#0f4c81"/>
+  <path d="M518 135h108c24 0 43 19 43 43v34H518v-77Z" fill="#334155"/>
+  <path d="M225 103c18-10 39-15 63-15h37v88H169l56-73Z" fill="#dbeafe"/>
+  <path d="M350 88h17c33 0 59 16 78 47l25 41H350V88Z" fill="#bfdbfe"/>
+  <path d="M114 213h547c33 0 60 27 60 60v8H54v-8c0-33 27-60 60-60Z" fill="#253244"/>
+  <circle cx="213" cy="276" r="49" fill="#111827"/>
+  <circle cx="213" cy="276" r="24" fill="#cbd5e1"/>
+  <circle cx="587" cy="276" r="49" fill="#111827"/>
+  <circle cx="587" cy="276" r="24" fill="#cbd5e1"/>
+  <path d="M83 239h78" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+  <path d="M648 238h42" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+</svg>

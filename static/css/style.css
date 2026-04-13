@@ -1,0 +1,621 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.page-shell {
+  animation: pageFade 260ms ease-out both;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-visual {
+  background:
+    linear-gradient(115deg, rgba(17, 24, 39, 0.94), rgba(15, 76, 129, 0.72)),
+    url("../images/suv.svg") right 8% bottom 8% / min(780px, 80vw) no-repeat;
+}
+
+.nav-link {
+  align-items: center;
+  border-radius: 8px;
+  color: rgb(203 213 225);
+  display: flex;
+  font-weight: 700;
+  gap: 0.75rem;
+  padding: 0.82rem 1rem;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.09);
+  color: white;
+}
+
+.nav-dot {
+  background: rgb(100 116 139);
+  border-radius: 999px;
+  height: 0.45rem;
+  width: 0.45rem;
+}
+
+.nav-link.active .nav-dot {
+  background: rgb(96 165 250);
+}
+
+.panel {
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  padding: 1.25rem;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.panel:hover,
+.metric-card:hover,
+.vehicle-card:hover,
+.lead-card:hover,
+.workflow-card:hover,
+.integration-card:hover {
+  box-shadow: 0 20px 42px rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px);
+}
+
+.panel-heading {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.panel-heading h2,
+.panel h2 {
+  color: rgb(15 23 42);
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  color: #0f4c81;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.metric-card,
+.summary-card {
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  padding: 1rem;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.metric-card span,
+.summary-card span {
+  color: rgb(100 116 139);
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.metric-card strong {
+  color: rgb(15 23 42);
+  display: block;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  margin-top: 0.45rem;
+}
+
+.metric-card small {
+  color: rgb(100 116 139);
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.summary-card strong {
+  color: rgb(15 23 42);
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 950;
+  margin-top: 0.35rem;
+}
+
+.top-control {
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  display: block;
+  padding: 0.55rem 0.75rem;
+}
+
+.top-control span {
+  color: rgb(100 116 139);
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.top-control input,
+.top-control select {
+  background: transparent;
+  color: rgb(15 23 42);
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-top: 0.2rem;
+  outline: none;
+  width: 100%;
+}
+
+#quickActionMenu a,
+.search-result {
+  border-radius: 8px;
+  display: block;
+  padding: 0.7rem 0.8rem;
+}
+
+#quickActionMenu a {
+  color: rgb(51 65 85);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+#quickActionMenu a:hover,
+.search-result:hover {
+  background: rgb(239 246 255);
+}
+
+.search-result span {
+  color: #0f4c81;
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.search-result strong {
+  color: rgb(15 23 42);
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.12rem;
+}
+
+.glance-card,
+.workflow-card,
+.integration-card {
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  padding: 1rem;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.glance-card strong {
+  color: rgb(15 23 42);
+  display: block;
+  font-size: 1.85rem;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.glance-card span {
+  color: rgb(15 76 129);
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.glance-card small {
+  color: rgb(100 116 139);
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline-item {
+  border-left: 2px solid rgb(219 234 254);
+  padding: 0 0 1rem 1rem;
+  position: relative;
+}
+
+.timeline-item::before {
+  background: #0f4c81;
+  border: 3px solid white;
+  border-radius: 999px;
+  content: "";
+  height: 0.8rem;
+  left: -0.45rem;
+  position: absolute;
+  top: 0.2rem;
+  width: 0.8rem;
+}
+
+.document-row,
+.check-row {
+  align-items: center;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0.85rem;
+}
+
+.doc-good {
+  background: rgb(236 253 245);
+  color: rgb(4 120 87);
+}
+
+.doc-missing {
+  background: rgb(254 242 242);
+  color: rgb(185 28 28);
+}
+
+.prep-board {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(7, minmax(245px, 1fr));
+  overflow-x: auto;
+  padding-bottom: 0.6rem;
+}
+
+.prep-column {
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  min-height: 440px;
+  padding: 1rem;
+}
+
+.prep-column h3 {
+  color: rgb(15 23 42);
+  font-size: 0.88rem;
+  font-weight: 950;
+}
+
+.integration-icon {
+  background: linear-gradient(135deg, #0f4c81, #1e293b);
+  border-radius: 8px;
+  color: white;
+  display: grid;
+  font-weight: 950;
+  height: 2.8rem;
+  place-items: center;
+  width: 2.8rem;
+}
+
+.skeleton {
+  animation: pulseSoft 1.2s ease-in-out infinite;
+  background: linear-gradient(90deg, rgb(241 245 249), rgb(226 232 240), rgb(241 245 249));
+  background-size: 200% 100%;
+  border-radius: 8px;
+}
+
+@keyframes pulseSoft {
+  0% { background-position: 0% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.alert-row {
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.alert-row strong,
+.alert-row span {
+  display: block;
+}
+
+.alert-row span {
+  color: rgb(71 85 105);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.alert-row.critical {
+  background: rgb(254 242 242);
+  border-color: rgb(254 202 202);
+}
+
+.alert-row.warning {
+  background: rgb(255 251 235);
+  border-color: rgb(253 230 138);
+}
+
+.alert-row.info {
+  background: rgb(239 246 255);
+  border-color: rgb(191 219 254);
+}
+
+.data-table {
+  min-width: 780px;
+  width: 100%;
+}
+
+.data-table th {
+  color: rgb(100 116 139);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 0.8rem 0.85rem;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.data-table td {
+  border-top: 1px solid rgb(226 232 240);
+  color: rgb(30 41 59);
+  font-size: 0.9rem;
+  padding: 0.95rem 0.85rem;
+}
+
+.status-pill,
+.badge,
+.priority,
+.time-pill,
+.booking-type {
+  border-radius: 8px;
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 0.28rem 0.55rem;
+}
+
+.status-pill,
+.status-in-stock {
+  background: rgb(239 246 255);
+  color: rgb(15 76 129);
+}
+
+.status-reserved,
+.warning {
+  background: rgb(255 251 235);
+  color: rgb(146 64 14);
+}
+
+.status-sold {
+  background: rgb(236 253 245);
+  color: rgb(4 120 87);
+}
+
+.danger {
+  background: rgb(254 242 242);
+  color: rgb(185 28 28);
+}
+
+.filter-btn {
+  border: 1px solid rgb(203 213 225);
+  border-radius: 8px;
+  color: rgb(51 65 85);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.55rem 0.8rem;
+  transition: all 160ms ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #0f4c81;
+  border-color: #0f4c81;
+  color: white;
+}
+
+.vehicle-card {
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  padding: 1rem;
+}
+
+.vehicle-card dt {
+  color: rgb(100 116 139);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.vehicle-card dd {
+  color: rgb(15 23 42);
+  font-weight: 900;
+  margin-top: 0.12rem;
+}
+
+.kanban {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(9, minmax(280px, 1fr));
+  overflow-x: auto;
+  padding-bottom: 0.6rem;
+}
+
+.kanban-column {
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  min-height: 440px;
+  padding: 1rem;
+}
+
+.kanban-column h3 {
+  font-size: 0.9rem;
+  font-weight: 950;
+}
+
+.kanban-column > div:first-child span {
+  background: white;
+  border-radius: 8px;
+  color: rgb(15 76 129);
+  font-size: 0.75rem;
+  font-weight: 950;
+  padding: 0.25rem 0.55rem;
+}
+
+.lead-card {
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.priority.hot {
+  background: rgb(254 242 242);
+  color: rgb(185 28 28);
+}
+
+.priority.warm {
+  background: rgb(255 251 235);
+  color: rgb(146 64 14);
+}
+
+.priority.cold {
+  background: rgb(241 245 249);
+  color: rgb(71 85 105);
+}
+
+.calendar-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(6, minmax(230px, 1fr));
+  overflow-x: auto;
+  padding-bottom: 0.6rem;
+}
+
+.day-column {
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  min-height: 520px;
+  padding: 1rem;
+}
+
+.day-column h3 {
+  color: rgb(15 23 42);
+  font-weight: 950;
+  margin-bottom: 1rem;
+}
+
+.booking-card {
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  padding: 0.9rem;
+}
+
+.time-pill {
+  background: #0f4c81;
+  color: white;
+}
+
+.booking-type {
+  background: rgb(239 246 255);
+  color: rgb(15 76 129);
+}
+
+.task-row {
+  align-items: flex-start;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.9rem;
+}
+
+.task-row input {
+  margin-top: 0.2rem;
+}
+
+.rank-badge {
+  background: #0f4c81;
+  border-radius: 8px;
+  color: white;
+  display: inline-grid;
+  font-size: 0.8rem;
+  font-weight: 950;
+  height: 1.8rem;
+  place-items: center;
+  width: 1.8rem;
+}
+
+.report-tile {
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  padding: 1.2rem;
+}
+
+.report-tile span {
+  color: #0f4c81;
+  font-weight: 950;
+}
+
+.report-tile h3 {
+  color: rgb(15 23 42);
+  font-size: 1.1rem;
+  font-weight: 950;
+  margin-top: 1.2rem;
+}
+
+.report-tile p {
+  color: rgb(71 85 105);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  margin-top: 0.6rem;
+}
+
+.settings-field span {
+  color: rgb(71 85 105);
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.settings-field input {
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  color: rgb(15 23 42);
+  font-weight: 800;
+  padding: 0.8rem 1rem;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 1rem;
+  }
+
+  .panel-heading {
+    display: block;
+  }
+
+  .panel-heading > * + * {
+    margin-top: 1rem;
+  }
+}

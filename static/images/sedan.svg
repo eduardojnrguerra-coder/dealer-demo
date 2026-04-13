@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Premium sedan illustration">
+  <rect width="760" height="360" rx="28" fill="#eef4fa"/>
+  <path d="M98 221h559c25 0 45 20 45 45v15H61v-19c0-23 14-41 37-41Z" fill="#172033"/>
+  <path d="M184 150c34-48 84-72 149-72h104c48 0 90 20 126 60l72 80H118l66-68Z" fill="#1d4ed8"/>
+  <path d="M238 117c23-15 53-23 90-23h46v94H170l68-71Z" fill="#dbeafe"/>
+  <path d="M400 94h35c37 0 68 13 94 40l51 54H400V94Z" fill="#bfdbfe"/>
+  <path d="M100 213h555c33 0 60 27 60 60v8H50v-8c0-33 17-60 50-60Z" fill="#263547"/>
+  <circle cx="220" cy="276" r="48" fill="#111827"/>
+  <circle cx="220" cy="276" r="24" fill="#cbd5e1"/>
+  <circle cx="560" cy="276" r="48" fill="#111827"/>
+  <circle cx="560" cy="276" r="24" fill="#cbd5e1"/>
+  <path d="M89 238h72" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+  <path d="M627 237h54" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+</svg>

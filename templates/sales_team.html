@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+    <div class="panel bg-slate-950 text-white">
+      <p class="eyebrow text-blue-200">Top Sales Executive</p>
+      <h2 class="mt-2 text-3xl font-black">{{ ranked_salespeople[0].name }}</h2>
+      <p class="mt-2 text-slate-300">{{ ranked_salespeople[0].role }}</p>
+      <div class="mt-8 grid grid-cols-2 gap-4">
+        <div class="rounded-lg bg-white/10 p-4">
+          <span class="text-sm text-slate-300">Deals closed</span>
+          <strong class="mt-1 block text-3xl">{{ ranked_salespeople[0].deals_closed }}</strong>
+        </div>
+        <div class="rounded-lg bg-white/10 p-4">
+          <span class="text-sm text-slate-300">Gross profit</span>
+          <strong class="mt-1 block text-3xl">{{ ranked_salespeople[0].gross_profit|currency }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Sales Activity</p>
+          <h2>Calls, test drives, deals closed</h2>
+        </div>
+      </div>
+      <div class="h-72">
+        <canvas id="teamChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Leaderboard</p>
+        <h2>Sales Executive performance</h2>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Salesperson</th>
+            <th>Leads</th>
+            <th>Calls</th>
+            <th>Test drives</th>
+            <th>Closed</th>
+            <th>Conversion</th>
+            <th class="text-right">Gross profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for person in ranked_salespeople %}
+          <tr class="{% if loop.first %}bg-blue-50/70{% endif %}">
+            <td><span class="rank-badge">{{ loop.index }}</span></td>
+            <td>
+              <p class="font-black">{{ person.name }}</p>
+              <p class="text-xs text-slate-500">{{ person.role }}</p>
+            </td>
+            <td>{{ person.leads_assigned }}</td>
+            <td>{{ person.calls_made }}</td>
+            <td>{{ person.test_drives_booked }}</td>
+            <td>{{ person.deals_closed }}</td>
+            <td><span class="status-pill">{{ person.conversion_rate }}%</span></td>
+            <td class="text-right font-black">{{ person.gross_profit|currency }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<script id="team-data" type="application/json">{{ ranked_salespeople|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/team.js') }}"></script>
+{% endblock %}

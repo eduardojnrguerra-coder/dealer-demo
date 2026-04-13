@@ -1,0 +1,276 @@
+{
+  "charts": {
+    "monthly_labels": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
+    "monthly_sales": [18, 22, 25, 21, 28, 31, 17]
+  },
+  "vehicles": [
+    {"id": 1, "image": "hatch.svg", "year": 2020, "make": "Volkswagen", "model": "Polo 1.0 TSI Comfortline", "mileage": 58200, "color": "Pure White", "stock_number": "AF-1042", "cost_price": 188000, "selling_price": 224900, "days_in_stock": 38, "status": "In Stock"},
+    {"id": 2, "image": "bakkie.svg", "year": 2021, "make": "Ford", "model": "Ranger 2.0 Bi-Turbo Wildtrak", "mileage": 74100, "color": "Sea Grey", "stock_number": "AF-1058", "cost_price": 438000, "selling_price": 499900, "days_in_stock": 22, "status": "Reserved"},
+    {"id": 3, "image": "bakkie.svg", "year": 2019, "make": "Toyota", "model": "Hilux 2.8 GD-6 Raider 4x4", "mileage": 96200, "color": "Glacier White", "stock_number": "AF-1061", "cost_price": 392000, "selling_price": 449900, "days_in_stock": 73, "status": "In Stock"},
+    {"id": 4, "image": "hatch.svg", "year": 2022, "make": "Suzuki", "model": "Swift 1.2 GL", "mileage": 33600, "color": "Silky Silver", "stock_number": "AF-1070", "cost_price": 151000, "selling_price": 179900, "days_in_stock": 18, "status": "In Stock"},
+    {"id": 5, "image": "sedan.svg", "year": 2018, "make": "BMW", "model": "320d M Sport Auto", "mileage": 88400, "color": "Mineral Grey", "stock_number": "AF-1074", "cost_price": 298000, "selling_price": 359900, "days_in_stock": 66, "status": "In Stock"},
+    {"id": 6, "image": "suv.svg", "year": 2023, "make": "Toyota", "model": "Corolla Cross 1.8 XS", "mileage": 21400, "color": "Platinum White", "stock_number": "AF-1082", "cost_price": 317000, "selling_price": 369900, "days_in_stock": 11, "status": "Reserved"},
+    {"id": 7, "image": "bakkie.svg", "year": 2021, "make": "Isuzu", "model": "D-Max 250 HO X-Rider", "mileage": 68100, "color": "Splash White", "stock_number": "AF-1088", "cost_price": 329000, "selling_price": 384900, "days_in_stock": 45, "status": "In Stock"},
+    {"id": 8, "image": "sedan.svg", "year": 2020, "make": "Mercedes-Benz", "model": "A200 Progressive Auto", "mileage": 59200, "color": "Cosmos Black", "stock_number": "AF-1092", "cost_price": 355000, "selling_price": 419900, "days_in_stock": 57, "status": "In Stock"},
+    {"id": 9, "image": "suv.svg", "year": 2022, "make": "Hyundai", "model": "Creta 1.5 Executive IVT", "mileage": 29100, "color": "Dragon Red", "stock_number": "AF-1099", "cost_price": 284000, "selling_price": 329900, "days_in_stock": 29, "status": "In Stock"},
+    {"id": 10, "image": "suv.svg", "year": 2021, "make": "Kia", "model": "Seltos 1.5 CRDi EX", "mileage": 60300, "color": "Gravity Grey", "stock_number": "AF-1104", "cost_price": 271000, "selling_price": 309900, "days_in_stock": 81, "status": "In Stock"},
+    {"id": 11, "image": "hatch.svg", "year": 2020, "make": "Renault", "model": "Clio V 1.0 Turbo Intens", "mileage": 54700, "color": "Iron Blue", "stock_number": "AF-1111", "cost_price": 165000, "selling_price": 189900, "days_in_stock": 34, "status": "In Stock"},
+    {"id": 12, "image": "suv.svg", "year": 2019, "make": "Mazda", "model": "CX-5 2.0 Dynamic Auto", "mileage": 77500, "color": "Soul Red", "stock_number": "AF-1117", "cost_price": 256000, "selling_price": 299900, "days_in_stock": 62, "status": "In Stock"},
+    {"id": 13, "image": "hatch.svg", "year": 2023, "make": "Volkswagen", "model": "Polo Vivo 1.4 Trendline", "mileage": 18800, "color": "Reef Blue", "stock_number": "AF-1120", "cost_price": 181000, "selling_price": 209900, "days_in_stock": 9, "status": "Sold"},
+    {"id": 14, "image": "sedan.svg", "year": 2020, "make": "Audi", "model": "A3 Sedan 35 TFSI", "mileage": 65800, "color": "Mythos Black", "stock_number": "AF-1126", "cost_price": 302000, "selling_price": 349900, "days_in_stock": 47, "status": "Sold"},
+    {"id": 15, "image": "suv.svg", "year": 2022, "make": "Haval", "model": "Jolion 1.5T Luxury DCT", "mileage": 37200, "color": "Mars Red", "stock_number": "AF-1130", "cost_price": 245000, "selling_price": 279900, "days_in_stock": 24, "status": "In Stock"},
+    {"id": 16, "image": "bakkie.svg", "year": 2018, "make": "Nissan", "model": "Navara 2.3D LE 4x4 Auto", "mileage": 107200, "color": "Brilliant Silver", "stock_number": "AF-1133", "cost_price": 295000, "selling_price": 329900, "days_in_stock": 88, "status": "In Stock"},
+    {"id": 17, "image": "hatch.svg", "year": 2021, "make": "Toyota", "model": "Starlet 1.4 XR", "mileage": 49500, "color": "Mystic Pearl", "stock_number": "AF-1140", "cost_price": 168000, "selling_price": 194900, "days_in_stock": 14, "status": "Reserved"},
+    {"id": 18, "image": "suv.svg", "year": 2020, "make": "Ford", "model": "EcoSport 1.0 Titanium Auto", "mileage": 71400, "color": "Moondust Silver", "stock_number": "AF-1146", "cost_price": 198000, "selling_price": 229900, "days_in_stock": 79, "status": "In Stock"},
+    {"id": 19, "image": "sedan.svg", "year": 2019, "make": "Honda", "model": "Civic 1.5T Executive CVT", "mileage": 82200, "color": "Modern Steel", "stock_number": "AF-1152", "cost_price": 231000, "selling_price": 269900, "days_in_stock": 53, "status": "In Stock"},
+    {"id": 20, "image": "suv.svg", "year": 2023, "make": "Chery", "model": "Tiggo 4 Pro Elite DCT", "mileage": 15600, "color": "Tech Grey", "stock_number": "AF-1159", "cost_price": 279000, "selling_price": 319900, "days_in_stock": 7, "status": "Sold"},
+    {"id": 21, "image": "hatch.svg", "year": 2021, "make": "Opel", "model": "Corsa 1.2 Edition", "mileage": 44400, "color": "Summit White", "stock_number": "AF-1164", "cost_price": 172000, "selling_price": 196900, "days_in_stock": 41, "status": "In Stock"},
+    {"id": 22, "image": "sedan.svg", "year": 2022, "make": "Toyota", "model": "Corolla Quest 1.8 Prestige", "mileage": 38800, "color": "Graphite Grey", "stock_number": "AF-1169", "cost_price": 229000, "selling_price": 259900, "days_in_stock": 33, "status": "In Stock"},
+    {"id": 23, "image": "suv.svg", "year": 2020, "make": "Nissan", "model": "Qashqai 1.2T Acenta", "mileage": 69700, "color": "Magnetic Red", "stock_number": "AF-1175", "cost_price": 218000, "selling_price": 239900, "days_in_stock": 92, "status": "In Stock"},
+    {"id": 24, "image": "bakkie.svg", "year": 2022, "make": "Mahindra", "model": "Pik Up 2.2 mHawk S11", "mileage": 43100, "color": "Dsat Silver", "stock_number": "AF-1180", "cost_price": 276000, "selling_price": 319900, "days_in_stock": 26, "status": "In Stock"}
+  ],
+  "salespeople": [
+    {"name": "Lerato Mokoena", "role": "Senior Sales Executive", "leads_assigned": 18, "calls_made": 126, "test_drives_booked": 14, "deals_closed": 8, "conversion_rate": 44, "gross_profit": 384500},
+    {"name": "Johan Botha", "role": "Sales Executive - Bakkies", "leads_assigned": 16, "calls_made": 104, "test_drives_booked": 12, "deals_closed": 6, "conversion_rate": 38, "gross_profit": 312800},
+    {"name": "Ayesha Naidoo", "role": "F&I Business Manager", "leads_assigned": 15, "calls_made": 97, "test_drives_booked": 10, "deals_closed": 5, "conversion_rate": 33, "gross_profit": 261400},
+    {"name": "Sipho Dlamini", "role": "Sales Executive", "leads_assigned": 13, "calls_made": 88, "test_drives_booked": 9, "deals_closed": 4, "conversion_rate": 31, "gross_profit": 194900},
+    {"name": "Megan Jacobs", "role": "Sales Executive - Retention", "leads_assigned": 12, "calls_made": 76, "test_drives_booked": 7, "deals_closed": 3, "conversion_rate": 25, "gross_profit": 142700}
+  ],
+  "leads": [
+    {"customer": "Thabo Khumalo", "vehicle": "2021 Ford Ranger 2.0 Bi-Turbo", "salesperson": "Johan Botha", "source": "AutoTrader", "last_contact": "Today, 09:15", "value": 499900, "priority": "Hot", "stage": "Finance Review"},
+    {"customer": "Nadia Petersen", "vehicle": "2023 Toyota Corolla Cross XS", "salesperson": "Lerato Mokoena", "source": "Website", "last_contact": "Today, 10:40", "value": 369900, "priority": "Hot", "stage": "Approved"},
+    {"customer": "Brandon Moodley", "vehicle": "2020 Mercedes-Benz A200", "salesperson": "Ayesha Naidoo", "source": "Facebook", "last_contact": "Yesterday, 16:20", "value": 419900, "priority": "Warm", "stage": "Negotiation"},
+    {"customer": "Zanele Nkosi", "vehicle": "2022 Suzuki Swift 1.2 GL", "salesperson": "Megan Jacobs", "source": "Walk-in", "last_contact": "Today, 08:55", "value": 179900, "priority": "Hot", "stage": "Test Drive Booked"},
+    {"customer": "Pieter van Wyk", "vehicle": "2019 Toyota Hilux 2.8 GD-6", "salesperson": "Johan Botha", "source": "Referral", "last_contact": "2 days ago", "value": 449900, "priority": "Warm", "stage": "Interested"},
+    {"customer": "Mandisa Maseko", "vehicle": "2021 Toyota Starlet 1.4 XR", "salesperson": "Sipho Dlamini", "source": "Website", "last_contact": "Today, 12:05", "value": 194900, "priority": "Warm", "stage": "Contacted"},
+    {"customer": "Ethan Smit", "vehicle": "2018 BMW 320d M Sport", "salesperson": "Lerato Mokoena", "source": "AutoTrader", "last_contact": "3 days ago", "value": 359900, "priority": "Hot", "stage": "New Lead"},
+    {"customer": "Fatima Khan", "vehicle": "2022 Haval Jolion Luxury", "salesperson": "Ayesha Naidoo", "source": "Instagram", "last_contact": "Yesterday, 11:10", "value": 279900, "priority": "Warm", "stage": "Interested"},
+    {"customer": "Michael Coetzee", "vehicle": "2020 VW Polo 1.0 TSI", "salesperson": "Megan Jacobs", "source": "Website", "last_contact": "4 days ago", "value": 224900, "priority": "Hot", "stage": "Contacted"},
+    {"customer": "Busisiwe Cele", "vehicle": "2021 Isuzu D-Max 250 HO", "salesperson": "Johan Botha", "source": "Walk-in", "last_contact": "Today, 14:30", "value": 384900, "priority": "Hot", "stage": "Negotiation"},
+    {"customer": "Willem Kruger", "vehicle": "2018 Nissan Navara 2.3D", "salesperson": "Sipho Dlamini", "source": "Facebook", "last_contact": "Yesterday, 13:00", "value": 329900, "priority": "Cold", "stage": "Finance Review"},
+    {"customer": "Chantelle Meyer", "vehicle": "2020 Ford EcoSport Titanium", "salesperson": "Megan Jacobs", "source": "Call-in", "last_contact": "Today, 15:10", "value": 229900, "priority": "Warm", "stage": "Test Drive Booked"},
+    {"customer": "Karabo Molefe", "vehicle": "2021 Kia Seltos CRDi EX", "salesperson": "Ayesha Naidoo", "source": "AutoTrader", "last_contact": "5 days ago", "value": 309900, "priority": "Warm", "stage": "New Lead"},
+    {"customer": "Jason Daniels", "vehicle": "2019 Mazda CX-5 Dynamic", "salesperson": "Lerato Mokoena", "source": "Referral", "last_contact": "Yesterday, 09:00", "value": 299900, "priority": "Hot", "stage": "Approved"},
+    {"customer": "Anika Pillay", "vehicle": "2021 Renault Clio Intens", "salesperson": "Sipho Dlamini", "source": "Website", "last_contact": "Today, 16:15", "value": 189900, "priority": "Warm", "stage": "Interested"},
+    {"customer": "Sibusiso Radebe", "vehicle": "2023 Chery Tiggo 4 Pro", "salesperson": "Lerato Mokoena", "source": "Walk-in", "last_contact": "Today, 11:55", "value": 319900, "priority": "Hot", "stage": "Sold"},
+    {"customer": "Leigh-Anne Williams", "vehicle": "2020 Audi A3 Sedan", "salesperson": "Ayesha Naidoo", "source": "Instagram", "last_contact": "Yesterday, 17:25", "value": 349900, "priority": "Warm", "stage": "Sold"},
+    {"customer": "Kabelo Ndlovu", "vehicle": "2020 Nissan Qashqai Acenta", "salesperson": "Johan Botha", "source": "Facebook", "last_contact": "6 days ago", "value": 239900, "priority": "Cold", "stage": "Lost"},
+    {"customer": "Monique Ferreira", "vehicle": "2022 Toyota Corolla Quest", "salesperson": "Megan Jacobs", "source": "Website", "last_contact": "Today, 13:45", "value": 259900, "priority": "Warm", "stage": "Contacted"},
+    {"customer": "Musa Gumede", "vehicle": "2022 Mahindra Pik Up S11", "salesperson": "Johan Botha", "source": "AutoTrader", "last_contact": "Yesterday, 12:10", "value": 319900, "priority": "Hot", "stage": "Negotiation"},
+    {"customer": "Rachel Adams", "vehicle": "2019 Honda Civic Executive", "salesperson": "Ayesha Naidoo", "source": "Call-in", "last_contact": "Today, 10:10", "value": 269900, "priority": "Warm", "stage": "Test Drive Booked"},
+    {"customer": "Neo Mthembu", "vehicle": "2021 Opel Corsa Edition", "salesperson": "Sipho Dlamini", "source": "Website", "last_contact": "2 days ago", "value": 196900, "priority": "Cold", "stage": "New Lead"},
+    {"customer": "Dewald Pretorius", "vehicle": "2023 VW Polo Vivo Trendline", "salesperson": "Lerato Mokoena", "source": "Referral", "last_contact": "Today, 09:50", "value": 209900, "priority": "Hot", "stage": "Sold"},
+    {"customer": "Anele Mbatha", "vehicle": "2020 Hyundai Creta Executive", "salesperson": "Megan Jacobs", "source": "Website", "last_contact": "Yesterday, 15:40", "value": 329900, "priority": "Warm", "stage": "Interested"}
+  ],
+  "recent_deals": [
+    {"customer": "Sibusiso Radebe", "vehicle": "2023 Chery Tiggo 4 Pro", "salesperson": "Lerato Mokoena", "status": "Sold", "value": 319900},
+    {"customer": "Dewald Pretorius", "vehicle": "2023 VW Polo Vivo Trendline", "salesperson": "Lerato Mokoena", "status": "Sold", "value": 209900},
+    {"customer": "Nadia Petersen", "vehicle": "2023 Toyota Corolla Cross XS", "salesperson": "Lerato Mokoena", "status": "Approved", "value": 369900},
+    {"customer": "Thabo Khumalo", "vehicle": "2021 Ford Ranger Wildtrak", "salesperson": "Johan Botha", "status": "Finance Review", "value": 499900},
+    {"customer": "Busisiwe Cele", "vehicle": "2021 Isuzu D-Max X-Rider", "salesperson": "Johan Botha", "status": "Negotiation", "value": 384900}
+  ],
+  "followups": [
+    {"customer": "Michael Coetzee", "vehicle": "2020 VW Polo 1.0 TSI", "due_time": "09:30", "salesperson": "Megan Jacobs"},
+    {"customer": "Ethan Smit", "vehicle": "2018 BMW 320d M Sport", "due_time": "10:45", "salesperson": "Lerato Mokoena"},
+    {"customer": "Karabo Molefe", "vehicle": "2021 Kia Seltos CRDi EX", "due_time": "12:15", "salesperson": "Ayesha Naidoo"},
+    {"customer": "Willem Kruger", "vehicle": "2018 Nissan Navara LE", "due_time": "14:00", "salesperson": "Sipho Dlamini"},
+    {"customer": "Anele Mbatha", "vehicle": "2020 Hyundai Creta Executive", "due_time": "16:30", "salesperson": "Megan Jacobs"}
+  ],
+  "bookings": [
+    {"day": "Monday", "time": "08:30", "type": "Test Drive", "customer": "Zanele Nkosi", "vehicle": "2022 Suzuki Swift 1.2 GL", "owner": "Megan Jacobs", "status": "Confirmed"},
+    {"day": "Monday", "time": "10:00", "type": "Finance Callback", "customer": "Thabo Khumalo", "vehicle": "2021 Ford Ranger Wildtrak", "owner": "Ayesha Naidoo", "status": "Docs pending"},
+    {"day": "Tuesday", "time": "09:15", "type": "Customer Appointment", "customer": "Pieter van Wyk", "vehicle": "2019 Toyota Hilux Raider", "owner": "Johan Botha", "status": "Confirmed"},
+    {"day": "Tuesday", "time": "13:45", "type": "Vehicle Handover", "customer": "Sibusiso Radebe", "vehicle": "2023 Chery Tiggo 4 Pro", "owner": "Lerato Mokoena", "status": "Ready"},
+    {"day": "Wednesday", "time": "08:00", "type": "Collection", "customer": "Dewald Pretorius", "vehicle": "2023 VW Polo Vivo", "owner": "Lerato Mokoena", "status": "Confirmed"},
+    {"day": "Wednesday", "time": "11:30", "type": "Test Drive", "customer": "Rachel Adams", "vehicle": "2019 Honda Civic Executive", "owner": "Ayesha Naidoo", "status": "Confirmed"},
+    {"day": "Wednesday", "time": "15:00", "type": "Finance Callback", "customer": "Willem Kruger", "vehicle": "2018 Nissan Navara LE", "owner": "Sipho Dlamini", "status": "Overdue docs"},
+    {"day": "Thursday", "time": "09:45", "type": "Customer Appointment", "customer": "Anele Mbatha", "vehicle": "2020 Hyundai Creta Executive", "owner": "Megan Jacobs", "status": "Confirmed"},
+    {"day": "Thursday", "time": "12:30", "type": "Test Drive", "customer": "Chantelle Meyer", "vehicle": "2020 Ford EcoSport Titanium", "owner": "Megan Jacobs", "status": "Confirmed"},
+    {"day": "Thursday", "time": "16:00", "type": "Vehicle Handover", "customer": "Leigh-Anne Williams", "vehicle": "2020 Audi A3 Sedan", "owner": "Ayesha Naidoo", "status": "Ready"},
+    {"day": "Friday", "time": "08:45", "type": "Workshop Check", "customer": "Nadia Petersen", "vehicle": "2023 Toyota Corolla Cross XS", "owner": "Lerato Mokoena", "status": "Priority"},
+    {"day": "Friday", "time": "10:30", "type": "Test Drive", "customer": "Musa Gumede", "vehicle": "2022 Mahindra Pik Up S11", "owner": "Johan Botha", "status": "Confirmed"},
+    {"day": "Friday", "time": "14:15", "type": "Collection", "customer": "Jason Daniels", "vehicle": "2019 Mazda CX-5 Dynamic", "owner": "Lerato Mokoena", "status": "Finance cleared"},
+    {"day": "Saturday", "time": "09:00", "type": "Customer Appointment", "customer": "Mandisa Maseko", "vehicle": "2021 Toyota Starlet XR", "owner": "Sipho Dlamini", "status": "Confirmed"},
+    {"day": "Saturday", "time": "11:00", "type": "Test Drive", "customer": "Brandon Moodley", "vehicle": "2020 Mercedes-Benz A200", "owner": "Ayesha Naidoo", "status": "Confirmed"}
+  ],
+  "tasks": [
+    "Confirm bank statements for Thabo Khumalo",
+    "Price review on aged Nissan Qashqai",
+    "Prepare Corolla Cross for finance inspection",
+    "Call three website leads before 15:00"
+  ],
+  "overdue": [
+    "Karabo Molefe has not been contacted in 5 days",
+    "Willem Kruger's finance pack is missing proof of address",
+    "Michael Coetzee requested trade-in value yesterday"
+  ],
+  "role_snapshot": [
+    {"role": "Dealer Principal", "name": "Marius van der Merwe", "focus": "Gross Profit, stock turn, delivery risk"},
+    {"role": "Used Vehicle Manager", "name": "Priya Govender", "focus": "Floor Stock, recon ageing, trade-in pricing"},
+    {"role": "Stock Controller", "name": "Andre Steyn", "focus": "Natis, Roadworthy, stock numbers, keys"},
+    {"role": "F&I", "name": "Ayesha Naidoo", "focus": "Bank approvals, documents, insurance confirmation"}
+  ],
+  "today_glance": [
+    {"label": "Deliveries Today", "value": 3, "detail": "2 ready, 1 awaiting Lic & Reg"},
+    {"label": "Test Drives Today", "value": 5, "detail": "R1.55m pipeline value"},
+    {"label": "F&I Outstanding", "value": 6, "detail": "Pending bank approval or docs"},
+    {"label": "Vehicles in Recon", "value": 7, "detail": "2 blocking floor stock"},
+    {"label": "Trade-ins Awaiting Appraisal", "value": 4, "detail": "Used Vehicle Manager review"},
+    {"label": "Docs Outstanding", "value": 8, "detail": "Copy of ID, Proof of Residence, bank statements"}
+  ],
+  "operational_flags": [
+    {"severity": "critical", "title": "Natis pending on 2 sold units", "detail": "Delivery Pack cannot be closed until registration documents are captured."},
+    {"severity": "warning", "title": "4 floor stock vehicles over 60 Days in Stock", "detail": "Used Vehicle Manager pricing review due before Friday campaign goes live."},
+    {"severity": "warning", "title": "3 hot leads need Sales Executive follow-up", "detail": "No outbound call logged in the last 48 hours."},
+    {"severity": "info", "title": "Recon capacity is tight", "detail": "Workshop has 7 active Job Cards and two Roadworthy bookings pending."}
+  ],
+  "recent_activity": [
+    {"time": "08:42", "actor": "Ayesha Naidoo", "action": "submitted WesBank application for Thabo Khumalo", "meta": "Pending Bank Approval"},
+    {"time": "09:10", "actor": "Andre Steyn", "action": "updated Roadworthy status on AF-1159", "meta": "Ready for Delivery"},
+    {"time": "10:05", "actor": "Lerato Mokoena", "action": "added Delivery Pack note for Nadia Petersen", "meta": "Copy of ID received"},
+    {"time": "11:20", "actor": "Priya Govender", "action": "approved trade-in estimate for Zanele Nkosi", "meta": "Settlement Figure requested"},
+    {"time": "13:35", "actor": "Johan Botha", "action": "moved Musa Gumede to Negotiation", "meta": "Trade-in appraisal booked"}
+  ],
+  "stock_ageing": [
+    {"bucket": "0-30 days", "units": 9, "value": 2728200},
+    {"bucket": "31-60 days", "units": 8, "value": 2480100},
+    {"bucket": "61-90 days", "units": 5, "value": 1673500},
+    {"bucket": "90+ days", "units": 2, "value": 569800}
+  ],
+  "deal_funnel": [
+    {"stage": "Lead to Contact", "count": 21, "rate": 88},
+    {"stage": "Contact to Test Drive", "count": 12, "rate": 57},
+    {"stage": "Test Drive to F&I", "count": 7, "rate": 58},
+    {"stage": "F&I to Delivery", "count": 4, "rate": 57}
+  ],
+  "deal_jackets": [
+    {
+      "id": "DJ-2048",
+      "customer": "Nadia Petersen",
+      "id_number": "870612 0123 08 4",
+      "phone": "+27 82 555 0194",
+      "email": "nadia.petersen@example.co.za",
+      "address": "Fourways, Johannesburg",
+      "vehicle": "2023 Toyota Corolla Cross 1.8 XS",
+      "stock_number": "AF-1082",
+      "sales_executive": "Lerato Mokoena",
+      "finance_stage": "Bank Approved - Delivery Pack",
+      "status": "Approved",
+      "deal_value": 369900,
+      "gross_profit": 52900,
+      "next_action": "Confirm insurance and book handover slot",
+      "trade_in": {"vehicle": "2017 Toyota Yaris 1.3 XS", "registration": "JP 62 AB GP", "settlement": 62500, "allowance": 118000, "status": "Appraisal Approved"},
+      "documents": [
+        {"name": "Copy of ID", "received": true},
+        {"name": "Proof of Residence", "received": true},
+        {"name": "Bank Statements", "received": true},
+        {"name": "Payslip", "received": true},
+        {"name": "Insurance Confirmation", "received": false},
+        {"name": "Signed OTP", "received": true}
+      ],
+      "notes": [
+        {"time": "Today 10:05", "user": "Lerato Mokoena", "note": "Client accepted instalment estimate and requested Friday collection."},
+        {"time": "Yesterday 15:30", "user": "Ayesha Naidoo", "note": "Bank approval received subject to insurance confirmation."},
+        {"time": "Yesterday 11:10", "user": "Stock Controller", "note": "Roadworthy booked and spare key confirmed."}
+      ]
+    },
+    {
+      "id": "DJ-2049",
+      "customer": "Thabo Khumalo",
+      "id_number": "790421 5472 08 1",
+      "phone": "+27 73 555 0148",
+      "email": "thabo.khumalo@example.co.za",
+      "address": "Centurion, Gauteng",
+      "vehicle": "2021 Ford Ranger 2.0 Bi-Turbo Wildtrak",
+      "stock_number": "AF-1058",
+      "sales_executive": "Johan Botha",
+      "finance_stage": "Pending Bank Approval",
+      "status": "F&I Review",
+      "deal_value": 499900,
+      "gross_profit": 61900,
+      "next_action": "Upload Proof of Residence and settlement letter",
+      "trade_in": {"vehicle": "2016 Ford Ranger 3.2 XLT", "registration": "HZ 44 LR GP", "settlement": 142000, "allowance": 196000, "status": "Settlement Figure Requested"},
+      "documents": [
+        {"name": "Copy of ID", "received": true},
+        {"name": "Proof of Residence", "received": false},
+        {"name": "Bank Statements", "received": true},
+        {"name": "Payslip", "received": true},
+        {"name": "Insurance Confirmation", "received": false},
+        {"name": "Signed OTP", "received": true}
+      ],
+      "notes": [
+        {"time": "Today 08:42", "user": "Ayesha Naidoo", "note": "Submitted to WesBank and MFC. Awaiting bank response."},
+        {"time": "Yesterday 16:20", "user": "Johan Botha", "note": "Client requested canopy quote and trade-in settlement confirmation."}
+      ]
+    },
+    {
+      "id": "DJ-2050",
+      "customer": "Zanele Nkosi",
+      "id_number": "930114 0381 08 6",
+      "phone": "+27 71 555 0186",
+      "email": "zanele.nkosi@example.co.za",
+      "address": "Randburg, Johannesburg",
+      "vehicle": "2022 Suzuki Swift 1.2 GL",
+      "stock_number": "AF-1070",
+      "sales_executive": "Megan Jacobs",
+      "finance_stage": "Pre-approval",
+      "status": "Test Drive Booked",
+      "deal_value": 179900,
+      "gross_profit": 28900,
+      "next_action": "Complete test drive and confirm trade-in appraisal",
+      "trade_in": {"vehicle": "2015 Hyundai i20 1.4 Fluid", "registration": "KR 19 WK GP", "settlement": 0, "allowance": 78000, "status": "Awaiting Appraisal"},
+      "documents": [
+        {"name": "Copy of ID", "received": true},
+        {"name": "Proof of Residence", "received": false},
+        {"name": "Bank Statements", "received": false},
+        {"name": "Payslip", "received": true},
+        {"name": "Insurance Confirmation", "received": false},
+        {"name": "Signed OTP", "received": false}
+      ],
+      "notes": [
+        {"time": "Today 08:55", "user": "Megan Jacobs", "note": "Test drive confirmed. Client wants a low instalment and delivery before month-end."}
+      ]
+    }
+  ],
+  "finance_applications": [
+    {"customer": "Thabo Khumalo", "vehicle": "2021 Ford Ranger Wildtrak", "bank": "WesBank", "status": "Pending Bank Approval", "amount": 499900, "deposit": 50000, "term": 72, "rate": 12.25, "estimate": 9120, "settlement": 142000, "documents": ["Proof of Residence", "Insurance Confirmation"], "insurance": "Pending", "payout": "Trade-in settlement requested"},
+    {"customer": "Nadia Petersen", "vehicle": "2023 Toyota Corolla Cross XS", "bank": "MFC", "status": "Approved", "amount": 369900, "deposit": 35000, "term": 72, "rate": 11.75, "estimate": 6625, "settlement": 62500, "documents": ["Insurance Confirmation"], "insurance": "Awaiting broker confirmation", "payout": "Payout instruction ready"},
+    {"customer": "Willem Kruger", "vehicle": "2018 Nissan Navara LE", "bank": "Standard Bank Vehicle Finance", "status": "Docs Outstanding", "amount": 329900, "deposit": 20000, "term": 60, "rate": 13.1, "estimate": 7240, "settlement": 0, "documents": ["Copy of ID", "Proof of Residence"], "insurance": "Not started", "payout": "No trade-in"},
+    {"customer": "Jason Daniels", "vehicle": "2019 Mazda CX-5 Dynamic", "bank": "Absa Vehicle Finance", "status": "Approved", "amount": 299900, "deposit": 45000, "term": 60, "rate": 11.95, "estimate": 5660, "settlement": 0, "documents": [], "insurance": "Confirmed", "payout": "Ready for delivery pack"},
+    {"customer": "Brandon Moodley", "vehicle": "2020 Mercedes-Benz A200", "bank": "Nedbank MFC", "status": "Referred", "amount": 419900, "deposit": 60000, "term": 72, "rate": 12.8, "estimate": 7410, "settlement": 88000, "documents": ["Bank Statements"], "insurance": "Quote sent", "payout": "Awaiting settlement figure"}
+  ],
+  "trade_ins": [
+    {"customer": "Nadia Petersen", "vehicle": "2017 Toyota Yaris 1.3 XS", "registration": "JP 62 AB GP", "mileage": 118400, "service_history": "Full service history", "tyres": "Good", "body": "Minor bumper scuffs", "interior": "Clean", "estimate": 118000, "notes": "Retailable after valet and front bumper touch-up.", "status": "Appraisal Approved"},
+    {"customer": "Thabo Khumalo", "vehicle": "2016 Ford Ranger 3.2 XLT", "registration": "HZ 44 LR GP", "mileage": 166200, "service_history": "Partial history", "tyres": "Needs rear tyres", "body": "Stone chips and tailgate dent", "interior": "Average", "estimate": 196000, "notes": "Settlement Figure requested before final allowance.", "status": "Settlement Pending"},
+    {"customer": "Zanele Nkosi", "vehicle": "2015 Hyundai i20 1.4 Fluid", "registration": "KR 19 WK GP", "mileage": 142600, "service_history": "Service book stamped", "tyres": "Fair", "body": "Needs inspection", "interior": "Good", "estimate": 78000, "notes": "Used Vehicle Manager to inspect after test drive.", "status": "Awaiting Appraisal"},
+    {"customer": "Musa Gumede", "vehicle": "2018 Mahindra Pik Up 2.2", "registration": "LM 77 YB GP", "mileage": 132900, "service_history": "Dealer serviced", "tyres": "Good", "body": "Canopy fitted, minor scratches", "interior": "Workwear marks", "estimate": 154000, "notes": "Possible wholesale if recon exceeds R18 000.", "status": "Manager Review"},
+    {"customer": "Anele Mbatha", "vehicle": "2017 Hyundai Creta 1.6 Executive", "registration": "ND 55 PV GP", "mileage": 101300, "service_history": "Full service history", "tyres": "Excellent", "body": "Clean", "interior": "Clean", "estimate": 172000, "notes": "Strong retail candidate. Check Natis before allowance approval.", "status": "Natis Check"}
+  ],
+  "recon_board": [
+    {"stage": "Awaiting Inspection", "stock_number": "AF-1175", "vehicle": "2020 Nissan Qashqai 1.2T Acenta", "job_card": "JC-8821", "owner": "Stock Controller", "due": "Today 14:00", "blocker": "Aged floor stock"},
+    {"stage": "Awaiting Inspection", "stock_number": "AF-1133", "vehicle": "2018 Nissan Navara 2.3D LE", "job_card": "JC-8824", "owner": "Workshop", "due": "Tomorrow", "blocker": "Oil leak check"},
+    {"stage": "Parts Ordered", "stock_number": "AF-1104", "vehicle": "2021 Kia Seltos CRDi EX", "job_card": "JC-8812", "owner": "Parts", "due": "Wed 16:00", "blocker": "Rear brake pads"},
+    {"stage": "In Workshop", "stock_number": "AF-1058", "vehicle": "2021 Ford Ranger Wildtrak", "job_card": "JC-8817", "owner": "Workshop", "due": "Today 15:30", "blocker": "PDI and towbar check"},
+    {"stage": "Valet / Detail", "stock_number": "AF-1082", "vehicle": "2023 Toyota Corolla Cross XS", "job_card": "JC-8808", "owner": "Valet Bay", "due": "Today 12:00", "blocker": "Delivery pack priority"},
+    {"stage": "Roadworthy", "stock_number": "AF-1159", "vehicle": "2023 Chery Tiggo 4 Pro", "job_card": "JC-8796", "owner": "Roadworthy", "due": "Today 11:30", "blocker": "Certificate upload"},
+    {"stage": "Ready for Floor", "stock_number": "AF-1070", "vehicle": "2022 Suzuki Swift 1.2 GL", "job_card": "JC-8801", "owner": "Stock Controller", "due": "Complete", "blocker": "Photos required"},
+    {"stage": "Ready for Delivery", "stock_number": "AF-1120", "vehicle": "2023 VW Polo Vivo Trendline", "job_card": "JC-8788", "owner": "Delivery Coordinator", "due": "Today 08:00", "blocker": "Customer collection"}
+  ],
+  "delivery_planning": [
+    {"customer": "Sibusiso Radebe", "vehicle": "2023 Chery Tiggo 4 Pro", "payment": "Paid", "fi_complete": true, "roadworthy": true, "lic_reg": true, "delivery": "Tue 13:45", "status": "Ready for Handover"},
+    {"customer": "Dewald Pretorius", "vehicle": "2023 VW Polo Vivo Trendline", "payment": "Paid", "fi_complete": true, "roadworthy": true, "lic_reg": true, "delivery": "Wed 08:00", "status": "Ready for Handover"},
+    {"customer": "Nadia Petersen", "vehicle": "2023 Toyota Corolla Cross XS", "payment": "Bank Approved", "fi_complete": false, "roadworthy": true, "lic_reg": false, "delivery": "Fri 11:30", "status": "Awaiting Insurance"},
+    {"customer": "Jason Daniels", "vehicle": "2019 Mazda CX-5 Dynamic", "payment": "Finance Cleared", "fi_complete": true, "roadworthy": false, "lic_reg": false, "delivery": "Fri 14:15", "status": "Roadworthy Pending"},
+    {"customer": "Leigh-Anne Williams", "vehicle": "2020 Audi A3 Sedan", "payment": "Paid", "fi_complete": true, "roadworthy": true, "lic_reg": false, "delivery": "Thu 16:00", "status": "Lic & Reg Pending"}
+  ],
+  "integrations": [
+    {"name": "WhatsApp Business Platform", "initial": "WA", "use_case": "Send lead replies, delivery reminders, and document requests.", "status": "Available"},
+    {"name": "Google Calendar", "initial": "GC", "use_case": "Sync test drives, handovers, and F&I callbacks.", "status": "Available"},
+    {"name": "Google Maps Platform", "initial": "GM", "use_case": "Route customers to the branch and value location-based leads.", "status": "Planned"},
+    {"name": "DocuSign", "initial": "DS", "use_case": "Sign OTPs, Delivery Packs, and Deal Jacket documents.", "status": "Optional Add-on"},
+    {"name": "Sage Accounting", "initial": "SA", "use_case": "Push invoices, gross profit journals, and payout summaries.", "status": "Enterprise"},
+    {"name": "QuickBooks", "initial": "QB", "use_case": "Send sales summaries and supplier recon costs.", "status": "Optional Add-on"},
+    {"name": "Xero", "initial": "XR", "use_case": "Export invoices, expenses, and management reports.", "status": "Optional Add-on"},
+    {"name": "Twilio", "initial": "TW", "use_case": "Power SMS alerts and call tracking for Sales Executives.", "status": "Planned"}
+  ]
+}

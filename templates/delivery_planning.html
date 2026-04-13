@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-heading">
+    <div>
+      <p class="eyebrow">Delivery Planning</p>
+      <h2>Sold units progressing toward handover</h2>
+    </div>
+    <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">{{ kpis.delivery_ready }} ready now</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="data-table">
+      <thead>
+        <tr><th>Customer</th><th>Vehicle</th><th>Payment</th><th>F&I Complete</th><th>Roadworthy</th><th>Lic & Reg</th><th>Delivery Booked</th><th>Handover Status</th></tr>
+      </thead>
+      <tbody>
+        {% for item in delivery_planning %}
+        <tr>
+          <td class="font-bold">{{ item.customer }}</td>
+          <td>{{ item.vehicle }}</td>
+          <td>{{ item.payment }}</td>
+          <td><span class="badge {% if item.fi_complete %}doc-good{% else %}doc-missing{% endif %}">{{ "Yes" if item.fi_complete else "Pending" }}</span></td>
+          <td><span class="badge {% if item.roadworthy %}doc-good{% else %}doc-missing{% endif %}">{{ "Complete" if item.roadworthy else "Pending" }}</span></td>
+          <td><span class="badge {% if item.lic_reg %}doc-good{% else %}doc-missing{% endif %}">{{ "Complete" if item.lic_reg else "Pending" }}</span></td>
+          <td>{{ item.delivery }}</td>
+          <td><span class="status-pill">{{ item.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

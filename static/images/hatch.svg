@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Premium hatchback illustration">
+  <rect width="760" height="360" rx="28" fill="#eef2f7"/>
+  <path d="M112 222h514c25 0 46 21 46 46v13H76v-16c0-24 12-43 36-43Z" fill="#172033"/>
+  <path d="M160 158c32-54 78-81 137-81h124c46 0 85 21 116 64l55 77H104l56-60Z" fill="#2563eb"/>
+  <path d="M229 119c19-16 42-24 70-24h54v88H158l71-64Z" fill="#dbeafe"/>
+  <path d="M378 95h37c34 0 63 15 87 45l34 43H378V95Z" fill="#bfdbfe"/>
+  <path d="M104 215h532c35 0 63 28 63 63H68c0-35 17-63 36-63Z" fill="#263547"/>
+  <circle cx="221" cy="276" r="47" fill="#111827"/>
+  <circle cx="221" cy="276" r="24" fill="#cbd5e1"/>
+  <circle cx="552" cy="276" r="47" fill="#111827"/>
+  <circle cx="552" cy="276" r="24" fill="#cbd5e1"/>
+  <path d="M95 236h70" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+  <path d="M615 235h49" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+</svg>

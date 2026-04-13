@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+  <section class="panel">
+    <p class="eyebrow">Dealer Setup</p>
+    <h2 class="mt-2 text-2xl font-black">Dealership profile</h2>
+    <div class="mt-6 space-y-4">
+      <label class="settings-field">
+        <span>Dealership name</span>
+        <input value="Arcta Motors Johannesburg North" readonly>
+      </label>
+      <label class="settings-field">
+        <span>Default currency</span>
+        <input value="South African Rand (R)" readonly>
+      </label>
+      <label class="settings-field">
+        <span>Monthly retail target</span>
+        <input value="24 vehicles" readonly>
+      </label>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Demo controls</p>
+        <h2>Enabled modules</h2>
+      </div>
+    </div>
+    <div class="grid gap-3 md:grid-cols-2">
+      {% for item in ["Floor Stock management", "Lead pipeline", "Deal Jackets", "F&I Desk", "Recon Board", "Delivery Planning", "Trade-in appraisals", "Gross Profit visibility"] %}
+      <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+        <span class="font-bold">{{ item }}</span>
+        <span class="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">Active</span>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="mt-6 rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-600">These settings are intentionally read-only in the client demo. A production version would connect them to dealership branches, user roles, targets, notification preferences, and integration credentials.</p>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Premium SUV illustration">
+  <rect width="760" height="360" rx="28" fill="#e8eef6"/>
+  <path d="M116 222h528c22 0 40 18 40 40v18H76v-18c0-22 18-40 40-40Z" fill="#182231"/>
+  <path d="M178 138c18-42 55-66 106-66h142c42 0 78 19 108 58l67 88H128l50-80Z" fill="#0f4c81"/>
+  <path d="M218 128c15-22 39-34 72-34h58v96H166l52-62Z" fill="#dbeafe"/>
+  <path d="M374 94h45c33 0 62 16 86 48l35 48H374V94Z" fill="#bfdbfe"/>
+  <path d="M118 214h536c28 0 50 22 50 50v12H68v-12c0-28 22-50 50-50Z" fill="#243244"/>
+  <path d="M563 215h84c20 0 38 14 43 34l3 13h-89c-10-21-24-37-41-47Z" fill="#1e293b"/>
+  <circle cx="212" cy="276" r="48" fill="#111827"/>
+  <circle cx="212" cy="276" r="24" fill="#94a3b8"/>
+  <circle cx="568" cy="276" r="48" fill="#111827"/>
+  <circle cx="568" cy="276" r="24" fill="#94a3b8"/>
+  <path d="M91 240h76" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+  <path d="M624 239h51" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+</svg>

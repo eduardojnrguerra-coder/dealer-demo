@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Customer Desk</p>
+        <h2>Active customers and opportunities</h2>
+      </div>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">{{ active_leads|length }} active leads</span>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {% for jacket in deal_jackets %}
+      <a class="workflow-card block" href="{{ url_for('deal_jackets', jacket_id=jacket.id) }}">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="font-black text-slate-950">{{ jacket.customer }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ jacket.vehicle }}</p>
+          </div>
+          <span class="status-pill">{{ jacket.status }}</span>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <div><span class="text-slate-500">Sales Executive</span><strong class="block">{{ jacket.sales_executive }}</strong></div>
+          <div><span class="text-slate-500">Deal Value</span><strong class="block">{{ jacket.deal_value|currency }}</strong></div>
+          <div><span class="text-slate-500">Stock No.</span><strong class="block">{{ jacket.stock_number }}</strong></div>
+          <div><span class="text-slate-500">F&I Stage</span><strong class="block">{{ jacket.finance_stage }}</strong></div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Pipeline Customers</p>
+        <h2>Recent customer activity</h2>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="data-table">
+        <thead>
+          <tr><th>Customer</th><th>Vehicle</th><th>Sales Executive</th><th>Source</th><th>Last Contact</th><th>Stage</th><th class="text-right">Value</th></tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr>
+            <td class="font-bold">{{ lead.customer }}</td>
+            <td>{{ lead.vehicle }}</td>
+            <td>{{ lead.salesperson }}</td>
+            <td>{{ lead.source }}</td>
+            <td>{{ lead.last_contact }}</td>
+            <td><span class="status-pill">{{ lead.stage }}</span></td>
+            <td class="text-right font-black">{{ lead.value|currency }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

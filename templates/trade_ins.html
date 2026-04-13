@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-heading">
+    <div>
+      <p class="eyebrow">Used Vehicle Manager</p>
+      <h2>Trade-in appraisals</h2>
+    </div>
+    <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">{{ trade_ins|length }} appraisals</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="data-table">
+      <thead>
+        <tr><th>Customer</th><th>Trade-in</th><th>Reg No.</th><th>Mileage</th><th>Service History</th><th>Tyres</th><th>Condition</th><th>Status</th><th class="text-right">Estimate</th></tr>
+      </thead>
+      <tbody>
+        {% for item in trade_ins %}
+        <tr>
+          <td class="font-bold">{{ item.customer }}</td>
+          <td>{{ item.vehicle }}</td>
+          <td>{{ item.registration }}</td>
+          <td>{{ item.mileage|number }} km</td>
+          <td>{{ item.service_history }}</td>
+          <td>{{ item.tyres }}</td>
+          <td>{{ item.body }} · {{ item.interior }}</td>
+          <td><span class="status-pill">{{ item.status }}</span></td>
+          <td class="text-right font-black">{{ item.estimate|currency }}</td>
+        </tr>
+        <tr>
+          <td colspan="9" class="bg-slate-50 text-sm text-slate-600"><strong>Appraisal notes:</strong> {{ item.notes }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
