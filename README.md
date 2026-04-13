@@ -11,6 +11,7 @@ The app uses mock demo data only. There is no database or real authentication in
 - Vehicle stock command view with 24 realistic vehicles, filters, badges, margins, aged stock flags, and a detail modal
 - Kanban-style Deal Flow with 24 active and closed leads
 - Buyer desk and Deal File profile view
+- Restricted Sales Executive view for assigned buyers, follow-ups, test drives, and Deal Flow only
 - Dedicated F&I desk for bank status, instalment estimates, settlement figures, required documents, insurance, and payout notes
 - Trade-in appraisal page for service history, tyre/body/interior condition, and valuation status
 - Recon / workshop prep board with Job Cards and Roadworthy flow
@@ -72,6 +73,7 @@ dealer_demo/
     recon_board.html
     reports.html
     sales_team.html
+    sales_executive_view.html
     settings.html
     stock.html
     trade_ins.html

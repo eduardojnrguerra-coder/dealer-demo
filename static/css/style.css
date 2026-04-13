@@ -373,7 +373,7 @@ body {
   border-color: rgb(167 243 208);
 }
 
-.view-toggle button {
+.view-toggle a {
   border-radius: 8px;
   color: rgb(71 85 105);
   font-size: 0.78rem;
@@ -381,7 +381,7 @@ body {
   padding: 0.45rem 0.65rem;
 }
 
-.view-toggle button.active {
+.view-toggle a.active {
   background: #0f4c81;
   color: white;
 }

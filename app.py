@@ -1,6 +1,7 @@
 import json
 import os
 from collections import Counter, defaultdict
+from copy import deepcopy
 from datetime import date
 from pathlib import Path
 
@@ -16,13 +17,72 @@ DEFAULT_BRANDING = {
     "system_tagline": "Powered by PineX Systems",
     "logo": "images/pinex-logo.svg",
 }
+DEFAULT_SALES_EXECUTIVE = "Lerato Mokoena"
+DEFAULT_SALESPERSON = {
+    "name": DEFAULT_SALES_EXECUTIVE,
+    "role": "Sales Executive",
+    "leads_assigned": 0,
+    "calls_made": 0,
+    "test_drives_booked": 0,
+    "deals_closed": 0,
+    "conversion_rate": 0,
+    "gross_profit": 0,
+}
+DEFAULT_DATA = {
+    "charts": {"monthly_labels": [], "monthly_sales": []},
+    "vehicles": [],
+    "salespeople": [DEFAULT_SALESPERSON],
+    "leads": [],
+    "recent_deals": [],
+    "followups": [],
+    "bookings": [],
+    "tasks": [],
+    "overdue": [],
+    "role_snapshot": [],
+    "today_glance": [],
+    "operational_flags": [],
+    "recent_activity": [],
+    "stock_ageing": [],
+    "deal_funnel": [],
+    "deal_jackets": [],
+    "finance_applications": [],
+    "trade_ins": [],
+    "recon_board": [],
+    "delivery_planning": [],
+    "integrations": [],
+}
 
 app = Flask(__name__)
 
 
 def load_data():
-    with DATA_FILE.open("r", encoding="utf-8") as file:
-        return json.load(file)
+    data = deepcopy(DEFAULT_DATA)
+    try:
+        with DATA_FILE.open("r", encoding="utf-8") as file:
+            loaded = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return data
+
+    if not isinstance(loaded, dict):
+        return data
+
+    for key, default_value in DEFAULT_DATA.items():
+        value = loaded.get(key, default_value)
+        if isinstance(default_value, list):
+            data[key] = value if isinstance(value, list) else default_value
+        elif isinstance(default_value, dict):
+            data[key] = value if isinstance(value, dict) else default_value
+        else:
+            data[key] = value
+
+    if not data["salespeople"]:
+        data["salespeople"] = [DEFAULT_SALESPERSON.copy()]
+    charts = data.get("charts", {})
+    data["charts"] = {
+        "monthly_labels": charts.get("monthly_labels", []) if isinstance(charts, dict) else [],
+        "monthly_sales": charts.get("monthly_sales", []) if isinstance(charts, dict) else [],
+    }
+    return data
 
 
 def load_branding():
@@ -42,11 +102,19 @@ def load_branding():
 
 
 def currency(value):
-    return f"R{int(value):,}".replace(",", " ")
+    try:
+        amount = int(value or 0)
+    except (TypeError, ValueError):
+        amount = 0
+    return f"R{amount:,}".replace(",", " ")
 
 
 def number(value):
-    return f"{int(value):,}".replace(",", " ")
+    try:
+        amount = int(value or 0)
+    except (TypeError, ValueError):
+        amount = 0
+    return f"{amount:,}".replace(",", " ")
 
 
 app.jinja_env.filters["currency"] = currency
@@ -63,11 +131,11 @@ def lead_needs_followup(lead):
 
 def dealership_data():
     data = load_data()
-    vehicles = data["vehicles"]
-    leads = data["leads"]
-    salespeople = data["salespeople"]
-    bookings = data["bookings"]
-    deals = data["recent_deals"]
+    vehicles = data.get("vehicles", [])
+    leads = data.get("leads", [])
+    salespeople = data.get("salespeople", []) or [DEFAULT_SALESPERSON.copy()]
+    bookings = data.get("bookings", [])
+    deals = data.get("recent_deals", [])
     deal_jackets = data.get("deal_jackets", [])
     finance_applications = data.get("finance_applications", [])
     trade_ins = data.get("trade_ins", [])
@@ -75,10 +143,10 @@ def dealership_data():
     delivery_planning = data.get("delivery_planning", [])
 
     active_deal_statuses = {"Negotiation", "Finance Review", "Approved", "Test Drive Booked"}
-    sold_this_month = [v for v in vehicles if v["status"] == "Sold"]
-    active_leads = [lead for lead in leads if lead["stage"] not in {"Sold", "Lost"}]
-    pending_finance = [lead for lead in leads if lead["stage"] == "Finance Review"]
-    followups_today = data["followups"]
+    sold_this_month = [v for v in vehicles if v.get("status") == "Sold"]
+    active_leads = [lead for lead in leads if lead.get("stage") not in {"Sold", "Lost"}]
+    pending_finance = [lead for lead in leads if lead.get("stage") == "Finance Review"]
+    followups_today = data.get("followups", [])
     docs_outstanding = sum(
         len([doc for doc in jacket.get("documents", []) if not doc.get("received")])
         for jacket in deal_jackets
@@ -88,18 +156,21 @@ def dealership_data():
     stuck_deals = [
         lead for lead in leads if lead.get("stage") in {"Finance Review", "Negotiation"}
     ]
-    aged_vehicles = [vehicle for vehicle in vehicles if vehicle["days_in_stock"] > 60]
+    aged_vehicles = [vehicle for vehicle in vehicles if vehicle.get("days_in_stock", 0) > 60]
     deals_closed_today = [
         lead for lead in leads if lead.get("stage") == "Sold" and "today" in lead.get("last_contact", "").lower()
     ]
 
-    monthly_profit = sum(vehicle["selling_price"] - vehicle["cost_price"] for vehicle in sold_this_month)
+    monthly_profit = sum(
+        vehicle.get("selling_price", 0) - vehicle.get("cost_price", 0)
+        for vehicle in sold_this_month
+    )
     average_deal_value = (
-        sum(lead["value"] for lead in active_leads) / len(active_leads) if active_leads else 0
+        sum(lead.get("value", 0) for lead in active_leads) / len(active_leads) if active_leads else 0
     )
     gross_profit_rate = (
-        monthly_profit / sum(vehicle["selling_price"] for vehicle in sold_this_month)
-        if sold_this_month
+        monthly_profit / sum(vehicle.get("selling_price", 0) for vehicle in sold_this_month)
+        if sold_this_month and sum(vehicle.get("selling_price", 0) for vehicle in sold_this_month)
         else 0.14
     )
     gross_profit_today = (
@@ -109,15 +180,15 @@ def dealership_data():
     )
     estimated_lost_profit = int(len(unfollowed_leads) * average_deal_value * gross_profit_rate)
     kpis = {
-        "stock_count": len([v for v in vehicles if v["status"] in {"In Stock", "Reserved"}]),
+        "stock_count": len([v for v in vehicles if v.get("status") in {"In Stock", "Reserved"}]),
         "sold_month": len(sold_this_month),
         "gross_profit": monthly_profit,
-        "active_deals": len([lead for lead in leads if lead["stage"] in active_deal_statuses]),
+        "active_deals": len([lead for lead in leads if lead.get("stage") in active_deal_statuses]),
         "pending_finance": len(pending_finance),
         "followups_due": len(followups_today),
         "recon_units": len(recon_board),
-        "trade_in_appraisals": len([item for item in trade_ins if item["status"] != "Appraisal Approved"]),
-        "delivery_ready": len([item for item in delivery_planning if item["status"] == "Ready for Handover"]),
+        "trade_in_appraisals": len([item for item in trade_ins if item.get("status") != "Appraisal Approved"]),
+        "delivery_ready": len([item for item in delivery_planning if item.get("status") == "Ready for Handover"]),
         "docs_outstanding": docs_outstanding,
     }
     today_performance = {
@@ -139,19 +210,21 @@ def dealership_data():
     }
     notifications = []
     if unfollowed_leads:
+        lead = unfollowed_leads[0]
         notifications.append(
             {
                 "type": "urgent",
                 "title": "Lead not contacted",
-                "detail": f"{unfollowed_leads[0]['customer']} needs a Sales Executive call now.",
+                "detail": f"{lead.get('customer', 'A buyer')} needs a Sales Executive call now.",
             }
         )
     if stuck_finance:
+        finance = stuck_finance[0]
         notifications.append(
             {
                 "type": "warning",
                 "title": "Deal awaiting finance",
-                "detail": f"{stuck_finance[0]['customer']} is still at {stuck_finance[0]['status']}.",
+                "detail": f"{finance.get('customer', 'A buyer')} is still at {finance.get('status', 'F&I review')}.",
             }
         )
     ready_delivery = next(
@@ -163,7 +236,7 @@ def dealership_data():
             {
                 "type": "success",
                 "title": "Vehicle ready for delivery",
-                "detail": f"{ready_delivery['vehicle']} is ready for handover.",
+                "detail": f"{ready_delivery.get('vehicle', 'A vehicle')} is ready for handover.",
             }
         )
 
@@ -171,7 +244,7 @@ def dealership_data():
     for vehicle in vehicles:
         search_records.append(
             {
-                "label": f"{vehicle['stock_number']} - {vehicle['year']} {vehicle['make']} {vehicle['model']}",
+                "label": f"{vehicle.get('stock_number', 'Stock')} - {vehicle.get('year', '')} {vehicle.get('make', '')} {vehicle.get('model', '')}".strip(),
                 "type": "Stock",
                 "url": "/stock",
             }
@@ -179,7 +252,7 @@ def dealership_data():
     for lead in leads:
         search_records.append(
             {
-                "label": f"{lead['customer']} - {lead['vehicle']}",
+                "label": f"{lead.get('customer', 'Buyer')} - {lead.get('vehicle', 'Vehicle')}",
                 "type": "Lead",
                 "url": "/pipeline",
             }
@@ -187,9 +260,9 @@ def dealership_data():
     for jacket in deal_jackets:
         search_records.append(
             {
-                "label": f"{jacket['id']} - {jacket['customer']} - {jacket['stock_number']}",
+                "label": f"{jacket.get('id', 'Deal File')} - {jacket.get('customer', 'Buyer')} - {jacket.get('stock_number', 'Stock')}",
                 "type": "Deal File",
-                "url": f"/deal-jackets/{jacket['id']}",
+                "url": f"/deal-jackets/{jacket.get('id', '')}",
             }
         )
 
@@ -217,6 +290,106 @@ def dealership_data():
     }
 
 
+def sales_executive_context(name=DEFAULT_SALES_EXECUTIVE):
+    context = dealership_data()
+    salespeople = context.get("salespeople", []) or [DEFAULT_SALESPERSON.copy()]
+    person = next(
+        (salesperson for salesperson in salespeople if salesperson.get("name") == name),
+        salespeople[0],
+    )
+    person_name = person.get("name", DEFAULT_SALES_EXECUTIVE)
+    assigned_leads = [lead for lead in context.get("leads", []) if lead.get("salesperson") == person_name]
+    active_leads = [lead for lead in assigned_leads if lead.get("stage") not in {"Sold", "Lost"}]
+    followups = [item for item in context.get("followups", []) if item.get("salesperson") == person_name]
+    bookings = [booking for booking in context.get("bookings", []) if booking.get("owner") == person_name]
+    deal_files = [
+        jacket for jacket in context.get("deal_jackets", []) if jacket.get("sales_executive") == person_name
+    ]
+    awaiting_fi = [
+        lead for lead in assigned_leads if lead.get("stage") in {"Finance Review", "Approved"}
+    ]
+    columns = [
+        "New Lead",
+        "Contacted",
+        "Interested",
+        "Test Drive Booked",
+        "Negotiation",
+        "Finance Review",
+        "Approved",
+        "Sold",
+        "Lost",
+    ]
+    grouped = {column: [] for column in columns}
+    for lead in assigned_leads:
+        grouped.setdefault(lead.get("stage", "New Lead"), []).append(lead)
+
+    my_notifications = []
+    stale_leads = [lead for lead in assigned_leads if lead_needs_followup(lead)]
+    if stale_leads:
+        lead = stale_leads[0]
+        my_notifications.append(
+            {
+                "type": "urgent",
+                "title": "Buyer follow-up overdue",
+                "detail": f"{lead.get('customer', 'A buyer')} has not been contacted since {lead.get('last_contact', 'the last activity')}.",
+            }
+        )
+    if awaiting_fi:
+        lead = awaiting_fi[0]
+        my_notifications.append(
+            {
+                "type": "warning",
+                "title": "Deal awaiting F&I",
+                "detail": f"{lead.get('customer', 'A buyer')} is sitting at {lead.get('stage', 'F&I')}.",
+            }
+        )
+    next_booking = bookings[0] if bookings else None
+    if next_booking:
+        my_notifications.append(
+            {
+                "type": "success",
+                "title": "Customer notified",
+                "detail": f"{next_booking.get('customer', 'A buyer')} has a {next_booking.get('type', 'booking')} on {next_booking.get('day', 'the diary')} at {next_booking.get('time', 'the booked time')}.",
+            }
+        )
+
+    restricted_search = []
+    for lead in assigned_leads:
+        restricted_search.append(
+            {
+                "label": f"{lead.get('customer', 'Buyer')} - {lead.get('vehicle', 'Vehicle')}",
+                "type": "My Buyer",
+                "url": "/sales-executive-view",
+            }
+        )
+    for jacket in deal_files:
+        restricted_search.append(
+            {
+                "label": f"{jacket.get('id', 'Deal File')} - {jacket.get('customer', 'Buyer')} - {jacket.get('stock_number', 'Stock')}",
+                "type": "My Deal File",
+                "url": "/sales-executive-view",
+            }
+        )
+
+    context.update(
+        {
+            "sales_exec": person,
+            "my_leads": assigned_leads,
+            "my_active_leads": active_leads,
+            "my_followups": followups,
+            "my_bookings": bookings,
+            "my_deal_files": deal_files,
+            "my_awaiting_fi": awaiting_fi,
+            "my_pipeline_columns": columns,
+            "my_grouped_leads": grouped,
+            "my_notifications": my_notifications,
+            "notifications": my_notifications,
+            "search_records": restricted_search,
+        }
+    )
+    return context
+
+
 @app.context_processor
 def inject_globals():
     branding = load_branding()
@@ -236,14 +409,37 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     context = dealership_data()
-    return render_template("dashboard.html", page_title="Dealer Control Room", active_page="Dashboard", **context)
+    return render_template(
+        "dashboard.html",
+        page_title="Dealer Control Room",
+        active_page="Dashboard",
+        active_view="principal",
+        role_badge="Dealer Principal View",
+        user_initials="MV",
+        **context,
+    )
+
+
+@app.route("/sales-executive-view")
+@app.route("/salesman-view")
+def sales_executive_view():
+    context = sales_executive_context()
+    return render_template(
+        "sales_executive_view.html",
+        page_title="Sales Executive View",
+        active_page="Dashboard",
+        active_view="salesman",
+        role_badge="Sales Executive View",
+        user_initials="LM",
+        **context,
+    )
 
 
 @app.route("/stock")
 def stock():
     context = dealership_data()
     vehicles = context["vehicles"]
-    stock_summary = Counter(vehicle["status"] for vehicle in vehicles)
+    stock_summary = Counter(vehicle.get("status", "Unknown") for vehicle in vehicles)
     return render_template(
         "stock.html",
         page_title="Vehicle Stock",
@@ -269,7 +465,7 @@ def pipeline():
     ]
     grouped = {column: [] for column in columns}
     for lead in context["leads"]:
-        grouped.setdefault(lead["stage"], []).append(lead)
+        grouped.setdefault(lead.get("stage", "New Lead"), []).append(lead)
     return render_template(
         "pipeline.html",
         page_title="Deal Flow",
@@ -291,7 +487,10 @@ def customers():
 def deal_jackets(jacket_id=None):
     context = dealership_data()
     jackets = context["deal_jackets"]
-    selected = next((jacket for jacket in jackets if jacket["id"] == jacket_id), jackets[0] if jackets else None)
+    selected = next(
+        (jacket for jacket in jackets if jacket.get("id") == jacket_id),
+        jackets[0] if jackets else None,
+    )
     return render_template(
         "deal_jackets.html",
         page_title="Deal Files",
@@ -318,7 +517,7 @@ def calendar():
     context = dealership_data()
     bookings_by_day = defaultdict(list)
     for booking in context["bookings"]:
-        bookings_by_day[booking["day"]].append(booking)
+        bookings_by_day[booking.get("day", "Unscheduled")].append(booking)
     return render_template(
         "calendar.html",
         page_title="Calendar",
@@ -342,7 +541,7 @@ def recon_board():
     ]
     grouped = {stage: [] for stage in stages}
     for item in context["recon_board"]:
-        grouped.setdefault(item["stage"], []).append(item)
+        grouped.setdefault(item.get("stage", "Awaiting Inspection"), []).append(item)
     return render_template(
         "recon_board.html",
         page_title="Workshop Queue",
@@ -367,7 +566,11 @@ def delivery_planning():
 @app.route("/sales-team")
 def sales_team():
     context = dealership_data()
-    ranked = sorted(context["salespeople"], key=lambda item: item["gross_profit"], reverse=True)
+    ranked = sorted(
+        context["salespeople"] or [DEFAULT_SALESPERSON.copy()],
+        key=lambda item: item.get("gross_profit", 0),
+        reverse=True,
+    )
     return render_template(
         "sales_team.html",
         page_title="Sales Team",
@@ -403,17 +606,19 @@ def settings():
 @app.route("/api/dashboard")
 def dashboard_api():
     context = dealership_data()
-    charts = context["data"]["charts"]
+    charts = context["data"].get("charts", {})
     salesperson_sales = {
-        person["name"]: person["deals_closed"] for person in context["salespeople"]
+        person.get("name", "Sales Executive"): person.get("deals_closed", 0)
+        for person in context["salespeople"]
     }
     gross_profit = {
-        person["name"]: person["gross_profit"] for person in context["salespeople"]
+        person.get("name", "Sales Executive"): person.get("gross_profit", 0)
+        for person in context["salespeople"]
     }
     return jsonify(
         {
-            "monthlySales": charts["monthly_sales"],
-            "monthlyLabels": charts["monthly_labels"],
+            "monthlySales": charts.get("monthly_sales", []),
+            "monthlyLabels": charts.get("monthly_labels", []),
             "salespersonSales": salesperson_sales,
             "grossProfit": gross_profit,
             "stockAgeing": context["data"].get("stock_ageing", []),

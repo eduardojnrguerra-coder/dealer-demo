@@ -80,11 +80,3 @@ document.querySelectorAll('[data-counter]').forEach((element) => {
 
   requestAnimationFrame(tick);
 });
-
-document.querySelectorAll('[data-view-mode]').forEach((button) => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('[data-view-mode]').forEach((item) => item.classList.remove('active'));
-    button.classList.add('active');
-    document.body.dataset.viewMode = button.dataset.viewMode;
-  });
-});

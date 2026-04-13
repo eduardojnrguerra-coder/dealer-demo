@@ -8,7 +8,7 @@
         <p class="eyebrow text-blue-200">Dealer Control Room</p>
         <h2 class="text-white">TODAY'S PERFORMANCE</h2>
       </div>
-      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Money, problems, missed opportunities</span>
+      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Cash, risk, and sales action</span>
     </div>
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <article class="performance-card success">
@@ -19,7 +19,7 @@
       <article class="performance-card success">
         <span>Gross Profit Today</span>
         <strong data-counter="{{ today_performance.gross_profit }}" data-prefix="R">{{ today_performance.gross_profit|currency }}</strong>
-        <small>Estimated front-end GP</small>
+        <small>Estimated front-end Gross Profit</small>
       </article>
       <article class="performance-card danger">
         <span>Deals Stuck (F&I / Docs)</span>
@@ -47,12 +47,12 @@
         <div class="rounded-lg bg-red-50 p-4">
           <span class="text-xs font-black uppercase tracking-wide text-red-700">Estimated lost profit</span>
           <strong class="mt-2 block text-3xl font-black text-red-800" data-counter="{{ missed_opportunities.estimated_lost_profit }}" data-prefix="R">{{ missed_opportunities.estimated_lost_profit|currency }}</strong>
-          <p class="mt-2 text-sm font-semibold text-red-700">Based on average deal value and current GP rate.</p>
+          <p class="mt-2 text-sm font-semibold text-red-700">Based on average deal value and current Gross Profit rate.</p>
         </div>
         <div class="rounded-lg bg-slate-50 p-4">
           <span class="text-xs font-black uppercase tracking-wide text-slate-500">Average deal value</span>
           <strong class="mt-2 block text-3xl font-black text-slate-950">{{ missed_opportunities.average_deal_value|currency }}</strong>
-          <p class="mt-2 text-sm font-semibold text-slate-600">Used to value stale lead risk.</p>
+          <p class="mt-2 text-sm font-semibold text-slate-600">Used to price missed buyer follow-ups.</p>
         </div>
       </div>
       <div class="mt-4 space-y-3">
@@ -84,7 +84,7 @@
         <article class="alert-indicator">
           <span class="red-badge">{{ alert_counts.deals_stuck }}</span>
           <strong>Deals stuck in Deal Flow</strong>
-          <small>F&I, negotiation, or missing docs</small>
+          <small>F&I, negotiation, or missing documents</small>
         </article>
         <article class="alert-indicator">
           <span class="red-badge">{{ alert_counts.aged_vehicles }}</span>
@@ -139,7 +139,7 @@
         <p class="eyebrow">Operational Snapshot</p>
         <h2>Today's dealership rhythm</h2>
       </div>
-      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Dealer Principal view</span>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Dealer Principal View</span>
     </div>
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
       {% for item in data.today_glance %}
@@ -276,7 +276,7 @@
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Buyer Follow-ups</p>
-          <h2>Today's calls that protect GP</h2>
+          <h2>Today's calls that protect Gross Profit</h2>
         </div>
         <a class="text-sm font-bold text-ocean" href="{{ url_for('pipeline') }}">Open Deal Flow</a>
       </div>

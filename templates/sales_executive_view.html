@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel bg-slate-950 text-white">
+    <div class="flex flex-col justify-between gap-5 lg:flex-row lg:items-start">
+      <div>
+        <p class="eyebrow text-blue-200">Sales Executive workspace</p>
+        <h2 class="mt-2 text-3xl font-black text-white">{{ sales_exec.name }}</h2>
+        <p class="mt-2 max-w-2xl text-slate-300">Your view is limited to your assigned buyers, deals, and follow-ups. Owner-level Gross Profit, staff performance, stock alerts, and management reports are hidden.</p>
+      </div>
+      <span class="rounded-lg bg-white/10 px-4 py-2 text-sm font-black text-blue-100">{{ sales_exec.role }}</span>
+    </div>
+  </section>
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+    <article class="metric-card">
+      <span>My Active Leads</span>
+      <strong data-counter="{{ my_active_leads|length }}">{{ my_active_leads|length }}</strong>
+      <small>Assigned buyers still in Deal Flow</small>
+    </article>
+    <article class="metric-card">
+      <span>Follow-ups Due Today</span>
+      <strong data-counter="{{ my_followups|length }}">{{ my_followups|length }}</strong>
+      <small>Calls that protect the deal</small>
+    </article>
+    <article class="metric-card">
+      <span>Test Drives Booked</span>
+      <strong data-counter="{{ sales_exec.test_drives_booked }}">{{ sales_exec.test_drives_booked }}</strong>
+      <small>This month</small>
+    </article>
+    <article class="metric-card">
+      <span>Deals Awaiting F&I</span>
+      <strong data-counter="{{ my_awaiting_fi|length }}">{{ my_awaiting_fi|length }}</strong>
+      <small>Approved or waiting for finance</small>
+    </article>
+    <article class="metric-card">
+      <span>Units Sold This Month</span>
+      <strong data-counter="{{ sales_exec.deals_closed }}">{{ sales_exec.deals_closed }}</strong>
+      <small>Personal retail result</small>
+    </article>
+    <article class="metric-card">
+      <span>My Conversion Rate</span>
+      <strong data-counter="{{ sales_exec.conversion_rate }}" data-suffix="%">{{ sales_exec.conversion_rate }}%</strong>
+      <small>Lead to closed deal</small>
+    </article>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[0.75fr_1.25fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">My Notifications</p>
+          <h2>Actions due now</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for item in my_notifications %}
+        <div class="notification-item {{ item.type }}">
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.detail }}</span>
+        </div>
+        {% endfor %}
+        {% if not my_notifications %}
+        <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-800">No urgent assigned items right now.</div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">My Buyers</p>
+          <h2>Assigned buyer list</h2>
+        </div>
+        <span class="automation-label success">Auto-follow-up sent</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead>
+            <tr><th>Buyer</th><th>Vehicle</th><th>Source</th><th>Last Contact</th><th>Status</th><th class="text-right">Deal Value</th></tr>
+          </thead>
+          <tbody>
+            {% for lead in my_leads %}
+            <tr>
+              <td class="font-bold">{{ lead.customer }}</td>
+              <td>{{ lead.vehicle }}</td>
+              <td>{{ lead.source }}</td>
+              <td>{{ lead.last_contact }}</td>
+              <td><span class="status-pill">{{ lead.stage }}</span></td>
+              <td class="text-right font-black">{{ lead.value|currency }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[1fr_360px]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">My Deal Flow</p>
+          <h2>Assigned pipeline only</h2>
+        </div>
+        <span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">Restricted role view</span>
+      </div>
+      <div class="kanban">
+        {% for column in my_pipeline_columns %}
+        <div class="kanban-column">
+          <div class="mb-4 flex items-center justify-between">
+            <h3>{{ column }}</h3>
+            <span>{{ my_grouped_leads[column]|length }}</span>
+          </div>
+          <div class="space-y-3">
+            {% for lead in my_grouped_leads[column] %}
+            <article class="lead-card" data-priority="{{ lead.priority }}">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="font-black text-slate-950">{{ lead.customer }}</p>
+                  <p class="mt-1 text-sm text-slate-500">{{ lead.vehicle }}</p>
+                </div>
+                <span class="priority {{ lead.priority|lower }}">{{ lead.priority }}</span>
+              </div>
+              <div class="mt-4 space-y-2 text-sm">
+                <p><strong>Source:</strong> {{ lead.source }}</p>
+                <p><strong>Last contact:</strong> {{ lead.last_contact }}</p>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <aside class="space-y-6">
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Follow-ups Due</p>
+            <h2>Today's calls</h2>
+          </div>
+        </div>
+        <div class="space-y-3">
+          {% for item in my_followups %}
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <p class="font-black text-slate-950">{{ item.customer }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ item.vehicle }}</p>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="time-pill">{{ item.due_time }}</span>
+              <span class="automation-label warning">Customer notified</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Test Drives / Handovers</p>
+            <h2>My diary</h2>
+          </div>
+        </div>
+        <div class="space-y-3">
+          {% for booking in my_bookings[:5] %}
+          <div class="rounded-lg border border-slate-200 p-3">
+            <div class="flex items-center justify-between">
+              <span class="time-pill">{{ booking.time }}</span>
+              <span class="booking-type">{{ booking.type }}</span>
+            </div>
+            <p class="mt-3 font-black text-slate-950">{{ booking.customer }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ booking.day }} - {{ booking.vehicle }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}
