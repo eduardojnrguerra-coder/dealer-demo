@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vehicle Stock | PineX Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#111827',
+            graphite: '#202734',
+            ocean: '#0f4c81',
+            steel: '#f4f7fb'
+          },
+          boxShadow: {
+            premium: '0 18px 45px rgba(15, 23, 42, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <div class="min-h-screen lg:flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full bg-[#171d26] text-white transition-transform duration-200 lg:static lg:translate-x-0">
+      <div class="flex h-full flex-col">
+        <div class="border-b border-white/10 px-6 py-5">
+          <a href="dashboard.html" class="flex items-center gap-3">
+            <img src="static/images/pinex-logo.svg" alt="PineX logo" class="h-11 w-11 rounded-lg bg-white object-contain p-1">
+            <span>
+              <span class="block text-lg font-bold tracking-tight">PineX Systems</span>
+              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Business Operating System</span>
+            </span>
+          </a>
+        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+          <a href="dashboard.html" class="nav-link"><span class="nav-dot"></span>Control Room</a>
+          <a href="stock.html" class="nav-link active"><span class="nav-dot"></span>Vehicle Stock</a>
+          <a href="deal-flow.html" class="nav-link"><span class="nav-dot"></span>Deal Flow</a>
+          <a href="customers.html" class="nav-link"><span class="nav-dot"></span>Customers</a>
+          <a href="deal_jackets.html" class="nav-link"><span class="nav-dot"></span>Deal Files</a>
+          <a href="fi_desk.html" class="nav-link"><span class="nav-dot"></span>F&I Finance</a>
+          <a href="trade_ins.html" class="nav-link"><span class="nav-dot"></span>Trade-ins</a>
+          <a href="calendar.html" class="nav-link"><span class="nav-dot"></span>Calendar</a>
+          <a href="recon_board.html" class="nav-link"><span class="nav-dot"></span>Workshop Queue</a>
+          <a href="delivery_planning.html" class="nav-link"><span class="nav-dot"></span>Handover Board</a>
+          <a href="sales_team.html" class="nav-link"><span class="nav-dot"></span>Sales Team</a>
+          <a href="reports.html" class="nav-link"><span class="nav-dot"></span>Reports</a>
+          <a href="finance.html" class="nav-link"><span class="nav-dot"></span>Finance & Compliance</a>
+          <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
+          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
+          <a href="sales-exec-view.html" class="nav-link"><span class="nav-dot"></span>Sales Exec</a>
+        </nav>
+        <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
+          <p class="text-sm font-semibold">April retail target</p>
+          <div class="mt-3 h-2 rounded-full bg-white/10">
+            <div class="h-2 rounded-full bg-blue-400" style="width: 72%"></div>
+          </div>
+          <p class="mt-3 text-xs text-slate-300">17 of 24 units closed this month</p>
+        </div>
+      </div>
+    </aside>
+
+    <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
+
+    <!-- Main Content -->
+    <main class="min-w-0 flex-1">
+      <!-- Sticky Header -->
+      <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+        <div class="px-4 py-3 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <button id="menuButton" class="rounded-lg border border-slate-200 p-2 lg:hidden" type="button" aria-label="Open navigation">
+                <span class="block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+              </button>
+              <div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-950 sm:text-xl">Vehicle Stock</h1>
+                <p class="hidden text-xs text-slate-500 sm:block">24 units in stock</p>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
+              <button class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700">Filters</button>
+              <button class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">+ Add</button>
+            </div>
+            <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
+              <div class="flex flex-col">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
+                <h1 class="text-xl font-bold tracking-tight text-slate-950">Vehicle Stock</h1>
+                <p class="text-xs text-slate-500">Floor stock management and pricing</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm">Search</button>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">MV</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <section class="page-shell px-4 py-6 pb-24 lg:pb-6 sm:px-6 lg:px-8">
+        <div class="space-y-6">
+          <!-- Filter Bar -->
+          <div class="flex flex-wrap gap-2">
+            <button class="filter-btn active">All Stock (24)</button>
+            <button class="filter-btn">Needs Attention (6)</button>
+            <button class="filter-btn">Aging Stock (5)</button>
+            <button class="filter-btn">Low Margin (4)</button>
+            <button class="filter-btn">High Margin (8)</button>
+            <button class="filter-btn">Fast Movers (7)</button>
+          </div>
+
+          <!-- Stock Summary Cards -->
+          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div class="metric-card">
+              <span>Total Units</span>
+              <strong>24</strong>
+              <small>3 reserved, 21 retail-ready</small>
+            </div>
+            <div class="metric-card">
+              <span>Stock Value</span>
+              <strong>R5.8M</strong>
+              <small>Cost price total</small>
+            </div>
+            <div class="metric-card">
+              <span>Avg Days in Stock</span>
+              <strong>43</strong>
+              <small>Industry benchmark: 45</small>
+            </div>
+            <div class="metric-card">
+              <span>Aging 60+ Days</span>
+              <strong>5</strong>
+              <small>Requires price review</small>
+            </div>
+            <div class="metric-card">
+              <span>Avg Margin %</span>
+              <strong>14.2%</strong>
+              <small>R826k potential GP</small>
+            </div>
+          </div>
+
+          <!-- Vehicle Grid -->
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <!-- Vehicle Card 1 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-reserved">Reserved</span>
+                <span class="text-xs font-bold text-slate-500">AF-1042</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/hatch.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2020 VW Polo 1.0 TSI</h3>
+                  <p class="text-sm text-slate-500">Comfortline</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>58,200 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Pure White</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R224,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R36,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold">38</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">16.4%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn">Reserve</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 2 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-reserved">Reserved</span>
+                <span class="text-xs font-bold text-slate-500">AF-1058</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/bakkie.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2021 Ford Ranger 2.0</h3>
+                  <p class="text-sm text-slate-500">Wildtrak Bi-Turbo</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>74,100 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Sea Grey</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R499,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R61,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold">22</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">12.4%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn">Reserve</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 3 - Aging Stock -->
+            <article class="vehicle-card needs-attention-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-in-stock">In Stock</span>
+                <span class="text-xs font-bold text-red-600">AF-1061</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/bakkie.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2019 Toyota Hilux 2.8</h3>
+                  <p class="text-sm text-slate-500">Raider 4x4 GD-6</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>96,200 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Glacier White</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R449,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-amber-600">R57,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold text-red-600">73</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold">12.9%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn primary">Price Review</button>
+                <button class="stock-action-btn">Recon</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 4 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-in-stock">In Stock</span>
+                <span class="text-xs font-bold text-slate-500">AF-1070</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/hatch.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2022 Suzuki Swift 1.2</h3>
+                  <p class="text-sm text-slate-500">GL</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>33,600 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Silky Silver</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R179,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R28,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold">18</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">16.1%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn">Reserve</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 5 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-in-stock">In Stock</span>
+                <span class="text-xs font-bold text-slate-500">AF-1074</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/sedan.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2018 BMW 320d</h3>
+                  <p class="text-sm text-slate-500">M Sport Auto</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>88,400 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Mineral Grey</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R359,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R61,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold text-amber-600">66</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">17.2%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn">Reserve</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 6 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-reserved">Reserved</span>
+                <span class="text-xs font-bold text-slate-500">AF-1082</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/suv.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2023 Toyota Corolla Cross</h3>
+                  <p class="text-sm text-slate-500">1.8 XS</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>21,400 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Platinum White</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R369,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R52,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold">11</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">14.3%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn is-confirmed">Reserved</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 7 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-in-stock">In Stock</span>
+                <span class="text-xs font-bold text-slate-500">AF-1088</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/bakkie.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2021 Isuzu D-Max 250</h3>
+                  <p class="text-sm text-slate-500">HO X-Rider</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>68,100 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Splash White</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R384,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R55,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold text-amber-600">45</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">14.5%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn">Reserve</button>
+              </div>
+            </article>
+
+            <!-- Vehicle Card 8 -->
+            <article class="vehicle-card">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="status-pill status-in-stock">In Stock</span>
+                <span class="text-xs font-bold text-slate-500">AF-1092</span>
+              </div>
+              <div class="mb-3 flex items-center gap-3">
+                <img src="static/images/sedan.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
+                <div>
+                  <h3 class="font-black text-slate-950">2020 Mercedes A200</h3>
+                  <p class="text-sm text-slate-500">Progressive Auto</p>
+                </div>
+              </div>
+              <dl class="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <dt>Mileage</dt>
+                  <dd>59,200 km</dd>
+                </div>
+                <div>
+                  <dt>Color</dt>
+                  <dd>Cosmos Black</dd>
+                </div>
+                <div>
+                  <dt>Selling Price</dt>
+                  <dd class="font-black text-ocean">R419,900</dd>
+                </div>
+                <div>
+                  <dt>Profit</dt>
+                  <dd class="font-bold text-emerald-600">R64,900</dd>
+                </div>
+                <div>
+                  <dt>Days in Stock</dt>
+                  <dd class="font-bold text-amber-600">57</dd>
+                </div>
+                <div>
+                  <dt>Margin</dt>
+                  <dd class="font-bold text-emerald-600">15.5%</dd>
+                </div>
+              </dl>
+              <div class="mt-3 flex gap-2">
+                <button class="stock-action-btn">View</button>
+                <button class="stock-action-btn">Price</button>
+                <button class="stock-action-btn">Reserve</button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Add Vehicle Button -->
+          <div class="flex justify-center">
+            <button class="rounded-lg bg-ocean px-6 py-3 text-sm font-black text-white shadow-sm">
+              + Add Vehicle
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Action Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-200 bg-white px-2 py-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="#">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      <span>Search</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean" href="#">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      <span>Add</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="#">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+      <span>Filter</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="dashboard.html">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <span>Home</span>
+    </a>
+  </nav>
+
+  <script src="static/js/app.js"></script>
+</body>
+</html>

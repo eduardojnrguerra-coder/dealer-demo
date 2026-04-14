@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PineX Systems | Business Operating System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#111827',
+            graphite: '#202734',
+            ocean: '#0f4c81',
+            steel: '#f4f7fb'
+          },
+          boxShadow: {
+            premium: '0 18px 45px rgba(15, 23, 42, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="min-h-screen bg-[#151b24] text-white">
+  <main class="grid min-h-screen lg:grid-cols-[1.08fr_0.92fr]">
+    <section class="relative flex items-center overflow-hidden px-6 py-10 sm:px-10 lg:px-16">
+      <div class="absolute inset-0 login-visual"></div>
+      <div class="relative z-10 max-w-2xl">
+        <div class="flex items-center gap-3">
+          <img src="static/images/pinex-logo.svg" alt="PineX Systems logo" class="h-12 w-12 rounded-lg bg-white object-contain p-1">
+          <div>
+            <p class="text-2xl font-bold tracking-tight">PineX Systems</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-blue-200">Business Operating System</p>
+          </div>
+        </div>
+        <h1 class="mt-16 max-w-xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">One system. Full control. Built to run the business.</h1>
+        <p class="mt-6 max-w-xl text-lg leading-8 text-slate-300">Operating system for dealership operations - visibility across stock, deals, teams, finance, and handover workflow.</p>
+        <div class="mt-10 grid max-w-xl gap-4 sm:grid-cols-3">
+          <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
+            <p class="text-3xl font-bold">24</p>
+            <p class="mt-1 text-sm text-slate-300">Retail units</p>
+          </div>
+          <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
+            <p class="text-3xl font-bold">9</p>
+            <p class="mt-1 text-sm text-slate-300">Deal Flow stages</p>
+          </div>
+          <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
+            <p class="text-3xl font-bold">5</p>
+            <p class="mt-1 text-sm text-slate-300">Salespeople</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flex items-center justify-center bg-slate-50 px-6 py-10 text-slate-950">
+      <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-premium">
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-ocean">Secure dealer access</p>
+        <h2 class="mt-3 text-3xl font-black tracking-tight">Sign in</h2>
+        <p class="mt-2 text-sm text-slate-500">Enter control room and see business operations in one view.</p>
+        <form class="mt-8 space-y-5" onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
+          <label class="block">
+            <span class="text-sm font-semibold text-slate-700">Email address</span>
+            <input class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-ocean focus:ring-4 focus:ring-blue-100" type="email" value="owner@dealership.co.za">
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-slate-700">Password</span>
+            <input class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-ocean focus:ring-4 focus:ring-blue-100" type="password" value="demoaccess">
+          </label>
+          <button class="w-full rounded-lg bg-slate-950 px-5 py-3 font-bold text-white transition hover:bg-ocean" type="submit">Sign in</button>
+          <a class="block w-full rounded-lg border border-slate-300 px-5 py-3 text-center font-bold text-slate-950 transition hover:border-ocean hover:text-ocean" href="dashboard.html">Enter Demo</a>
+        </form>
+        <p class="mt-6 text-xs leading-6 text-slate-500">Preview access only. No real customer, dealership, or financial information is stored.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

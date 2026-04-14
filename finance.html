@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finance & Compliance | PineX Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#111827',
+            graphite: '#202734',
+            ocean: '#0f4c81',
+            steel: '#f4f7fb'
+          },
+          boxShadow: {
+            premium: '0 18px 45px rgba(15, 23, 42, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <div class="min-h-screen lg:flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full bg-[#171d26] text-white transition-transform duration-200 lg:static lg:translate-x-0">
+      <div class="flex h-full flex-col">
+        <div class="border-b border-white/10 px-6 py-5">
+          <a href="dashboard.html" class="flex items-center gap-3">
+            <img src="static/images/pinex-logo.svg" alt="PineX logo" class="h-11 w-11 rounded-lg bg-white object-contain p-1">
+            <span>
+              <span class="block text-lg font-bold tracking-tight">PineX Systems</span>
+              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Business Operating System</span>
+            </span>
+          </a>
+        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+          <a href="dashboard.html" class="nav-link"><span class="nav-dot"></span>Control Room</a>
+          <a href="stock.html" class="nav-link"><span class="nav-dot"></span>Vehicle Stock</a>
+          <a href="deal-flow.html" class="nav-link"><span class="nav-dot"></span>Deal Flow</a>
+          <a href="customers.html" class="nav-link"><span class="nav-dot"></span>Customers</a>
+          <a href="deal_jackets.html" class="nav-link"><span class="nav-dot"></span>Deal Files</a>
+          <a href="fi_desk.html" class="nav-link"><span class="nav-dot"></span>F&I Finance</a>
+          <a href="trade_ins.html" class="nav-link"><span class="nav-dot"></span>Trade-ins</a>
+          <a href="calendar.html" class="nav-link"><span class="nav-dot"></span>Calendar</a>
+          <a href="recon_board.html" class="nav-link"><span class="nav-dot"></span>Workshop Queue</a>
+          <a href="delivery_planning.html" class="nav-link"><span class="nav-dot"></span>Handover Board</a>
+          <a href="sales_team.html" class="nav-link"><span class="nav-dot"></span>Sales Team</a>
+          <a href="reports.html" class="nav-link"><span class="nav-dot"></span>Reports</a>
+          <a href="finance.html" class="nav-link active"><span class="nav-dot"></span>Finance & Compliance</a>
+          <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
+          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
+          <a href="sales-exec-view.html" class="nav-link"><span class="nav-dot"></span>Sales Exec</a>
+        </nav>
+        <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
+          <p class="text-sm font-semibold">April retail target</p>
+          <div class="mt-3 h-2 rounded-full bg-white/10">
+            <div class="h-2 rounded-full bg-blue-400" style="width: 72%"></div>
+          </div>
+          <p class="mt-3 text-xs text-slate-300">17 of 24 units closed this month</p>
+        </div>
+      </div>
+    </aside>
+
+    <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
+
+    <!-- Main Content -->
+    <main class="min-w-0 flex-1">
+      <!-- Sticky Header -->
+      <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+        <div class="px-4 py-3 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <button id="menuButton" class="rounded-lg border border-slate-200 p-2 lg:hidden" type="button" aria-label="Open navigation">
+                <span class="block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+              </button>
+              <div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-950 sm:text-xl">Finance & Compliance</h1>
+                <p class="hidden text-xs text-slate-500 sm:block">Payroll, VAT, SARS, Audit</p>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
+              <button class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700">Reports</button>
+              <button class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">Export</button>
+            </div>
+            <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
+              <div class="flex flex-col">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
+                <h1 class="text-xl font-bold tracking-tight text-slate-950">Finance & Compliance</h1>
+                <p class="text-xs text-slate-500">Financial oversight, payroll, tax compliance</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm">Reports</button>
+                <button class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm">Export</button>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">MV</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <section class="page-shell px-4 py-6 pb-24 lg:pb-6 sm:px-6 lg:px-8">
+        <div class="space-y-6">
+          <!-- Finance Overview -->
+          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="metric-card">
+              <span>Revenue This Month</span>
+              <strong>R5.4M</strong>
+              <small>24 units sold</small>
+            </div>
+            <div class="metric-card">
+              <span>Gross Profit</span>
+              <strong>R486,000</strong>
+              <small>Front-end GP</small>
+            </div>
+            <div class="metric-card">
+              <span>Commission Paid</span>
+              <strong>R97,200</strong>
+              <small>This month</small>
+            </div>
+            <div class="metric-card">
+              <span>Staff Costs</span>
+              <strong>R142,500</strong>
+              <small>5 sales execs + 3 F&I</small>
+            </div>
+          </div>
+
+          <!-- Payroll Visibility Section -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Finance Operations</p>
+                <h2>Payroll Visibility</h2>
+              </div>
+              <span class="rounded-lg bg-amber-100 px-3 py-1 text-sm font-bold text-amber-700">April 2026</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Role</th>
+                    <th>Units Sold</th>
+                    <th>GP Generated</th>
+                    <th>Commission (4%)</th>
+                    <th>Base Salary</th>
+                    <th>Total Package</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-black text-slate-950">Lerato Mokoena</td>
+                    <td>Senior Sales Executive</td>
+                    <td class="font-bold">8</td>
+                    <td class="text-emerald-600 font-bold">R384,500</td>
+                    <td class="font-bold">R15,380</td>
+                    <td>R12,000</td>
+                    <td class="font-black">R27,380</td>
+                    <td><span class="status-pill status-in-stock">Approved</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Johan Botha</td>
+                    <td>Sales Executive</td>
+                    <td class="font-bold">6</td>
+                    <td class="text-emerald-600 font-bold">R312,800</td>
+                    <td class="font-bold">R12,512</td>
+                    <td>R10,500</td>
+                    <td class="font-black">R23,012</td>
+                    <td><span class="status-pill status-in-stock">Approved</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Ayesha Naidoo</td>
+                    <td>F&I Business Manager</td>
+                    <td class="font-bold">5</td>
+                    <td class="text-emerald-600 font-bold">R261,400</td>
+                    <td class="font-bold">R10,456</td>
+                    <td>R14,000</td>
+                    <td class="font-black">R24,456</td>
+                    <td><span class="status-pill status-in-stock">Approved</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Sipho Dlamini</td>
+                    <td>Sales Executive</td>
+                    <td class="font-bold">4</td>
+                    <td class="text-emerald-600 font-bold">R194,900</td>
+                    <td class="font-bold">R7,796</td>
+                    <td>R10,500</td>
+                    <td class="font-black">R18,296</td>
+                    <td><span class="status-pill status-reserved">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Megan Jacobs</td>
+                    <td>Sales Executive</td>
+                    <td class="font-bold">3</td>
+                    <td class="text-emerald-600 font-bold">R142,700</td>
+                    <td class="font-bold">R5,708</td>
+                    <td>R10,500</td>
+                    <td class="font-black">R16,208</td>
+                    <td><span class="status-pill status-in-stock">Approved</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-4 flex items-center justify-between border-t border-slate-200 pt-4">
+              <div>
+                <span class="text-sm text-slate-500">Total Commission:</span>
+                <span class="ml-2 font-black text-slate-950">R51,852</span>
+              </div>
+              <div>
+                <span class="text-sm text-slate-500">Total Payroll:</span>
+                <span class="ml-2 font-black text-slate-950">R109,352</span>
+              </div>
+              <button class="rounded-lg bg-ocean px-4 py-2 text-sm font-bold text-white">Approve Payroll</button>
+            </div>
+          </section>
+
+          <!-- VAT Workflow -->
+          <div class="grid gap-6 xl:grid-cols-2">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Tax Compliance</p>
+                  <h2>VAT Workflow</h2>
+                </div>
+                <span class="rounded-lg bg-emerald-100 px-3 py-1 text-sm font-bold text-emerald-700">Compliant</span>
+              </div>
+              <div class="space-y-4">
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">VAT Input Claims</span>
+                    <span class="block text-xs text-slate-500">Recon invoices, trade-in payouts</span>
+                  </div>
+                  <span class="status-pill doc-good">R127,450 verified</span>
+                </div>
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">VAT Output (Sales)</span>
+                    <span class="block text-xs text-slate-500">24 units sold this month</span>
+                  </div>
+                  <span class="status-pill doc-good">R756,000 declared</span>
+                </div>
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">VAT Reconciliation</span>
+                    <span class="block text-xs text-slate-500">Bank statements vs Sage</span>
+                  </div>
+                  <span class="status-pill doc-good">Matched</span>
+                </div>
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">VAT Returns Filed</span>
+                    <span class="block text-xs text-slate-500">March 2026</span>
+                  </div>
+                  <span class="status-pill doc-good">Filed Apr 25</span>
+                </div>
+              </div>
+              <div class="mt-4 flex gap-2">
+                <button class="stock-action-btn">Run Reconciliation</button>
+                <button class="stock-action-btn">Export VAT101</button>
+              </div>
+            </section>
+
+            <!-- SARS Reporting Prep -->
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Tax Compliance</p>
+                  <h2>SARS Reporting Prep</h2>
+                </div>
+                <span class="rounded-lg bg-amber-100 px-3 py-1 text-sm font-bold text-amber-700">Due May 30</span>
+              </div>
+              <div class="space-y-4">
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">IT14 Annual Returns</span>
+                    <span class="block text-xs text-slate-500">Employee tax certificates</span>
+                  </div>
+                  <span class="status-pill warning">Pending - 3 emp</span>
+                </div>
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">PAYE Reconciliation</span>
+                    <span class="block text-xs text-slate-500">Monthly tax submissions</span>
+                  </div>
+                  <span class="status-pill doc-good">Complete</span>
+                </div>
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">EMP501 Submission</span>
+                    <span class="block text-xs text-slate-500">Annual emp tax summary</span>
+                  </div>
+                  <span class="status-pill warning">Due May 15</span>
+                </div>
+                <div class="check-row">
+                  <div>
+                    <span class="font-bold text-slate-950">Corporate Tax Docs</span>
+                    <span class="block text-xs text-slate-500">2025 financial statements</span>
+                  </div>
+                  <span class="status-pill doc-good">Ready</span>
+                </div>
+              </div>
+              <div class="mt-4 flex gap-2">
+                <button class="stock-action-btn primary">Generate IRP5</button>
+                <button class="stock-action-btn">View SARS Portal</button>
+              </div>
+            </section>
+          </div>
+
+          <!-- Month-End Readiness -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Finance Operations</p>
+                <h2>Month-End Readiness</h2>
+              </div>
+              <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">April 2026</span>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <article class="workflow-card">
+                <span class="text-xs font-black uppercase tracking-wide text-emerald-600">Bank Rec</span>
+                <strong class="mt-2 block text-2xl font-black text-slate-950">Complete</strong>
+                <p class="mt-2 text-sm text-slate-600">All transactions reconciled</p>
+              </article>
+              <article class="workflow-card">
+                <span class="text-xs font-black uppercase tracking-wide text-amber-600">Creditors</span>
+                <strong class="mt-2 block text-2xl font-black text-slate-950">3 Pending</strong>
+                <p class="mt-2 text-sm text-slate-600">Trade-in settlements</p>
+              </article>
+              <article class="workflow-card">
+                <span class="text-xs font-black uppercase tracking-wide text-emerald-600">Debtors</span>
+                <strong class="mt-2 block text-2xl font-black text-slate-950">Clear</strong>
+                <p class="mt-2 text-sm text-slate-600">All F&I payouts cleared</p>
+              </article>
+              <article class="workflow-card">
+                <span class="text-xs font-black uppercase tracking-wide text-emerald-600">Stock Valuation</span>
+                <strong class="mt-2 block text-2xl font-black text-slate-950">R5.8M</strong>
+                <p class="mt-2 text-sm text-slate-600">FIFO method applied</p>
+              </article>
+            </div>
+            <div class="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <h4 class="font-black text-slate-950">Pending Actions</h4>
+              <ul class="mt-2 space-y-2 text-sm text-slate-600">
+                <li class="flex items-center gap-2">
+                  <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                  Process trade-in settlement for Thabo Khumalo (R142,000)
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                  Finalise supplier invoice for workshop parts (R23,400)
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                  Reconcile Natis fees from March (R4,800)
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Finance Approvals -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Finance Operations</p>
+                <h2>Finance Approvals</h2>
+              </div>
+              <span class="rounded-lg bg-amber-100 px-3 py-1 text-sm font-bold text-amber-700">4 pending</span>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="alert-row warning">
+                <strong>Trade-in Payout - Thabo Khumalo</strong>
+                <span>2016 Ford Ranger 3.2 XLT - Settlement: R142,000 | Allowance: R196,000</span>
+                <div class="mt-3 flex gap-2">
+                  <button class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white">Approve</button>
+                  <button class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">Review</button>
+                </div>
+              </div>
+              <div class="alert-row warning">
+                <strong>Commission Approval - April 2026</strong>
+                <span>Total: R97,200 across 5 sales executives</span>
+                <div class="mt-3 flex gap-2">
+                  <button class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white">Approve All</button>
+                  <button class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">Review</button>
+                </div>
+              </div>
+              <div class="alert-row info">
+                <strong>Price Adjustment Request</strong>
+                <span>AF-1061 Toyota Hilux - Reduce from R449,900 to R429,900 (-R20,000)</span>
+                <div class="mt-3 flex gap-2">
+                  <button class="rounded-lg bg-ocean px-3 py-1.5 text-xs font-bold text-white">Approve</button>
+                  <button class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">Decline</button>
+                </div>
+              </div>
+              <div class="alert-row info">
+                <strong>Discount Request - Nadia Petersen</strong>
+                <span>Corolla Cross accessories waiver: R2,500</span>
+                <div class="mt-3 flex gap-2">
+                  <button class="rounded-lg bg-ocean px-3 py-1.5 text-xs font-bold text-white">Approve</button>
+                  <button class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">Decline</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Audit Trail -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Compliance</p>
+                <h2>Audit Trail</h2>
+              </div>
+              <button class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700">Export Log</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date & Time</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>IP Address</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-xs text-slate-500">Today 14:32</td>
+                    <td class="font-bold">Marius van der Merwe</td>
+                    <td>Approved Deal</td>
+                    <td>DJ-2048 Nadia Petersen</td>
+                    <td class="text-xs text-slate-500">192.168.1.45</td>
+                  </tr>
+                  <tr>
+                    <td class="text-xs text-slate-500">Today 12:15</td>
+                    <td class="font-bold">Ayesha Naidoo</td>
+                    <td>Finance Submit</td>
+                    <td>WesBank - Thabo Khumalo</td>
+                    <td class="text-xs text-slate-500">192.168.1.42</td>
+                  </tr>
+                  <tr>
+                    <td class="text-xs text-slate-500">Today 10:22</td>
+                    <td class="font-bold">Andre Steyn</td>
+                    <td>Stock Update</td>
+                    <td>AF-1120 Roadworthy completed</td>
+                    <td class="text-xs text-slate-500">192.168.1.38</td>
+                  </tr>
+                  <tr>
+                    <td class="text-xs text-slate-500">Yesterday 16:45</td>
+                    <td class="font-bold">Priya Govender</td>
+                    <td>Price Change</td>
+                    <td>AF-1061 Hilux reduced R20k</td>
+                    <td class="text-xs text-slate-500">192.168.1.51</td>
+                  </tr>
+                  <tr>
+                    <td class="text-xs text-slate-500">Yesterday 11:30</td>
+                    <td class="font-bold">Lerato Mokoena</td>
+                    <td>Lead Created</td>
+                    <td>New lead from AutoTrader</td>
+                    <td class="text-xs text-slate-500">192.168.1.44</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Action Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-200 bg-white px-2 py-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="#">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+      <span>Reports</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean" href="#">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      <span>Export</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="#">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span>Approve</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="dashboard.html">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <span>Home</span>
+    </a>
+  </nav>
+
+  <script src="static/js/app.js"></script>
+</body>
+</html>

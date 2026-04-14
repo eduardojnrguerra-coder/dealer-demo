@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales Team | PineX Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#111827',
+            graphite: '#202734',
+            ocean: '#0f4c81',
+            steel: '#f4f7fb'
+          },
+          boxShadow: {
+            premium: '0 18px 45px rgba(15, 23, 42, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <div class="min-h-screen lg:flex">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full bg-[#171d26] text-white transition-transform duration-200 lg:static lg:translate-x-0">
+      <div class="flex h-full flex-col">
+        <div class="border-b border-white/10 px-6 py-5">
+          <a href="dashboard.html" class="flex items-center gap-3">
+            <img src="static/images/pinex-logo.svg" alt="PineX logo" class="h-11 w-11 rounded-lg bg-white object-contain p-1">
+            <span>
+              <span class="block text-lg font-bold tracking-tight">PineX Systems</span>
+              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Business Operating System</span>
+            </span>
+          </a>
+        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+          <a href="dashboard.html" class="nav-link"><span class="nav-dot"></span>Control Room</a>
+          <a href="stock.html" class="nav-link"><span class="nav-dot"></span>Vehicle Stock</a>
+          <a href="deal-flow.html" class="nav-link"><span class="nav-dot"></span>Deal Flow</a>
+          <a href="buyers.html" class="nav-link"><span class="nav-dot"></span>Customers</a>
+          <a href="deal-files.html" class="nav-link"><span class="nav-dot"></span>Deal Files</a>
+          <a href="fi-desk.html" class="nav-link"><span class="nav-dot"></span>F&I Finance</a>
+          <a href="trade-ins.html" class="nav-link"><span class="nav-dot"></span>Trade-ins</a>
+          <a href="calendar.html" class="nav-link"><span class="nav-dot"></span>Calendar</a>
+          <a href="workshop.html" class="nav-link"><span class="nav-dot"></span>Workshop Queue</a>
+          <a href="handover.html" class="nav-link"><span class="nav-dot"></span>Handover Board</a>
+          <a href="team.html" class="nav-link active"><span class="nav-dot"></span>Sales Team</a>
+          <a href="reports.html" class="nav-link"><span class="nav-dot"></span>Reports</a>
+          <a href="finance.html" class="nav-link"><span class="nav-dot"></span>Finance & Compliance</a>
+          <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
+          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
+          <a href="sales-exec-view.html" class="nav-link"><span class="nav-dot"></span>Sales Exec</a>
+        </nav>
+        <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
+          <p class="text-sm font-semibold">April retail target</p>
+          <div class="mt-3 h-2 rounded-full bg-white/10">
+            <div class="h-2 rounded-full bg-blue-400" style="width: 72%"></div>
+          </div>
+          <p class="mt-3 text-xs text-slate-300">17 of 24 units closed this month</p>
+          <p class="mt-2 text-xs text-slate-400">Operating system control room</p>
+        </div>
+      </div>
+    </aside>
+    <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
+    <main class="min-w-0 flex-1">
+      <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+        <div class="px-4 py-3 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <button id="menuButton" class="rounded-lg border border-slate-200 p-2 lg:hidden" type="button" aria-label="Open navigation">
+                <span class="block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+              </button>
+              <div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-950 sm:text-xl">Sales Team</h1>
+                <p class="hidden text-xs text-slate-500 sm:block">Team performance & leaderboard</p>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
+              <button class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700">Team</button>
+              <button class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">+ Add</button>
+              <button class="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-700">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              </button>
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">MV</div>
+            </div>
+            <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
+              <div class="flex flex-col">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
+                <h1 class="text-xl font-bold tracking-tight text-slate-950">Sales Team Performance</h1>
+                <p class="text-xs text-slate-500">Executive rankings and metrics</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm">Alerts <span class="ml-1 grid h-5 w-5 place-items-center rounded-full bg-red-600 text-[10px] text-white">3</span></button>
+                <div class="view-toggle rounded-lg border border-ocean bg-ocean p-1">
+                  <a class="text-white" href="dashboard.html">DP View</a>
+                  <a class="text-slate-400" href="sales-exec-view.html">Sales View</a>
+                </div>
+                <div class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-bold text-white">Dealer Principal</div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">MV</div>
+              </div>
+            </div>
+          </div>
+          <div class="hidden lg:grid lg:gap-3 xl:grid-cols-[180px_180px_1fr_190px]">
+            <label class="top-control"><span>Period</span><select><option>This Month</option><option>Last Month</option><option>This Quarter</option></select></label>
+            <label class="top-control"><span>Team</span><select><option>All Teams</option><option>Sales Executives</option><option>F&I</option></select></label>
+            <label class="top-control"><span>Search</span><input type="search" placeholder="Search team member..."></label>
+            <button class="h-full rounded-lg bg-ocean px-4 py-3 text-sm font-black text-white shadow-sm">+ Add Member</button>
+          </div>
+        </div>
+      </header>
+      <section class="page-shell px-4 py-6 pb-24 lg:pb-6 sm:px-6 lg:px-8">
+        <div class="space-y-6">
+          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="metric-card">
+              <span>Active Executives</span>
+              <strong>5</strong>
+              <small>Full team</small>
+            </div>
+            <div class="metric-card">
+              <span>Units This Month</span>
+              <strong>17</strong>
+              <small>Closed deals</small>
+            </div>
+            <div class="metric-card">
+              <span>GP This Month</span>
+              <strong>R486K</strong>
+              <small>Front-end profit</small>
+            </div>
+            <div class="metric-card">
+              <span>Team Conversion</span>
+              <strong>33%</strong>
+              <small>Lead to deal</small>
+            </div>
+          </div>
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Leaderboard</p>
+                <h2>Sales Executive Rankings</h2>
+              </div>
+              <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">April 2026</span>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <article class="team-card rank-1">
+                <div class="team-rank">#1</div>
+                <div class="team-avatar">LM</div>
+                <div class="team-info">
+                  <h3>Lerato Mokoena</h3>
+                  <p class="text-xs font-semibold uppercase text-slate-400">Senior Sales Executive</p>
+                </div>
+                <div class="team-stats">
+                  <div class="team-stat"><span>Deals</span><strong>8</strong></div>
+                  <div class="team-stat"><span>GP</span><strong>R384,500</strong></div>
+                  <div class="team-stat"><span>Conv Rate</span><strong>44%</strong></div>
+                </div>
+              </article>
+              <article class="team-card rank-2">
+                <div class="team-rank">#2</div>
+                <div class="team-avatar">JB</div>
+                <div class="team-info">
+                  <h3>Johan Botha</h3>
+                  <p class="text-xs font-semibold uppercase text-slate-400">Sales Executive - Bakkies</p>
+                </div>
+                <div class="team-stats">
+                  <div class="team-stat"><span>Deals</span><strong>6</strong></div>
+                  <div class="team-stat"><span>GP</span><strong>R312,800</strong></div>
+                  <div class="team-stat"><span>Conv Rate</span><strong>38%</strong></div>
+                </div>
+              </article>
+              <article class="team-card rank-3">
+                <div class="team-rank">#3</div>
+                <div class="team-avatar">AN</div>
+                <div class="team-info">
+                  <h3>Ayesha Naidoo</h3>
+                  <p class="text-xs font-semibold uppercase text-slate-400">F&I Business Manager</p>
+                </div>
+                <div class="team-stats">
+                  <div class="team-stat"><span>Deals</span><strong>5</strong></div>
+                  <div class="team-stat"><span>GP</span><strong>R261,400</strong></div>
+                  <div class="team-stat"><span>Conv Rate</span><strong>33%</strong></div>
+                </div>
+              </article>
+              <article class="team-card">
+                <div class="team-rank">#4</div>
+                <div class="team-avatar">SD</div>
+                <div class="team-info">
+                  <h3>Sipho Dlamini</h3>
+                  <p class="text-xs font-semibold uppercase text-slate-400">Sales Executive</p>
+                </div>
+                <div class="team-stats">
+                  <div class="team-stat"><span>Deals</span><strong>4</strong></div>
+                  <div class="team-stat"><span>GP</span><strong>R194,900</strong></div>
+                  <div class="team-stat"><span>Conv Rate</span><strong>31%</strong></div>
+                </div>
+              </article>
+              <article class="team-card">
+                <div class="team-rank">#5</div>
+                <div class="team-avatar">MJ</div>
+                <div class="team-info">
+                  <h3>Megan Jacobs</h3>
+                  <p class="text-xs font-semibold uppercase text-slate-400">Sales Executive - Retention</p>
+                </div>
+                <div class="team-stats">
+                  <div class="team-stat"><span>Deals</span><strong>3</strong></div>
+                  <div class="team-stat"><span>GP</span><strong>R142,700</strong></div>
+                  <div class="team-stat"><span>Conv Rate</span><strong>25%</strong></div>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Team Structure</p>
+                <h2>Organization Chart</h2>
+              </div>
+            </div>
+            <div class="org-chart">
+              <div class="org-level">
+                <div class="org-card leadership">
+                  <span class="org-role">Dealer Principal</span>
+                  <span class="org-name">Marius van der Merwe</span>
+                </div>
+              </div>
+              <div class="org-level">
+                <div class="org-card">
+                  <span class="org-role">Used Vehicle Manager</span>
+                  <span class="org-name">Priya Govender</span>
+                </div>
+                <div class="org-card">
+                  <span class="org-role">F&I Manager</span>
+                  <span class="org-name">Ayesha Naidoo</span>
+                </div>
+                <div class="org-card">
+                  <span class="org-role">Stock Controller</span>
+                  <span class="org-name">Andre Steyn</span>
+                </div>
+              </div>
+              <div class="org-level">
+                <div class="org-card">
+                  <span class="org-role">Senior Sales Exec</span>
+                  <span class="org-name">Lerato Mokoena</span>
+                </div>
+                <div class="org-card">
+                  <span class="org-role">Sales Exec - Bakkies</span>
+                  <span class="org-name">Johan Botha</span>
+                </div>
+                <div class="org-card">
+                  <span class="org-role">Sales Exec</span>
+                  <span class="org-name">Sipho Dlamini</span>
+                </div>
+                <div class="org-card">
+                  <span class="org-role">Sales Exec - Retention</span>
+                  <span class="org-name">Megan Jacobs</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+  <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-200 bg-white px-2 py-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="tel:">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+      <span>Call</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-emerald-600" href="https://wa.me/">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg>
+      <span>WhatsApp</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean" href="deal-flow.html">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+      <span>Add Note</span>
+    </a>
+    <button class="mobileMoveDeal flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" type="button">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+      <span>Move Deal</span>
+    </button>
+  </nav>
+  <script src="static/js/app.js"></script>
+</body>

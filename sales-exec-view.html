@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales Executive View | PineX Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#111827',
+            graphite: '#202734',
+            ocean: '#0f4c81',
+            steel: '#f4f7fb'
+          },
+          boxShadow: {
+            premium: '0 18px 45px rgba(15, 23, 42, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <div class="min-h-screen lg:flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full bg-[#171d26] text-white transition-transform duration-200 lg:static lg:translate-x-0">
+      <div class="flex h-full flex-col">
+        <div class="border-b border-white/10 px-6 py-5">
+          <a href="dashboard.html" class="flex items-center gap-3">
+            <img src="static/images/pinex-logo.svg" alt="PineX logo" class="h-11 w-11 rounded-lg bg-white object-contain p-1">
+            <span>
+              <span class="block text-lg font-bold tracking-tight">PineX Systems</span>
+              <span class="text-xs uppercase tracking-[0.18em] text-slate-400">Business Operating System</span>
+            </span>
+          </a>
+        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+          <a href="dashboard.html" class="nav-link"><span class="nav-dot"></span>Control Room</a>
+          <a href="stock.html" class="nav-link"><span class="nav-dot"></span>Vehicle Stock</a>
+          <a href="deal-flow.html" class="nav-link"><span class="nav-dot"></span>Deal Flow</a>
+          <a href="customers.html" class="nav-link"><span class="nav-dot"></span>Customers</a>
+          <a href="deal_jackets.html" class="nav-link"><span class="nav-dot"></span>Deal Files</a>
+          <a href="fi_desk.html" class="nav-link"><span class="nav-dot"></span>F&I Finance</a>
+          <a href="trade_ins.html" class="nav-link"><span class="nav-dot"></span>Trade-ins</a>
+          <a href="calendar.html" class="nav-link"><span class="nav-dot"></span>Calendar</a>
+          <a href="recon_board.html" class="nav-link"><span class="nav-dot"></span>Workshop Queue</a>
+          <a href="delivery_planning.html" class="nav-link"><span class="nav-dot"></span>Handover Board</a>
+          <a href="sales_team.html" class="nav-link"><span class="nav-dot"></span>Sales Team</a>
+          <a href="reports.html" class="nav-link"><span class="nav-dot"></span>Reports</a>
+          <a href="finance.html" class="nav-link"><span class="nav-dot"></span>Finance & Compliance</a>
+          <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
+          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
+          <a href="sales-exec-view.html" class="nav-link active"><span class="nav-dot"></span>Sales Exec</a>
+        </nav>
+        <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
+          <p class="text-sm font-semibold">Your Performance</p>
+          <div class="mt-3 h-2 rounded-full bg-white/10">
+            <div class="h-2 rounded-full bg-emerald-500" style="width: 68%"></div>
+          </div>
+          <p class="mt-3 text-xs text-slate-300">8 deals this month</p>
+        </div>
+      </div>
+    </aside>
+
+    <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
+
+    <!-- Main Content -->
+    <main class="min-w-0 flex-1">
+      <!-- Sticky Header -->
+      <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+        <div class="px-4 py-3 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <button id="menuButton" class="rounded-lg border border-slate-200 p-2 lg:hidden" type="button" aria-label="Open navigation">
+                <span class="block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+                <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
+              </button>
+              <div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-950 sm:text-xl">My Dashboard</h1>
+                <p class="hidden text-xs text-slate-500 sm:block">Lerato Mokoena - Senior Sales Executive</p>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
+              <button class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700">Alerts</button>
+              <button class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">Action</button>
+            </div>
+            <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
+              <div class="flex flex-col">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
+                <h1 class="text-xl font-bold tracking-tight text-slate-950">Sales Executive View</h1>
+                <p class="text-xs text-slate-500">Your personal leads and performance</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm">Alerts <span class="ml-1 grid h-5 w-5 place-items-center rounded-full bg-red-600 text-[10px] text-white">3</span></button>
+                <div class="view-toggle rounded-lg border border-ocean bg-ocean p-1">
+                  <a class="text-slate-400" href="principal-view.html">DP View</a>
+                  <a class="text-white" href="sales-exec-view.html">Sales View</a>
+                </div>
+                <div class="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white">Sales Exec</div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">LM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <section class="page-shell px-4 py-6 pb-24 lg:pb-6 sm:px-6 lg:px-8">
+        <div class="space-y-6">
+          <!-- Personal Performance Cards -->
+          <section class="panel bg-slate-950 text-white">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow text-blue-200">Your Performance</p>
+                <h2 class="text-white">TODAY'S METRICS</h2>
+              </div>
+              <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Rank #1 in team</span>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+              <article class="performance-card success">
+                <span>My Active Leads</span>
+                <strong>18</strong>
+                <small>R4.2M pipeline value</small>
+              </article>
+              <article class="performance-card success">
+                <span>Follow-ups Due</span>
+                <strong>4</strong>
+                <small>Call before 15:00</small>
+              </article>
+              <article class="performance-card success">
+                <span>Test Drives Booked</span>
+                <strong>2</strong>
+                <small>Today and tomorrow</small>
+              </article>
+              <article class="performance-card success">
+                <span>Deals Awaiting F&I</span>
+                <strong>3</strong>
+                <small>Pending approval</small>
+              </article>
+              <article class="performance-card success">
+                <span>Units Sold</span>
+                <strong>8</strong>
+                <small>This month</small>
+              </article>
+              <article class="performance-card success">
+                <span>Conversion Rate</span>
+                <strong>44%</strong>
+                <small>Top performer</small>
+              </article>
+            </div>
+          </section>
+
+          <!-- Notifications -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">My Notifications</p>
+                <h2>Action items and alerts</h2>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="notification-item urgent">
+                <strong>URGENT: Bank approval pending</strong>
+                <span>Nadia Petersen's finance deal requires insurance confirmation before handover can proceed.</span>
+                <div class="mt-2 flex gap-2">
+                  <button class="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white">Call Customer</button>
+                  <button class="rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700">Follow Up</button>
+                </div>
+              </div>
+              <div class="notification-item warning">
+                <strong>Test Drive Tomorrow</strong>
+                <span>Jason Daniels - 2019 Mazda CX-5 Dynamic at 10:00. Vehicle needs to be ready.</span>
+                <div class="mt-2 flex gap-2">
+                  <button class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white">Confirm Vehicle</button>
+                </div>
+              </div>
+              <div class="notification-item success">
+                <strong>Deal Approved - Congrats!</strong>
+                <span>Dewald Pretorius finance approved. Handover scheduled for Wednesday 08:00.</span>
+                <div class="mt-2 flex gap-2">
+                  <button class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white">Prepare Handover</button>
+                </div>
+              </div>
+              <div class="notification-item">
+                <strong>New Lead Assigned</strong>
+                <span>Ethan Smit (2018 BMW 320d M Sport) - R359,900 value. AutoTrader lead - call within 1 hour.</span>
+                <div class="mt-2 flex gap-2">
+                  <button class="stock-action-btn primary">Contact Now</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Follow-ups Due Today -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Today's Tasks</p>
+                <h2>Follow-ups Due Today</h2>
+              </div>
+              <span class="rounded-lg bg-red-100 px-3 py-1 text-sm font-bold text-red-700">4 due</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Due Time</th>
+                    <th>Priority</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-black text-slate-950">Ethan Smit</td>
+                    <td>2018 BMW 320d M Sport</td>
+                    <td class="font-bold">10:45</td>
+                    <td><span class="priority hot">Hot</span></td>
+                    <td><button class="stock-action-btn primary">Call Now</button></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Nadia Petersen</td>
+                    <td>2023 Toyota Corolla Cross XS</td>
+                    <td class="font-bold">12:30</td>
+                    <td><span class="priority hot">Hot</span></td>
+                    <td><button class="stock-action-btn">Check Status</button></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Jason Daniels</td>
+                    <td>2019 Mazda CX-5 Dynamic</td>
+                    <td class="font-bold">14:00</td>
+                    <td><span class="priority hot">Hot</span></td>
+                    <td><button class="stock-action-btn">Prepare TD</button></td>
+                  </tr>
+                  <tr>
+                    <td class="font-black text-slate-950">Dewald Pretorius</td>
+                    <td>2023 VW Polo Vivo Trendline</td>
+                    <td class="font-bold">16:00</td>
+                    <td><span class="priority warm">Warm</span></td>
+                    <td><button class="stock-action-btn">Confirm</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- My Deal Flow Pipeline -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Your Pipeline</p>
+                <h2>My Deal Flow</h2>
+              </div>
+              <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">18 leads</span>
+            </div>
+            <div class="kanban">
+              <!-- New Lead -->
+              <div class="kanban-column">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="font-black text-slate-950">New Lead</h3>
+                  <span>1</span>
+                </div>
+                <div class="space-y-3">
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Ethan Smit</h4>
+                    <p class="text-sm text-slate-600 mb-2">2018 BMW 320d M Sport</p>
+                    <div class="text-xs font-bold text-ocean">R359,900</div>
+                    <div class="mt-2 flex gap-2">
+                      <button class="stock-action-btn primary w-full">Contact</button>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Contacted -->
+              <div class="kanban-column">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="font-black text-slate-950">Contacted</h3>
+                  <span>2</span>
+                </div>
+                <div class="space-y-3">
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Nadia Petersen</h4>
+                    <p class="text-sm text-slate-600 mb-2">2023 Toyota Corolla Cross</p>
+                    <div class="text-xs font-bold text-ocean">R369,900</div>
+                    <div class="mt-2 flex gap-2">
+                      <button class="stock-action-btn w-full">Schedule TD</button>
+                    </div>
+                  </article>
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority warm">Warm</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Jason Daniels</h4>
+                    <p class="text-sm text-slate-600 mb-2">2019 Mazda CX-5</p>
+                    <div class="text-xs font-bold text-ocean">R299,900</div>
+                    <div class="mt-2 flex gap-2">
+                      <button class="stock-action-btn w-full">Schedule TD</button>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Test Drive Booked -->
+              <div class="kanban-column">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="font-black text-slate-950">Test Drive</h3>
+                  <span>1</span>
+                </div>
+                <div class="space-y-3">
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Dewald Pretorius</h4>
+                    <p class="text-sm text-slate-600 mb-2">2023 VW Polo Vivo</p>
+                    <div class="text-xs font-bold text-ocean">R209,900</div>
+                    <div class="mt-1 text-xs text-emerald-600 font-bold">Sold - Book Handover</div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Finance Review -->
+              <div class="kanban-column">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="font-black text-slate-950">Finance Review</h3>
+                  <span>2</span>
+                </div>
+                <div class="space-y-3">
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Sibusiso Radebe</h4>
+                    <p class="text-sm text-slate-600 mb-2">2023 Chery Tiggo 4 Pro</p>
+                    <div class="text-xs font-bold text-ocean">R319,900</div>
+                    <div class="mt-1 text-xs text-amber-600 font-bold">Pending approval</div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Approved -->
+              <div class="kanban-column">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="font-black text-slate-950">Approved</h3>
+                  <span>2</span>
+                </div>
+                <div class="space-y-3">
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Nadia Petersen</h4>
+                    <p class="text-sm text-slate-600 mb-2">2023 Toyota Corolla Cross</p>
+                    <div class="text-xs font-bold text-ocean">R369,900</div>
+                    <div class="mt-1 text-xs text-emerald-600 font-bold">Book Handover</div>
+                  </article>
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Jason Daniels</h4>
+                    <p class="text-sm text-slate-600 mb-2">2019 Mazda CX-5</p>
+                    <div class="text-xs font-bold text-ocean">R299,900</div>
+                    <div class="mt-1 text-xs text-emerald-600 font-bold">Book Handover</div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Sold -->
+              <div class="kanban-column">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="font-black text-slate-950">Sold</h3>
+                  <span>8</span>
+                </div>
+                <div class="space-y-3">
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Sibusiso Radebe</h4>
+                    <p class="text-sm text-slate-600 mb-2">2023 Chery Tiggo 4 Pro</p>
+                    <div class="text-xs font-bold text-emerald-600">R319,900 - Sold</div>
+                    <div class="mt-1 text-xs text-slate-500">GP: R40,900</div>
+                  </article>
+                  <article class="lead-card">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="priority hot">Hot</span>
+                    </div>
+                    <h4 class="font-black text-slate-950">Dewald Pretorius</h4>
+                    <p class="text-sm text-slate-600 mb-2">2023 VW Polo Vivo</p>
+                    <div class="text-xs font-bold text-emerald-600">R209,900 - Sold</div>
+                    <div class="mt-1 text-xs text-slate-500">GP: R28,900</div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Team Leaderboard -->
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Team Performance</p>
+                <h2>Sales Leaderboard</h2>
+              </div>
+              <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">April 2026</span>
+            </div>
+            <div class="grid gap-4 md:grid-cols-3">
+              <article class="metric-card">
+                <div class="flex items-center gap-3">
+                  <span class="rank-badge">1</span>
+                  <div>
+                    <p class="font-black text-slate-950">Lerato Mokoena</p>
+                    <p class="text-xs text-slate-500">Senior Sales Executive</p>
+                  </div>
+                </div>
+                <div class="mt-3 flex items-end justify-between">
+                  <div>
+                    <span class="text-xs font-bold text-slate-500">Units Sold</span>
+                    <strong class="block text-2xl text-emerald-600">8</strong>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-bold text-slate-500">GP Generated</span>
+                    <strong class="block text-lg text-emerald-600">R384,500</strong>
+                  </div>
+                </div>
+              </article>
+              <article class="metric-card">
+                <div class="flex items-center gap-3">
+                  <span class="rank-badge bg-slate-400">2</span>
+                  <div>
+                    <p class="font-black text-slate-950">Johan Botha</p>
+                    <p class="text-xs text-slate-500">Sales Executive</p>
+                  </div>
+                </div>
+                <div class="mt-3 flex items-end justify-between">
+                  <div>
+                    <span class="text-xs font-bold text-slate-500">Units Sold</span>
+                    <strong class="block text-2xl text-slate-700">6</strong>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-bold text-slate-500">GP Generated</span>
+                    <strong class="block text-lg text-slate-700">R312,800</strong>
+                  </div>
+                </div>
+              </article>
+              <article class="metric-card">
+                <div class="flex items-center gap-3">
+                  <span class="rank-badge bg-slate-400">3</span>
+                  <div>
+                    <p class="font-black text-slate-950">Ayesha Naidoo</p>
+                    <p class="text-xs text-slate-500">F&I Business Manager</p>
+                  </div>
+                </div>
+                <div class="mt-3 flex items-end justify-between">
+                  <div>
+                    <span class="text-xs font-bold text-slate-500">Units Sold</span>
+                    <strong class="block text-2xl text-slate-700">5</strong>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-bold text-slate-500">GP Generated</span>
+                    <strong class="block text-lg text-slate-700">R261,400</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Action Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-200 bg-white px-2 py-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="tel:">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+      <span>Call</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-emerald-600" href="https://wa.me/">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg>
+      <span>WhatsApp</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean" href="deal-flow.html">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+      <span>Add Note</span>
+    </a>
+    <button class="mobileMoveDeal flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" type="button">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+      <span>Move Deal</span>
+    </button>
+  </nav>
+
+  <script src="static/js/app.js"></script>
+</body>
+</html>
