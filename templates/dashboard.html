@@ -5,10 +5,10 @@
   <section class="panel bg-slate-950 text-white">
     <div class="panel-heading">
       <div>
-        <p class="eyebrow text-blue-200">Dealer Control Room</p>
+        <p class="eyebrow text-blue-200">Control Room</p>
         <h2 class="text-white">TODAY'S PERFORMANCE</h2>
       </div>
-      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Cash, risk, and sales action</span>
+      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Finance, risk, and operations</span>
     </div>
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <article class="performance-card success">
@@ -38,21 +38,21 @@
     <section class="panel missed-panel">
       <div class="panel-heading">
         <div>
-          <p class="eyebrow text-red-700">Missed Opportunities</p>
-          <h2>Profit at risk</h2>
+          <p class="eyebrow text-red-700">Lost Money Engine</p>
+          <h2>Revenue at risk – take action now</h2>
         </div>
-        <span class="red-badge">{{ missed_opportunities.unfollowed_leads }} unfollowed leads</span>
+        <span class="red-badge">{{ missed_opportunities.unfollowed_leads }} leads requiring action</span>
       </div>
       <div class="grid gap-4 sm:grid-cols-2">
         <div class="rounded-lg bg-red-50 p-4">
           <span class="text-xs font-black uppercase tracking-wide text-red-700">Estimated lost profit</span>
           <strong class="mt-2 block text-3xl font-black text-red-800" data-counter="{{ missed_opportunities.estimated_lost_profit }}" data-prefix="R">{{ missed_opportunities.estimated_lost_profit|currency }}</strong>
-          <p class="mt-2 text-sm font-semibold text-red-700">Based on average deal value and current Gross Profit rate.</p>
+          <p class="mt-2 text-sm font-semibold text-red-700">This money can be recovered today.</p>
         </div>
         <div class="rounded-lg bg-slate-50 p-4">
           <span class="text-xs font-black uppercase tracking-wide text-slate-500">Average deal value</span>
           <strong class="mt-2 block text-3xl font-black text-slate-950">{{ missed_opportunities.average_deal_value|currency }}</strong>
-          <p class="mt-2 text-sm font-semibold text-slate-600">Used to price missed buyer follow-ups.</p>
+          <p class="mt-2 text-sm font-semibold text-slate-600">Per buyer in lost pipeline.</p>
         </div>
       </div>
       <div class="mt-4 space-y-3">
@@ -62,7 +62,11 @@
             <p class="font-black text-slate-950">{{ lead.customer }}</p>
             <p class="text-sm text-slate-500">{{ lead.vehicle }} - {{ lead.last_contact }}</p>
           </div>
-          <span class="red-badge">Call now</span>
+          <div class="flex gap-2">
+            <button class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white" type="button">Call</button>
+            <button class="rounded-lg bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-700" type="button">WhatsApp</button>
+            <button class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600" type="button">Snooze</button>
+          </div>
         </div>
         {% endfor %}
       </div>

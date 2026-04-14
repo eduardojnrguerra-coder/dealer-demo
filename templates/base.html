@@ -44,10 +44,10 @@
         </div>
         <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
           {% set items = [
-            ('Dashboard', 'dashboard'),
-            ('Stock', 'stock'),
+            ('Control Room', 'dashboard'),
+            ('Vehicle Stock', 'stock'),
             ('Deal Flow', 'pipeline'),
-            ('Buyers', 'customers'),
+            ('Customers', 'customers'),
             ('Deal Files', 'deal_jackets'),
             ('F&I Desk', 'fi_desk'),
             ('Trade-ins', 'trade_ins'),
@@ -55,7 +55,12 @@
             ('Workshop Queue', 'recon_board'),
             ('Handover Board', 'delivery_planning'),
             ('Sales Team', 'sales_team'),
-            ('Reports', 'reports'),
+            ('Reports', 'reports')
+          ] %}
+          {% if active_view|default('principal') == 'principal' %}
+          {% set items = items + [('Finance & Compliance', 'finance_compliance')] %}
+          {% endif %}
+          {% set items = items + [
             ('Integrations', 'integrations'),
             ('Settings', 'settings')
           ] %}
@@ -72,7 +77,7 @@
             <div class="h-2 rounded-full bg-blue-400" style="width: 72%"></div>
           </div>
           <p class="mt-3 text-xs text-slate-300">17 of 24 units closed this month</p>
-          <p class="mt-2 text-xs text-slate-400">Dealer Principal control room</p>
+          <p class="mt-2 text-xs text-slate-400">Operating system control room</p>
         </div>
       </div>
     </aside>
@@ -80,9 +85,9 @@
     <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
 
     <main class="min-w-0 flex-1">
-      <header class="sticky top-0 z-20 border-b border-slate-200 bg-white/92 shadow-sm backdrop-blur">
-        <div class="space-y-3 px-4 py-4 sm:px-6 lg:px-8">
-          <div class="flex items-center justify-between gap-4">
+      <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+        <div class="px-4 py-3 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
             <button id="menuButton" class="rounded-lg border border-slate-200 p-2 lg:hidden" type="button" aria-label="Open navigation">
               <span class="block h-0.5 w-5 bg-slate-700"></span>
@@ -90,10 +95,79 @@
               <span class="mt-1 block h-0.5 w-5 bg-slate-700"></span>
             </button>
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
-              <h1 class="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">{{ page_title }}</h1>
+              <h1 class="text-lg font-bold tracking-tight text-slate-950 sm:text-xl">{{ page_title }}</h1>
+              {% if active_view|default('principal') == 'principal' %}
+              <p class="hidden text-xs text-slate-500 sm:block">Full visibility</p>
+              {% else %}
+              <p class="hidden text-xs text-emerald-700 sm:block">Personal view</p>
+              {% endif %}
             </div>
           </div>
+          <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
+            <div class="flex items-center gap-2">
+              <button id="mobileAlertsBtn" class="relative flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 shadow-sm" type="button" aria-label="Alerts">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.659 6 8.338 6 10v4.158a2.032 2.032 0 01-.595 1.405L5 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <span>{{ notifications|default([])|length }}</span>
+              </button>
+              <div id="mobileAlertsMenu" class="absolute left-4 right-4 top-[calc(100%+0.5rem)] z-50 hidden rounded-lg border border-slate-200 bg-white p-3 shadow-premium">
+                <p class="mb-2 text-xs font-black uppercase tracking-wide text-slate-400">Alerts</p>
+                {% for item in notifications|default([]) %}
+                <div class="notification-item {{ item.type }}">
+                  <strong>{{ item.title }}</strong>
+                  <span>{{ item.detail }}</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="relative">
+              <button id="mobileQuickAction" class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white shadow-sm" type="button">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span class="hidden sm:inline">Action</span>
+              </button>
+              <div id="mobileQuickMenu" class="absolute right-4 top-[calc(100%+0.5rem)] z-50 hidden w-48 rounded-lg border border-slate-200 bg-white p-2 shadow-premium">
+                {% if active_view|default('principal') == 'salesman' %}
+                <a href="{{ url_for('sales_executive_view') }}">Add Lead</a>
+                <a href="{{ url_for('calendar') }}">Book Test Drive</a>
+                <a href="{{ url_for('sales_executive_view') }}">Start Deal</a>
+                <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>
+                {% else %}
+                <a href="{{ url_for('pipeline') }}">Add Lead</a>
+                <a href="{{ url_for('calendar') }}">Book Test Drive</a>
+                <a href="{{ url_for('deal_jackets') }}">Start Deal</a>
+                <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>
+                {% endif %}
+              </div>
+            </div>
+            <button id="mobileOverflowBtn" class="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-700 shadow-sm" type="button" aria-label="More options">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div id="mobileOverflowMenu" class="absolute right-4 top-[calc(100%+0.5rem)] z-50 hidden w-56 rounded-lg border border-slate-200 bg-white p-2 shadow-premium">
+              <div class="border-b border-slate-100 pb-2 mb-2">
+                <p class="px-2 pb-1 text-xs font-black uppercase text-slate-400">Select Branch</p>
+                <select class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm"><option>Johannesburg North</option><option>Pretoria East</option><option>Cape Town</option></select>
+              </div>
+              <div class="border-b border-slate-100 pb-2 mb-2">
+                <p class="px-2 pb-1 text-xs font-black uppercase text-slate-400">Date Range</p>
+                <select class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm"><option>This Month</option><option>Last 30 Days</option><option>Quarter to Date</option></select>
+              </div>
+              <p class="px-2 pb-1 text-xs font-black uppercase text-slate-400">Role View</p>
+              <div class="flex gap-1">
+                <a class="flex-1 rounded px-2 py-1.5 text-center text-xs font-bold {% if active_view|default('principal') == 'principal' %}bg-slate-800 text-white{% else %}bg-slate-100 text-slate-600{% endif %}" href="{{ url_for('dashboard') }}">Management</a>
+                <a class="flex-1 rounded px-2 py-1.5 text-center text-xs font-bold {% if active_view|default('principal') == 'salesman' %}bg-emerald-600 text-white{% else %}bg-slate-100 text-slate-600{% endif %}" href="{{ url_for('sales_executive_view') }}">Sales</a>
+              </div>
+            </div>
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">{{ user_initials|default('MV') }}</div>
+          </div>
+          <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
+            <div class="flex flex-col">
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
+              <h1 class="text-xl font-bold tracking-tight text-slate-950">{{ page_title }}</h1>
+              {% if active_view|default('principal') == 'principal' %}
+              <p class="text-xs text-slate-500">Full visibility across stock, deals, people, and profit</p>
+              {% else %}
+              <p class="text-xs text-slate-500">Your leads, follow-ups, deals, and actions</p>
+              {% endif %}
+            </div>
             <div class="flex items-center gap-2">
               <div class="relative">
               <button id="notificationButton" class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm" type="button" aria-label="Notifications">
@@ -110,16 +184,23 @@
                 {% endfor %}
               </div>
               </div>
-              <div class="view-toggle hidden rounded-lg border border-slate-200 bg-slate-50 p-1 md:flex">
-                <a class="{% if active_view|default('principal') == 'principal' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dealer Principal View</a>
-                <a class="{% if active_view|default('principal') == 'salesman' %}active{% endif %}" href="{{ url_for('sales_executive_view') }}">Salesman View</a>
+              {% if active_view|default('principal') == 'principal' %}
+              <div class="view-toggle rounded-lg border border-ocean bg-ocean p-1">
+                <a class="text-white" href="{{ url_for('dashboard') }}">DP View</a>
+                <a class="text-slate-400" href="{{ url_for('sales_executive_view') }}">Sales View</a>
               </div>
-              <div class="hidden rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-sm font-black text-ocean lg:block">{{ role_badge|default('Dealer Principal View') }}</div>
+              <div class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-bold text-white">{{ role_badge|default('Dealer Principal') }}</div>
+              {% else %}
+              <div class="view-toggle rounded-lg border border-emerald-600 bg-emerald-600 p-1">
+                <a class="text-white" href="{{ url_for('dashboard') }}">DP View</a>
+                <a class="text-white" href="{{ url_for('sales_executive_view') }}">Sales View</a>
+              </div>
+              <div class="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white">{{ role_badge|default('Sales Executive') }}</div>
+              {% endif %}
               <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">{{ user_initials|default('MV') }}</div>
             </div>
           </div>
-
-          <div class="grid gap-3 xl:grid-cols-[180px_180px_1fr_190px]">
+          <div class="hidden lg:grid lg:gap-3 xl:grid-cols-[180px_180px_1fr_190px]">
             <label class="top-control">
               <span>Branch</span>
               <select>
@@ -163,9 +244,28 @@
         </div>
       </header>
 
-      <section class="page-shell px-4 py-6 sm:px-6 lg:px-8">
+      <section class="page-shell px-4 py-6 sm:px-6 lg:px-8 pb-24 lg:pb-6">
         {% block content %}{% endblock %}
       </section>
+
+      <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-200 bg-white px-2 py-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+        <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600 hover:bg-slate-50" href="tel:">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+          <span>Call</span>
+        </a>
+        <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-emerald-600 hover:bg-emerald-50" href="https://wa.me/">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg>
+          <span>WhatsApp</span>
+        </a>
+        <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean hover:bg-blue-50" href="{{ url_for('pipeline') }}">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <span>Add Note</span>
+        </a>
+        <button class="mobileMoveDeal flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" type="button">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+          <span>Move Deal</span>
+        </button>
+      </nav>
     </main>
   </div>
 

@@ -1,41 +1,67 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
-  <section class="panel">
-    <p class="eyebrow">Dealer Setup</p>
-    <h2 class="mt-2 text-2xl font-black">Dealership profile</h2>
-    <div class="mt-6 space-y-4">
-      <label class="settings-field">
-        <span>Dealership name</span>
-        <input value="Johannesburg North Demo Motors" readonly>
-      </label>
-      <label class="settings-field">
-        <span>Default currency</span>
-        <input value="South African Rand (R)" readonly>
-      </label>
-      <label class="settings-field">
-        <span>Monthly retail target</span>
-        <input value="24 vehicles" readonly>
-      </label>
-    </div>
-  </section>
-  <section class="panel">
+<div class="space-y-6">
+  <section class="panel bg-slate-950 text-white">
     <div class="panel-heading">
       <div>
-        <p class="eyebrow">Demo controls</p>
-        <h2>Enabled modules</h2>
+        <p class="eyebrow text-blue-200">System Customization</p>
+        <h2 class="text-white">Module & workflow configuration</h2>
       </div>
+      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">PineX Operating System</span>
     </div>
-    <div class="grid gap-3 md:grid-cols-2">
-      {% for item in ["Floor Stock management", "Deal Flow", "Deal Files", "F&I Desk", "Workshop Queue", "Handover Board", "Trade-in appraisals", "Gross Profit visibility"] %}
-      <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
-        <span class="font-bold">{{ item }}</span>
-        <span class="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">Active</span>
+    <p class="mt-2 max-w-2xl text-sm text-slate-300">Configure which modules, roles, and workflows are active for your organization. PineX adapts to your business structure.</p>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+    <section class="panel">
+      <p class="eyebrow">Module Toggles</p>
+      <h2 class="mt-2 text-xl font-black">Active business modules</h2>
+      <div class="mt-4 space-y-3">
+        {% set modules = [('Vehicle Stock', true), ('Deal Flow', true), ('Deal Files', true), ('F&I Finance', true), ('Workshop Queue', true), ('Handover Control', true), ('Trade-ins', true), ('Payroll visibility', true), ('VAT workflow', false), ('Compliance tracking', false)] %}
+        {% for name, active in modules %}
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <span class="font-bold text-slate-900">{{ name }}</span>
+          <label class="relative inline-flex cursor-pointer items-center">
+            <input class="sr-only peer" type="checkbox" {% if active %}checked{% endif %}>
+            <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-all peer-checked:bg-emerald-600 peer-checked:after:translate-x-full"></div>
+          </label>
+        </div>
+        {% endfor %}
       </div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Role Configuration</p>
+      <h2 class="mt-2 text-xl font-black">Access control layers</h2>
+      <div class="mt-4 space-y-3">
+        {% set roles = [('Dealer Principal', 'Full business visibility', true), ('Sales Executive', 'Own leads and deals only', true), ('Admin', 'Data entry and support', false), ('Finance Manager', 'Finance workflow only', false), ('Workshop Manager', 'Recon board only', false), ('Used Vehicle Manager', 'Stock pricing only', false)] %}
+        {% for name, desc, active in roles %}
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <div>
+            <p class="font-black text-slate-950">{{ name }}</p>
+            <p class="text-sm text-slate-500">{{ desc }}</p>
+          </div>
+          <label class="relative inline-flex cursor-pointer items-center">
+            <input class="sr-only peer" type="checkbox" {% if active %}checked{% endif %}>
+            <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-all peer-checked:bg-emerald-600 peer-checked:after:translate-x-full"></div>
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <p class="eyebrow">Workflow Customization</p>
+    <h2 class="mt-2 text-xl font-black">Deal flow pipeline stages</h2>
+    <div class="mt-4 flex flex-wrap gap-2">
+      {% set stages = ['New Lead', 'Contacted', 'Interested', 'Test Drive Booked', 'Negotiation', 'Finance Review', 'Approved', 'Sold', 'Lost'] %}
+      {% for stage in stages %}
+      <span class="rounded-lg border border-ocean bg-ocean/10 px-3 py-1.5 text-sm font-bold text-ocean">{{ stage }}</span>
       {% endfor %}
     </div>
-    <p class="mt-6 rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-600">These settings are intentionally read-only in the client demo. A production version would connect them to dealership branches, user roles, targets, notification preferences, and integration credentials.</p>
+    <p class="mt-6 rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-600">This configuration demonstrates PineX's ability to adapt to different business structures and industries. In production, these would be fully customizable per branch.</p>
   </section>
 </div>
 {% endblock %}

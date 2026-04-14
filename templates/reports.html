@@ -2,39 +2,91 @@
 
 {% block content %}
 <div class="space-y-6">
-  <section class="panel">
+  <section class="panel bg-slate-950 text-white">
     <div class="panel-heading">
       <div>
-        <p class="eyebrow">Dealer Principal Pack</p>
-        <h2>Executive reports</h2>
+        <p class="eyebrow text-blue-200">Executive Pack</p>
+        <h2 class="text-white">Business visibility reports</h2>
       </div>
-      <span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">Version 1 preview</span>
+      <span class="rounded-lg bg-emerald-900/50 px-3 py-1 text-sm font-bold text-emerald-400">Finance-Ready</span>
     </div>
     <div class="grid gap-4 md:grid-cols-3">
-      <article class="report-tile">
-        <span>01</span>
-        <h3>Stock ageing and margin</h3>
-        <p>Track floor stock age, low-margin vehicles, recon exposure, and pricing actions by branch.</p>
+      <article class="report-tile border border-slate-700 bg-slate-900/50">
+        <span class="text-blue-300">01</span>
+        <h3 class="text-white">Stock ageing and margin</h3>
+        <p class="text-slate-400">Track floor stock age, low-margin vehicles, recon exposure, and pricing actions by branch.</p>
       </article>
-      <article class="report-tile">
-        <span>02</span>
-        <h3>Deal Flow conversion</h3>
-        <p>See lead source quality, stage drop-off, response gaps, and Sales Executive conversion movement.</p>
+      <article class="report-tile border border-slate-700 bg-slate-900/50">
+        <span class="text-blue-300">02</span>
+        <h3 class="text-white">Deal Flow conversion</h3>
+        <p class="text-slate-400">See lead source quality, stage drop-off, response gaps, and Sales Executive conversion movement.</p>
       </article>
-      <article class="report-tile">
-        <span>03</span>
-        <h3>Gross Profit pack</h3>
-        <p>Monthly Gross Profit, F&I contribution, accessory opportunity, and deal velocity in one view.</p>
+      <article class="report-tile border border-slate-700 bg-slate-900/50">
+        <span class="text-blue-300">03</span>
+        <h3 class="text-white">Gross Profit pack</h3>
+        <p class="text-slate-400">Monthly Gross Profit, F&I contribution, accessory opportunity, and deal velocity in one view.</p>
+      </article>
+      <article class="report-tile border border-slate-700 bg-slate-900/50">
+        <span class="text-blue-300">04</span>
+        <h3 class="text-white">Finance pipeline</h3>
+        <p class="text-slate-400">Active finance applications, bank status, approval delays, and document completion tracking.</p>
+      </article>
+      <article class="report-tile border border-slate-700 bg-slate-900/50">
+        <span class="text-blue-300">05</span>
+        <h3 class="text-white">Compliance status</h3>
+        <p class="text-slate-400">Documents outstanding, audit trail readiness, and regulatory compliance checkpoints.</p>
+      </article>
+      <article class="report-tile border border-slate-700 bg-slate-900/50">
+        <span class="text-blue-300">06</span>
+        <h3 class="text-white">Sales team performance</h3>
+        <p class="text-slate-400">Individual sales rankings, Gross Profit contribution, activity metrics, and KPIs by role.</p>
       </article>
     </div>
   </section>
 
   <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Management Dashboard</p>
+        <h2>Performance snapshot</h2>
+      </div>
+    </div>
     <div class="grid gap-4 md:grid-cols-4">
-      <div class="summary-card"><span>Aged units</span><strong>4</strong></div>
-      <div class="summary-card"><span>Hot lead gaps</span><strong>3</strong></div>
-      <div class="summary-card"><span>Low margin stock</span><strong>5</strong></div>
-      <div class="summary-card"><span>Finance docs missing</span><strong>2</strong></div>
+      <div class="summary-card"><span>Aged units</span><strong>4</strong><small>Over 60 days in stock</small></div>
+      <div class="summary-card"><span>Hot lead gaps</span><strong>3</strong><small>Uncontacted 48h+</small></div>
+      <div class="summary-card"><span>Low margin stock</span><strong>5</strong><small>Below 10% margin</small></div>
+      <div class="summary-card"><span>Finance docs missing</span><strong>2</strong><small>Blocking delivery</small></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Finance & Compliance</p>
+        <h2>Audit-ready visibility</h2>
+      </div>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <article class="glance-card">
+        <span>Deal Files</span>
+        <strong>3</strong>
+        <small>Active jackets requiring finance docs</small>
+      </article>
+      <article class="glance-card">
+        <span>Audit Trail</span>
+        <strong>Active</strong>
+        <small>All deal actions logged with timestamp</small>
+      </article>
+      <article class="glance-card">
+        <span>VAT Tracking</span>
+        <strong>Ready</strong>
+        <small>Period close data exportable</small>
+      </article>
+      <article class="glance-card">
+        <span>Approvals</span>
+        <strong>2 Pending</strong>
+        <small>Manager discount thresholds</small>
+      </article>
     </div>
   </section>
 </div>

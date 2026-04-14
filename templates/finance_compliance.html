@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel bg-slate-950 text-white">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow text-blue-200">Finance & Compliance</p>
+        <h2 class="text-white">OPERATIONAL FINANCE LAYER</h2>
+      </div>
+      <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Management visibility</span>
+    </div>
+    <p class="mt-2 max-w-2xl text-sm text-slate-300">PineX can be configured to support payroll workflows, VAT process visibility, SARS reporting preparation, approval chains, and finance oversight through a connected finance and compliance layer.</p>
+  </section>
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <article class="metric-card">
+      <span>Gross Profit This Month</span>
+      <strong data-counter="{{ kpis.gross_profit }}" data-prefix="R">{{ kpis.gross_profit|currency }}</strong>
+      <small>Front-end GP from sales</small>
+    </article>
+    <article class="metric-card">
+      <span>Pending Approvals</span>
+      <strong data-counter="{{ kpis.pending_finance }}">{{ kpis.pending_finance }}</strong>
+      <small>Deals awaiting sign-off</small>
+    </article>
+    <article class="metric-card">
+      <span>Docs Outstanding</span>
+      <strong data-counter="{{ kpis.get('docs_outstanding', 0) }}">{{ kpis.get('docs_outstanding', 0) }}</strong>
+      <small>Compliance docs needed</small>
+    </article>
+    <article class="metric-card">
+      <span>Active Deal Files</span>
+      <strong data-counter="{{ deal_jackets|length }}">{{ deal_jackets|length }}</strong>
+      <small>Files in progress</small>
+    </article>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Payroll Visibility</p>
+          <h2>Commission and staff costs</h2>
+        </div>
+        <span class="rounded-lg bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700">Ready</span>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <div>
+            <p class="font-black text-slate-950">Sales Team Commission</p>
+            <p class="text-sm text-slate-500">SPIF + Gross Profit commission this month</p>
+          </div>
+          <strong class="text-xl font-black text-emerald-700">R{{ (kpis.get('gross_profit', 0) * 0.15)|round|int }}</strong>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <div>
+            <p class="font-black text-slate-950">Total Sales Payroll</p>
+            <p class="text-sm text-slate-500">Base + commission for period</p>
+          </div>
+          <strong class="text-xl font-black text-slate-950">R187,500</strong>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <div>
+            <p class="font-black text-amber-800">Pending Adjustments</p>
+            <p class="text-sm text-amber-700">Manual overrides awaiting approval</p>
+          </div>
+          <strong class="text-xl font-black text-amber-800">3</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">VAT Workflow</p>
+          <h2> VAT process tracking</h2>
+        </div>
+        <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Period tracking</span>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <div>
+            <p class="font-black text-slate-950">Input VAT (Purchases)</p>
+            <p class="text-sm text-slate-500">Stock, parts, recon costs</p>
+          </div>
+          <strong class="text-xl font-black text-slate-950">R{{ ((stock_profit_summary.get('total_stock_value', 0) * 0.15)|round / 10)|round|int }}</strong>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <div>
+            <p class="font-black text-slate-950">Output VAT (Sales)</p>
+            <p class="text-sm text-slate-500">Vehicles + F&I products</p>
+          </div>
+          <strong class="text-xl font-black text-slate-950">R{{ ((kpis.get('gross_profit', 0) * 0.15)|round / 8)|round|int }}</strong>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+          <div>
+            <p class="font-black text-slate-950">VAT Submission Due</p>
+            <p class="text-sm text-slate-500">SARS VAT201 deadline</p>
+          </div>
+          <strong class="text-xl font-black text-ocean">25 May</strong>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">SARS Reporting Prep</p>
+          <h2>Audit-ready checklist</h2>
+        </div>
+        <span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">Preparation</span>
+      </div>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+          <span class="font-bold text-emerald-800">Income records exported</span>
+          <span class="automation-label success">Complete</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+          <span class="font-bold text-emerald-800">Expense claims verified</span>
+          <span class="automation-label success">Complete</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-3">
+          <span class="font-bold text-amber-800">IRP5 / IT3 data review</span>
+          <span class="automation-label warning">Pending</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+          <span class="font-bold text-slate-700">Asset register reconciliation</span>
+          <span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">Scheduled</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+          <span class="font-bold text-slate-700">Dividend declarations</span>
+          <span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">Scheduled</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Month-End Readiness</p>
+          <h2>Operational checkpoints</h2>
+        </div>
+        <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">25 days remaining</span>
+      </div>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+          <span class="font-bold text-slate-700">Stock valuation complete</span>
+          <span class="status-pill status-in-stock">Ready</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+          <span class="font-bold text-slate-700">Bank reconciliations</span>
+          <span class="status-pill status-reserved">In Progress</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-3">
+          <span class="font-bold text-red-800">Deal jackets pending close</span>
+          <span class="red-badge">2</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+          <span class="font-bold text-slate-700">F&I pack closure</span>
+          <span class="status-pill status-in-stock">Ready</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+          <span class="font-bold text-slate-700">Handover financial clear</span>
+          <span class="status-pill status-in-stock">Ready</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Finance Approvals</p>
+          <h2>Pending approval chains</h2>
+        </div>
+        <span class="rounded-lg bg-amber-50 px-3 py-1 text-sm font-bold text-amber-700">{{ kpis.get('pending_finance', 0) }} pending</span>
+      </div>
+      <div class="space-y-3">
+        {% for app in finance_applications[:4] %}
+        <div class="rounded-lg border border-slate-200 p-4">
+          <div class="flex items-center justify-between">
+            <p class="font-black text-slate-950">{{ app.customer }}</p>
+            <span class="status-pill {% if app.status == 'Approved' %}status-sold{% else %}status-reserved{% endif %}">{{ app.status }}</span>
+          </div>
+          <p class="mt-1 text-sm text-slate-500">{{ app.vehicle }} - {{ app.bank }}</p>
+          <div class="mt-3 flex items-center justify-between text-sm">
+            <span class="text-slate-500">Amount: R{{ app.amount|number }}</span>
+            <span class="font-bold text-slate-700">R{{ app.estimate|number }}/mo</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Audit Trail</p>
+          <h2>Recent financial actions</h2>
+        </div>
+        <span class="rounded-lg bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700">Active</span>
+      </div>
+      <div class="timeline">
+        {% for item in data.recent_activity[:5] %}
+        <div class="timeline-item">
+          <p class="text-xs font-black text-ocean">{{ item.time }} - {{ item.actor }}</p>
+          <p class="mt-1 text-sm font-bold text-slate-900">{{ item.action }}</p>
+          <p class="mt-1 text-xs font-semibold text-slate-500">{{ item.meta }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Integration Positioning</p>
+        <h2>Connected systems ecosystem</h2>
+      </div>
+    </div>
+    <p class="max-w-3xl text-sm leading-6 text-slate-600">PineX stays the primary operating layer. This finance and compliance visibility can connect to or work alongside payroll tools, accounting systems (Sage, QuickBooks, Xero), VAT workflow processes, and reporting preparation for a complete financial oversight solution.</p>
+  </section>
+</div>
+{% endblock %}

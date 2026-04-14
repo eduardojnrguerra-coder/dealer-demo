@@ -643,15 +643,34 @@ def reports():
     return render_template("reports.html", page_title="Reports", active_page="Reports", **context)
 
 
+@app.route("/finance-compliance")
+def finance_compliance():
+    context = dealership_data()
+    vehicles = context.get("vehicles", [])
+    stock_summary = {"In Stock": 0, "Reserved": 0, "Sold": 0}
+    for v in vehicles:
+        status = v.get("status", "Unknown")
+        if status in stock_summary:
+            stock_summary[status] += 1
+    total_stock_value = sum(v.get("selling_price", 0) for v in vehicles if v.get("status") != "Sold")
+    stock_profit_summary = {
+        "total_stock_value": total_stock_value,
+        "total_potential_profit": 0,
+        "estimated_profit_at_risk": 0,
+    }
+    context.update({"stock_summary": stock_summary, "stock_profit_summary": stock_profit_summary})
+    return render_template(
+        "finance_compliance.html",
+        page_title="Finance & Compliance",
+        active_page="Finance & Compliance",
+        **context,
+    )
+
+
 @app.route("/integrations")
 def integrations():
     context = dealership_data()
-    return render_template(
-        "integrations.html",
-        page_title="Integrations",
-        active_page="Integrations",
-        **context,
-    )
+    return render_template("integrations.html", page_title="Integrations", active_page="Integrations", **context)
 
 
 @app.route("/settings")

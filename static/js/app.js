@@ -8,6 +8,17 @@ const notificationMenu = document.getElementById('notificationMenu');
 const globalSearch = document.getElementById('globalSearch');
 const searchResults = document.getElementById('searchResults');
 const searchDataElement = document.getElementById('global-search-data');
+const mobileAlertsBtn = document.getElementById('mobileAlertsBtn');
+const mobileAlertsMenu = document.getElementById('mobileAlertsMenu');
+const mobileQuickAction = document.getElementById('mobileQuickAction');
+const mobileQuickMenu = document.getElementById('mobileQuickMenu');
+const mobileOverflowBtn = document.getElementById('mobileOverflowBtn');
+const mobileOverflowMenu = document.getElementById('mobileOverflowMenu');
+const mobileMoveDealBtn = document.querySelector('.mobileMoveDeal');
+
+mobileMoveDealBtn?.addEventListener('click', () => {
+  alert('Deal stage picker would open here. Select new pipeline stage to move the deal.');
+});
 
 function closeSidebar() {
   sidebar?.classList.add('-translate-x-full');
@@ -21,6 +32,33 @@ function openSidebar() {
 
 menuButton?.addEventListener('click', openSidebar);
 overlay?.addEventListener('click', closeSidebar);
+
+mobileAlertsBtn?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  mobileAlertsMenu?.classList.toggle('hidden');
+  mobileQuickMenu?.classList.add('hidden');
+  mobileOverflowMenu?.classList.add('hidden');
+});
+
+mobileQuickAction?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  mobileQuickMenu?.classList.toggle('hidden');
+  mobileAlertsMenu?.classList.add('hidden');
+  mobileOverflowMenu?.classList.add('hidden');
+});
+
+mobileOverflowBtn?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  mobileOverflowMenu?.classList.toggle('hidden');
+  mobileAlertsMenu?.classList.add('hidden');
+  mobileQuickMenu?.classList.add('hidden');
+});
+
+document.addEventListener('click', () => {
+  mobileAlertsMenu?.classList.add('hidden');
+  mobileQuickMenu?.classList.add('hidden');
+  mobileOverflowMenu?.classList.add('hidden');
+});
 
 quickActionButton?.addEventListener('click', (event) => {
   event.stopPropagation();
