@@ -21,7 +21,7 @@
     <div class="panel bg-slate-950 text-white">
       <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
         <div>
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-200">{{ selected_jacket.id }} · {{ selected_jacket.stock_number }}</p>
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-200">{{ selected_jacket.id }} - {{ selected_jacket.stock_number }}</p>
           <h2 class="mt-3 text-3xl font-black text-white">{{ selected_jacket.customer }}</h2>
           <p class="mt-2 text-slate-300">{{ selected_jacket.vehicle }}</p>
         </div>
@@ -96,7 +96,7 @@
         <div class="timeline">
           {% for note in selected_jacket.notes %}
           <div class="timeline-item">
-            <p class="text-xs font-black text-ocean">{{ note.time }} · {{ note.user }}</p>
+            <p class="text-xs font-black text-ocean">{{ note.time }} - {{ note.user }}</p>
             <p class="mt-1 text-sm font-bold text-slate-900">{{ note.note }}</p>
           </div>
           {% endfor %}

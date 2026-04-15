@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel bg-slate-950 text-white">
+    <div class="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+      <div>
+        <p class="eyebrow text-blue-200">Role-based workspace</p>
+        <h2 class="mt-2 text-3xl font-black text-white">{{ selected_role.title }}</h2>
+        <p class="mt-3 max-w-3xl text-sm font-semibold leading-6 text-slate-300">{{ selected_role.focus }}</p>
+      </div>
+      <span class="rounded-lg bg-white/10 px-4 py-2 text-sm font-black text-blue-100">{{ selected_role.badge }}</span>
+    </div>
+  </section>
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    {% for widget in selected_role.widgets %}
+    <article class="metric-card">
+      <span>{{ widget }}</span>
+      <strong>{{ loop.index * 3 + alert_counts.deals_stuck }}</strong>
+      <small>Filtered for this role's daily decisions</small>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[0.75fr_1.25fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Action Queue</p>
+          <h2>What this role should do next</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for action in selected_role.actions %}
+        <button class="module-action" type="button" data-confirm-action="{{ action }}">
+          <span>{{ loop.index }}</span>
+          <strong>{{ action }}</strong>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Live Dealership Context</p>
+          <h2>Filtered operational picture</h2>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <article class="alert-row warning"><strong>Deals awaiting F&I</strong><span>{{ kpis.pending_finance }} deal files need bank, docs, or insurance follow-through.</span></article>
+        <article class="alert-row critical"><strong>Overdue follow-ups</strong><span>{{ today_performance.overdue_followups }} buyers need contact before revenue leaks.</span></article>
+        <article class="alert-row info"><strong>Workshop jobs open</strong><span>{{ kpis.recon_units }} active Job Cards are affecting floor readiness and handover timing.</span></article>
+        <article class="alert-row info"><strong>Delivery Packs</strong><span>{{ kpis.docs_outstanding }} documents are outstanding across active deal files.</span></article>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

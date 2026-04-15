@@ -39,7 +39,7 @@
       <div class="panel-heading">
         <div>
           <p class="eyebrow text-red-700">Lost Money Engine</p>
-          <h2>Revenue at risk – take action now</h2>
+          <h2>Revenue at risk - take action now</h2>
         </div>
         <span class="red-badge">{{ missed_opportunities.unfollowed_leads }} leads requiring action</span>
       </div>
@@ -104,37 +104,67 @@
     </section>
   </div>
 
-  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-    <div class="metric-card">
-      <span>Floor Stock</span>
-      <strong class="kpi-value" data-counter="{{ kpis.stock_count }}">{{ kpis.stock_count }}</strong>
-      <small>Retail-ready and reserved units</small>
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Dealer Operating System</p>
+        <h2>Performance, control, and action queue</h2>
+      </div>
+      <div class="quick-actions-bar" aria-label="Common dealership actions">
+        <a href="{{ url_for('module_page', slug='add-vehicle') }}">Add Vehicle</a>
+        <a href="{{ url_for('deal_jackets') }}">Create Deal</a>
+        <a href="{{ url_for('module_page', slug='leads') }}">Add Lead</a>
+        <a href="{{ url_for('calendar') }}">Book Service</a>
+      </div>
     </div>
-    <div class="metric-card">
-      <span>Units Delivered This Month</span>
-      <strong class="kpi-value" data-counter="{{ kpis.sold_month }}">{{ kpis.sold_month }}</strong>
-      <small>Closed and handed over</small>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+      {% for metric in dashboard_metrics %}
+      <div class="metric-card {% if 'Aged' in metric.label %}border-red-200 bg-red-50{% endif %}">
+        <span>{{ metric.label }}</span>
+        {% if metric.currency|default(false) %}
+        <strong class="kpi-value" data-counter="{{ metric.value }}" data-prefix="R">{{ metric.value|currency }}</strong>
+        {% else %}
+        <strong class="kpi-value" data-counter="{{ metric.value }}">{{ metric.value }}</strong>
+        {% endif %}
+        <small>{{ metric.detail }}</small>
+      </div>
+      {% endfor %}
     </div>
-    <div class="metric-card">
-      <span>Gross Profit This Month</span>
-      <strong class="kpi-value" data-counter="{{ kpis.gross_profit }}" data-prefix="R">{{ kpis.gross_profit|currency }}</strong>
-      <small>Front-end GP from sold units</small>
-    </div>
-    <div class="metric-card">
-      <span>Deals Awaiting F&I</span>
-      <strong class="kpi-value" data-counter="{{ kpis.pending_finance }}">{{ kpis.pending_finance }}</strong>
-      <small>Bank approval or docs pending</small>
-    </div>
-    <div class="metric-card">
-      <span>Vehicles in Workshop Queue</span>
-      <strong class="kpi-value" data-counter="{{ kpis.recon_units }}">{{ kpis.recon_units }}</strong>
-      <small>Active Job Cards</small>
-    </div>
-    <div class="metric-card">
-      <span>Docs Outstanding</span>
-      <strong class="kpi-value" data-counter="{{ kpis.docs_outstanding }}">{{ kpis.docs_outstanding }}</strong>
-      <small>ID, Proof of Residence, insurance</small>
-    </div>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Warnings</p>
+          <h2>Operational alerts that need a decision</h2>
+        </div>
+        <span class="red-badge">{{ dashboard_alerts|selectattr("severity", "equalto", "critical")|list|length }} critical</span>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        {% for alert in dashboard_alerts %}
+        <article class="alert-row {{ alert.severity }}">
+          <strong>{{ alert.title }}</strong>
+          <span>{{ alert.detail }}</span>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Role Control</p>
+          <h2>Role-aware demo views</h2>
+        </div>
+      </div>
+      <div class="grid gap-2 sm:grid-cols-2">
+        <a class="role-card active" href="{{ url_for('dashboard') }}"><strong>Dealer Principal</strong><span>Profit, stock, people, and risk.</span></a>
+        <a class="role-card" href="{{ url_for('role_dashboard', role_key='sales-manager') }}"><strong>Sales Manager</strong><span>Lead discipline and stuck deals.</span></a>
+        <a class="role-card" href="{{ url_for('sales_executive_view') }}"><strong>Sales Executive</strong><span>Own buyers and daily follow-ups.</span></a>
+        <a class="role-card" href="{{ url_for('role_dashboard', role_key='workshop-manager') }}"><strong>Workshop Manager</strong><span>Job Cards and turnaround risk.</span></a>
+      </div>
+    </section>
   </div>
 
   <section class="panel">
@@ -294,6 +324,69 @@
             <span class="automation-label success">Auto-follow-up sent</span>
           </div>
         </article>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-3">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Inventory Ageing</p>
+          <h2>Cash tied up in Floor Stock</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for item in inventory_aging_summary %}
+        <div class="ageing-row {{ item.tone }}">
+          <span>{{ item.label }}</span>
+          <strong>{{ item.count }} units</strong>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Lead Source Performance</p>
+          <h2>Where buyer demand is coming from</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for source in lead_source_performance[:5] %}
+        <div class="source-row">
+          <div>
+            <strong>{{ source.source }}</strong>
+            <span>{{ source.count }} leads - {{ source.conversion }}% won</span>
+          </div>
+          {% if source.overdue %}
+          <span class="red-badge">{{ source.overdue }} stale</span>
+          {% else %}
+          <span class="automation-label success">Clean</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Top Salespeople</p>
+          <h2>Gross Profit leaders</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for person in top_salespeople %}
+        <div class="source-row">
+          <div>
+            <strong>{{ loop.index }}. {{ person.name }}</strong>
+            <span>{{ person.deals_closed }} units - {{ person.conversion_rate }}% conversion</span>
+          </div>
+          <span class="status-pill">{{ person.gross_profit|currency }}</span>
+        </div>
         {% endfor %}
       </div>
     </section>

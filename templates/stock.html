@@ -57,6 +57,69 @@
     </div>
   </section>
 
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Inventory Control Table</p>
+        <h2>Listing readiness, margin, and channel actions</h2>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button class="stock-action-btn" type="button" data-confirm-action="Bulk export selected stock">Export Selected</button>
+        <button class="stock-action-btn" type="button" data-confirm-action="Sync selected stock to Cars.co.za">Post to Cars.co.za</button>
+        <button class="stock-action-btn primary" type="button" data-confirm-action="Sync selected stock to AutoTrader">Post to AutoTrader</button>
+      </div>
+    </div>
+    <div class="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+      <label class="top-control"><span>Make</span><input class="stock-search-input" type="search" placeholder="Toyota, Ford..."></label>
+      <label class="top-control"><span>Model</span><input class="stock-search-input" type="search" placeholder="Polo, Ranger..."></label>
+      <label class="top-control"><span>Price range</span><select><option>All prices</option><option>Under R250k</option><option>R250k - R400k</option><option>R400k+</option></select></label>
+      <label class="top-control"><span>Year</span><select><option>All years</option><option>2023+</option><option>2021 - 2022</option><option>2020 and older</option></select></label>
+      <label class="top-control"><span>Status</span><select><option>All statuses</option><option>Available</option><option>Reserved</option><option>Sold</option><option>In recon</option><option>Draft</option></select></label>
+      <label class="top-control"><span>Age in stock</span><select><option>Any age</option><option>0-30 days</option><option>31-60 days</option><option>60+ days</option></select></label>
+    </div>
+    <div class="mt-4 overflow-x-auto">
+      <table class="data-table inventory-table">
+        <thead>
+          <tr>
+            <th><span class="sr-only">Select</span></th>
+            <th>Stock</th>
+            <th>Vehicle</th>
+            <th>Status</th>
+            <th>Photos</th>
+            <th>Listing</th>
+            <th>Age</th>
+            <th class="text-right">Margin</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for vehicle in stock_vehicles[:10] %}
+          <tr>
+            <td><input type="checkbox" aria-label="Select {{ vehicle.stock_number }}"></td>
+            <td class="font-black">{{ vehicle.stock_number }}<br><span class="text-xs font-semibold text-slate-400">{{ vehicle.registration }}</span></td>
+            <td><strong>{{ vehicle.year }} {{ vehicle.make }}</strong><br><span class="text-xs text-slate-500">{{ vehicle.model }}</span></td>
+            <td><span class="badge status-{{ vehicle.status|lower|replace(' ', '-') }}">{{ vehicle.status }}</span></td>
+            <td><span class="status-pill">{{ vehicle.photo_count }} photos</span></td>
+            <td>
+              <div class="listing-bar" aria-label="{{ vehicle.listing_completeness }} percent listing complete">
+                <span style="width: {{ vehicle.listing_completeness }}%"></span>
+              </div>
+              <small class="font-bold text-slate-500">{{ vehicle.listing_completeness }}% - {{ vehicle.channel_status }}</small>
+            </td>
+            <td class="{% if vehicle.is_aged %}font-black text-red-700{% else %}font-bold{% endif %}">{{ vehicle.days_in_stock }} days</td>
+            <td class="text-right font-black {% if vehicle.is_low_margin %}text-amber-700{% endif %}">{{ "%.1f"|format(vehicle.margin) }}%</td>
+            <td class="text-right">
+              <button class="stock-row-action" type="button" data-confirm-action="Edit {{ vehicle.stock_number }}">Edit</button>
+              <button class="stock-row-action" type="button" data-confirm-action="Mark {{ vehicle.stock_number }} sold">Mark sold</button>
+              <button class="stock-row-action" type="button" data-confirm-action="Feature {{ vehicle.stock_number }}">Feature</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" id="stockGrid">
     {% for vehicle in stock_vehicles %}
       <article class="vehicle-card {% if vehicle.needs_attention %}needs-attention-card{% endif %}"
@@ -68,7 +131,7 @@
         data-needs-attention="{{ 'true' if vehicle.needs_attention else 'false' }}"
         data-vehicle='{{ vehicle|tojson }}'>
         <div class="relative rounded-lg bg-slate-100 p-4">
-          <img class="h-32 w-full object-contain" src="{{ url_for('static', filename='images/' ~ vehicle.image) }}" alt="{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}">
+          <img class="h-32 w-full object-contain" src="{{ url_for('static', filename='images/' ~ vehicle.image) }}" alt="{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}" loading="lazy">
           <div class="absolute left-3 top-3 flex flex-wrap gap-2">
             <span class="badge status-{{ vehicle.status|lower|replace(' ', '-') }}">{{ vehicle.status }}</span>
             {% if vehicle.is_aged %}<span class="badge danger">Aging Stock</span>{% endif %}

@@ -13,7 +13,7 @@ filterButtons.forEach((button) => {
     filterButtons.forEach((item) => item.classList.remove('active'));
     button.classList.add('active');
 
-    stockGrid.querySelectorAll('.vehicle-card').forEach((card) => {
+    stockGrid?.querySelectorAll('.vehicle-card').forEach((card) => {
       const show =
         filter === 'All Stock' ||
         card.dataset.status === filter ||
@@ -23,6 +23,29 @@ filterButtons.forEach((button) => {
         (filter === 'Fast Movers' && card.dataset.fastMover === 'true') ||
         (filter === 'Needs Attention' && card.dataset.needsAttention === 'true');
       card.style.display = show ? '' : 'none';
+    });
+  });
+});
+
+document.querySelectorAll('.stock-search-input').forEach((input) => {
+  input.addEventListener('input', () => {
+    const query = Array.from(document.querySelectorAll('.stock-search-input'))
+      .map((field) => field.value.trim().toLowerCase())
+      .filter(Boolean)
+      .join(' ');
+
+    stockGrid?.querySelectorAll('.vehicle-card').forEach((card) => {
+      const vehicle = JSON.parse(card.dataset.vehicle || '{}');
+      const searchable = [
+        vehicle.stock_number,
+        vehicle.registration,
+        vehicle.vin,
+        vehicle.make,
+        vehicle.model,
+        vehicle.year,
+        vehicle.status
+      ].join(' ').toLowerCase();
+      card.style.display = !query || searchable.includes(query) ? '' : 'none';
     });
   });
 });

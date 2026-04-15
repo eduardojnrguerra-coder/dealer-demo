@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="bg-slate-100 text-slate-900">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="min-h-screen lg:flex">
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full bg-[#171d26] text-white transition-transform duration-200 lg:static lg:translate-x-0">
       <div class="flex h-full flex-col">
@@ -42,49 +43,37 @@
             </span>
           </a>
         </div>
-        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
-          {% set items = [
-            ('Control Room', 'dashboard'),
-            ('Vehicle Stock', 'stock'),
-            ('Deal Flow', 'pipeline'),
-            ('Customers', 'customers'),
-            ('Deal Files', 'deal_jackets'),
-            ('F&I Desk', 'fi_desk'),
-            ('Trade-ins', 'trade_ins'),
-            ('Calendar', 'calendar'),
-            ('Workshop Queue', 'recon_board'),
-            ('Handover Board', 'delivery_planning'),
-            ('Sales Team', 'sales_team'),
-            ('Reports', 'reports')
-          ] %}
-          {% if active_view|default('principal') == 'principal' %}
-          {% set items = items + [('Finance & Compliance', 'finance_compliance')] %}
-          {% endif %}
-          {% set items = items + [
-            ('Integrations', 'integrations'),
-            ('Settings', 'settings')
-          ] %}
-          {% for label, route in items %}
-            <a href="{{ url_for(route) }}" class="nav-link {% if active_page == label %}active{% endif %}">
-              <span class="nav-dot"></span>
-              {{ label }}
-            </a>
+        <nav class="flex-1 overflow-y-auto px-4 py-5" aria-label="Primary navigation">
+          {% for group in navigation_groups %}
+          <section class="nav-group" aria-labelledby="nav-group-{{ loop.index }}">
+            <p id="nav-group-{{ loop.index }}" class="nav-group-label">{{ group.label }}</p>
+            <div class="space-y-1">
+              {% for item in group["items"] %}
+              {% set href = nav_href(item) %}
+              {% set active = is_nav_active(item, active_page|default('')) %}
+              <a href="{{ href }}" class="nav-link {% if active %}active{% endif %}" {% if active %}aria-current="page"{% endif %}>
+                <span class="nav-icon">{{ item.icon }}</span>
+                <span>{{ item.label }}</span>
+              </a>
+              {% endfor %}
+            </div>
+          </section>
           {% endfor %}
         </nav>
         <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
-          <p class="text-sm font-semibold">April retail target</p>
+          <p class="text-sm font-semibold">Retail target control</p>
           <div class="mt-3 h-2 rounded-full bg-white/10">
             <div class="h-2 rounded-full bg-blue-400" style="width: 72%"></div>
           </div>
           <p class="mt-3 text-xs text-slate-300">17 of 24 units closed this month</p>
-          <p class="mt-2 text-xs text-slate-400">Operating system control room</p>
+          <p class="mt-2 text-xs text-slate-400">Profit, stock turn, and follow-up discipline</p>
         </div>
       </div>
     </aside>
 
     <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
 
-    <main class="min-w-0 flex-1">
+    <main id="main-content" class="min-w-0 flex-1" tabindex="-1">
       <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
         <div class="px-4 py-3 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between gap-3">
@@ -105,7 +94,7 @@
           </div>
           <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
             <div class="flex items-center gap-2">
-              <button id="mobileAlertsBtn" class="relative flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 shadow-sm" type="button" aria-label="Alerts">
+              <button id="mobileAlertsBtn" class="relative flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 shadow-sm" type="button" aria-label="Alerts" aria-expanded="false" aria-controls="mobileAlertsMenu">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.659 6 8.338 6 10v4.158a2.032 2.032 0 01-.595 1.405L5 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                 <span>{{ notifications|default([])|length }}</span>
               </button>
@@ -120,7 +109,7 @@
               </div>
             </div>
             <div class="relative">
-              <button id="mobileQuickAction" class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white shadow-sm" type="button">
+              <button id="mobileQuickAction" class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white shadow-sm" type="button" aria-expanded="false" aria-controls="mobileQuickMenu">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 <span class="hidden sm:inline">Action</span>
               </button>
@@ -131,14 +120,14 @@
                 <a href="{{ url_for('sales_executive_view') }}">Start Deal</a>
                 <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>
                 {% else %}
-                <a href="{{ url_for('pipeline') }}">Add Lead</a>
+                <a href="{{ url_for('module_page', slug='leads') }}">Add Lead</a>
                 <a href="{{ url_for('calendar') }}">Book Test Drive</a>
                 <a href="{{ url_for('deal_jackets') }}">Start Deal</a>
                 <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>
                 {% endif %}
               </div>
             </div>
-            <button id="mobileOverflowBtn" class="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-700 shadow-sm" type="button" aria-label="More options">
+            <button id="mobileOverflowBtn" class="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-700 shadow-sm" type="button" aria-label="More options" aria-expanded="false" aria-controls="mobileOverflowMenu">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
             <div id="mobileOverflowMenu" class="absolute right-4 top-[calc(100%+0.5rem)] z-50 hidden w-56 rounded-lg border border-slate-200 bg-white p-2 shadow-premium">
@@ -151,9 +140,11 @@
                 <select class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm"><option>This Month</option><option>Last 30 Days</option><option>Quarter to Date</option></select>
               </div>
               <p class="px-2 pb-1 text-xs font-black uppercase text-slate-400">Role View</p>
-              <div class="flex gap-1">
+              <div class="grid grid-cols-2 gap-1">
                 <a class="flex-1 rounded px-2 py-1.5 text-center text-xs font-bold {% if active_view|default('principal') == 'principal' %}bg-slate-800 text-white{% else %}bg-slate-100 text-slate-600{% endif %}" href="{{ url_for('dashboard') }}">Management</a>
                 <a class="flex-1 rounded px-2 py-1.5 text-center text-xs font-bold {% if active_view|default('principal') == 'salesman' %}bg-emerald-600 text-white{% else %}bg-slate-100 text-slate-600{% endif %}" href="{{ url_for('sales_executive_view') }}">Sales</a>
+                <a class="rounded bg-slate-100 px-2 py-1.5 text-center text-xs font-bold text-slate-600" href="{{ url_for('role_dashboard', role_key='sales-manager') }}">Manager</a>
+                <a class="rounded bg-slate-100 px-2 py-1.5 text-center text-xs font-bold text-slate-600" href="{{ url_for('role_dashboard', role_key='workshop-manager') }}">Workshop</a>
               </div>
             </div>
             <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">{{ user_initials|default('MV') }}</div>
@@ -170,7 +161,7 @@
             </div>
             <div class="flex items-center gap-2">
               <div class="relative">
-              <button id="notificationButton" class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm" type="button" aria-label="Notifications">
+              <button id="notificationButton" class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationMenu">
                 <span>Alerts</span>
                 <span class="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-red-600 text-[10px] text-white">{{ notifications|default([])|length }}</span>
               </button>
@@ -225,7 +216,7 @@
               <div id="searchResults" class="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-40 hidden rounded-lg border border-slate-200 bg-white p-2 shadow-premium"></div>
             </div>
             <div class="relative">
-              <button id="quickActionButton" class="h-full w-full rounded-lg bg-ocean px-4 py-3 text-sm font-black text-white shadow-sm transition hover:bg-blue-800" type="button">Quick Action</button>
+              <button id="quickActionButton" class="h-full w-full rounded-lg bg-ocean px-4 py-3 text-sm font-black text-white shadow-sm transition hover:bg-blue-800" type="button" aria-expanded="false" aria-controls="quickActionMenu">Quick Action</button>
               <div id="quickActionMenu" class="absolute right-0 top-[calc(100%+0.35rem)] z-40 hidden w-60 rounded-lg border border-slate-200 bg-white p-2 shadow-premium">
                 {% if active_view|default('principal') == 'salesman' %}
                 <a href="{{ url_for('sales_executive_view') }}">Add My Lead</a>
@@ -233,7 +224,8 @@
                 <a href="{{ url_for('sales_executive_view') }}">Start My Deal</a>
                 <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>
                 {% else %}
-                <a href="{{ url_for('pipeline') }}">Add New Lead</a>
+                <a href="{{ url_for('module_page', slug='add-vehicle') }}">Add Vehicle</a>
+                <a href="{{ url_for('module_page', slug='leads') }}">Add New Lead</a>
                 <a href="{{ url_for('calendar') }}">Book Test Drive</a>
                 <a href="{{ url_for('deal_jackets') }}">Start Deal</a>
                 <a href="{{ url_for('trade_ins') }}">Log Trade-in</a>

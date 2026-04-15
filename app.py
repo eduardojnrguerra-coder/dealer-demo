@@ -5,7 +5,7 @@ from copy import deepcopy
 from datetime import date
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, url_for
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -121,12 +121,284 @@ app.jinja_env.filters["currency"] = currency
 app.jinja_env.filters["number"] = number
 
 
+MODULE_PAGES = {
+    "add-vehicle": {
+        "title": "Add Vehicle",
+        "section": "Inventory",
+        "summary": "Capture a new unit with Natis, Roadworthy, photos, pricing, and listing readiness in one guided workflow.",
+        "actions": ["Start stock capture", "Add vehicle photos", "Request Roadworthy", "Prepare Cars.co.za listing"],
+        "metrics": [("Draft units", 3), ("Missing photos", 4), ("Listings incomplete", 5)],
+    },
+    "bulk-upload": {
+        "title": "Imports / Bulk Upload",
+        "section": "Inventory",
+        "summary": "Import stock sheets, validate required fields, and prepare bulk listings for retail channels.",
+        "actions": ["Upload stock sheet", "Map columns", "Validate pricing", "Queue listing sync"],
+        "metrics": [("Rows ready", 24), ("Needs review", 2), ("Channel updates", 11)],
+    },
+    "quotations": {
+        "title": "Quotations",
+        "section": "Sales",
+        "summary": "Build buyer-ready quotations with trade-in allowance, settlement figure, Lic & Reg, and F&I notes.",
+        "actions": ["Create quotation", "Add trade-in", "Send to buyer", "Convert to deal file"],
+        "metrics": [("Open quotes", 9), ("Accepted today", 2), ("Awaiting buyer", 4)],
+    },
+    "documents": {
+        "title": "Invoices / Documents",
+        "section": "Sales",
+        "summary": "Track OTPs, invoices, Delivery Packs, signed documents, and buyer document gaps.",
+        "actions": ["Prepare invoice", "Review Delivery Pack", "Request Copy of ID", "Request Proof of Residence"],
+        "metrics": [("Docs outstanding", 8), ("Delivery Packs", 5), ("Ready to invoice", 3)],
+    },
+    "leads": {
+        "title": "Leads",
+        "section": "Leads / CRM",
+        "summary": "Prioritise new, hot, and overdue leads so Sales Executives know who to call next.",
+        "actions": ["Add lead", "Assign Sales Executive", "Book follow-up", "Send WhatsApp"],
+        "metrics": [("Active leads", 21), ("Hot leads", 8), ("Overdue", 4)],
+    },
+    "follow-ups": {
+        "title": "Follow-ups",
+        "section": "Leads / CRM",
+        "summary": "Daily call, WhatsApp, and appointment queue focused on keeping buyer momentum alive.",
+        "actions": ["Log call", "Send WhatsApp", "Book test drive", "Escalate stale lead"],
+        "metrics": [("Due today", 5), ("Overdue", 4), ("Auto reminders", 7)],
+    },
+    "job-cards": {
+        "title": "Job Cards",
+        "section": "Workshop / Service",
+        "summary": "Manage workshop prep, parts blockers, Roadworthy items, and turnaround risk for stock and sold units.",
+        "actions": ["Open Job Card", "Assign technician", "Order parts", "Mark Roadworthy"],
+        "metrics": [("Open jobs", 7), ("Waiting parts", 2), ("Ready today", 3)],
+    },
+    "appointments": {
+        "title": "Appointments",
+        "section": "Workshop / Service",
+        "summary": "View test drives, service appointments, finance callbacks, collections, and handovers in one diary.",
+        "actions": ["Book service", "Book test drive", "Confirm handover", "Notify buyer"],
+        "metrics": [("Today", 6), ("This week", 15), ("Overdue callbacks", 2)],
+    },
+    "service-history": {
+        "title": "Service History",
+        "section": "Workshop / Service",
+        "summary": "Keep a clean vehicle prep and service record for trade-ins, stock, and customer-owned vehicles.",
+        "actions": ["Add service note", "Attach invoice", "Flag comeback", "Request history"],
+        "metrics": [("Vehicles tracked", 24), ("History gaps", 3), ("Roadworthy files", 6)],
+    },
+    "sales-reports": {
+        "title": "Sales Reports",
+        "section": "Reports",
+        "summary": "Review unit sales, Gross Profit, conversion, and Sales Executive activity by branch and date range.",
+        "actions": ["View GP report", "Export CSV", "Compare branches", "Send DP pack"],
+        "metrics": [("Units sold", 17), ("Gross Profit", "R1 296 300"), ("Target achieved", "72%")],
+    },
+    "inventory-reports": {
+        "title": "Inventory Reports",
+        "section": "Reports",
+        "summary": "Understand stock turn, ageing exposure, low-margin units, missing photos, and listing completeness.",
+        "actions": ["Ageing report", "Margin review", "Photo gaps", "Channel readiness"],
+        "metrics": [("Aged 60+", 7), ("Low margin", 5), ("Stock value", "R6 721 900")],
+    },
+    "lead-performance": {
+        "title": "Lead Performance",
+        "section": "Reports",
+        "summary": "Compare lead sources, response times, conversion, missed follow-ups, and revenue at risk.",
+        "actions": ["Source report", "Response SLA", "Lost leads", "Team follow-up pack"],
+        "metrics": [("Website leads", 8), ("AutoTrader leads", 5), ("Stale leads", 4)],
+    },
+    "autotrader": {
+        "title": "AutoTrader",
+        "section": "Integrations",
+        "summary": "Future connector for stock publishing, listing sync, lead capture, and price-position monitoring.",
+        "actions": ["Map stock fields", "Preview listings", "Sync leads", "Review channel status"],
+        "metrics": [("Connector", "Planned"), ("Listing hooks", 24), ("Lead sync", "Ready")],
+    },
+    "cars": {
+        "title": "Cars.co.za",
+        "section": "Integrations",
+        "summary": "Future connector for Cars.co.za stock publishing, buyer leads, and inventory performance feedback.",
+        "actions": ["Prepare listings", "Sync photos", "Import enquiries", "Review failed listings"],
+        "metrics": [("Connector", "Planned"), ("Ready listings", 19), ("Photo gaps", 4)],
+    },
+    "meta-leads": {
+        "title": "Meta Leads",
+        "section": "Integrations",
+        "summary": "Capture Facebook and Instagram leads directly into Deal Flow with assignment and SLA tracking.",
+        "actions": ["Connect page", "Map campaigns", "Assign routing", "Test lead capture"],
+        "metrics": [("Connector", "Optional"), ("Campaigns", 3), ("Leads this month", 6)],
+    },
+    "finance-applications": {
+        "title": "Finance Applications",
+        "section": "Integrations",
+        "summary": "Prepare bank application workflow hooks for F&I submission, document checks, and approval tracking.",
+        "actions": ["Review F&I queue", "Check docs", "Submit to bank", "Track approvals"],
+        "metrics": [("Pending bank", 4), ("Docs missing", 6), ("Approved", 3)],
+    },
+    "dealership-profile": {
+        "title": "Dealership Profile",
+        "section": "Settings",
+        "summary": "Configure branch details, contact numbers, address, dealership branding, and regional defaults.",
+        "actions": ["Edit branch", "Update branding", "Set contact details", "Review public profile"],
+        "metrics": [("Branches", 3), ("Users", 11), ("Brand status", "Live")],
+    },
+    "users-roles": {
+        "title": "Users / Roles",
+        "section": "Settings",
+        "summary": "Demo-ready role structure for Owner, Sales Manager, Sales Executive, Workshop Manager, F&I, and Admin.",
+        "actions": ["Invite user", "Assign role", "Review permissions", "Audit activity"],
+        "metrics": [("Active users", 11), ("Roles", 6), ("Pending invites", 2)],
+    },
+    "preferences": {
+        "title": "Preferences",
+        "section": "Settings",
+        "summary": "Set branch defaults for date ranges, Gross Profit targets, notification rules, and workflow labels.",
+        "actions": ["Update targets", "Set alerts", "Configure automations", "Save defaults"],
+        "metrics": [("Alerts", 9), ("Automations", 5), ("Targets", "Active")],
+    },
+}
+
+
+ROLE_DASHBOARDS = {
+    "owner": {
+        "title": "Owner / Dealer Principal",
+        "badge": "Dealer Principal View",
+        "focus": "Overall performance, profit, stock turn, team execution, and risk.",
+        "widgets": ["Gross Profit protection", "Stock ageing exposure", "Team conversion", "Delivery risk"],
+        "actions": ["Review profit at risk", "Open sales reports", "Escalate stale stock", "Check delivery packs"],
+    },
+    "sales-manager": {
+        "title": "Sales Manager",
+        "badge": "Sales Manager View",
+        "focus": "Team follow-up quality, pending deals, test drive conversion, and missed revenue.",
+        "widgets": ["Team Deal Flow", "Overdue follow-ups", "Test drives booked", "Hot leads by source"],
+        "actions": ["Assign leads", "Coach Sales Executive", "Move stuck deals", "Review daily calls"],
+    },
+    "salesperson": {
+        "title": "Salesperson",
+        "badge": "Sales Executive View",
+        "focus": "Own buyers, own deals, follow-ups due today, and personal conversion.",
+        "widgets": ["My active leads", "My buyers", "My test drives", "Deals awaiting F&I"],
+        "actions": ["Call buyer", "Send WhatsApp", "Book test drive", "Start deal file"],
+    },
+    "workshop-manager": {
+        "title": "Workshop Manager",
+        "badge": "Workshop Manager View",
+        "focus": "Open Job Cards, parts blockers, Roadworthy status, and stock turnaround.",
+        "widgets": ["Open Job Cards", "Waiting parts", "Ready for floor", "Delivery prep risk"],
+        "actions": ["Assign technician", "Order parts", "Update Roadworthy", "Release to floor"],
+    },
+    "admin": {
+        "title": "Admin",
+        "badge": "Admin View",
+        "focus": "Documents, approvals, user access, Delivery Packs, and compliance-ready paperwork.",
+        "widgets": ["Docs outstanding", "Delivery Pack queue", "User access", "F&I document gaps"],
+        "actions": ["Request documents", "Prepare invoice", "Archive deal file", "Review user roles"],
+    },
+}
+
+
 def lead_needs_followup(lead):
     last_contact = lead.get("last_contact", "").lower()
     return (
         lead.get("stage") not in {"Sold", "Lost"}
         and any(marker in last_contact for marker in ["3 days", "4 days", "5 days", "6 days"])
     )
+
+
+def build_navigation_groups():
+    return [
+        {
+            "label": "Command",
+            "items": [
+                {"label": "Dashboard", "endpoint": "dashboard", "icon": "01"},
+            ],
+        },
+        {
+            "label": "Inventory",
+            "items": [
+                {"label": "All Vehicles", "endpoint": "stock", "icon": "02"},
+                {"label": "Add Vehicle", "endpoint": "module_page", "slug": "add-vehicle", "icon": "03"},
+                {"label": "Imports / Bulk Upload", "endpoint": "module_page", "slug": "bulk-upload", "icon": "04"},
+            ],
+        },
+        {
+            "label": "Sales",
+            "items": [
+                {"label": "Deals", "endpoint": "pipeline", "icon": "05"},
+                {"label": "Deal Files", "endpoint": "deal_jackets", "icon": "06"},
+                {"label": "F&I Desk", "endpoint": "fi_desk", "icon": "07"},
+                {"label": "Quotations", "endpoint": "module_page", "slug": "quotations", "icon": "08"},
+                {"label": "Invoices / Documents", "endpoint": "module_page", "slug": "documents", "icon": "09"},
+                {"label": "Handover Board", "endpoint": "delivery_planning", "icon": "10"},
+            ],
+        },
+        {
+            "label": "Leads / CRM",
+            "items": [
+                {"label": "Leads", "endpoint": "module_page", "slug": "leads", "icon": "11"},
+                {"label": "Customers", "endpoint": "customers", "icon": "12"},
+                {"label": "Follow-ups", "endpoint": "module_page", "slug": "follow-ups", "icon": "13"},
+            ],
+        },
+        {
+            "label": "Workshop / Service",
+            "items": [
+                {"label": "Job Cards", "endpoint": "module_page", "slug": "job-cards", "icon": "14"},
+                {"label": "Appointments", "endpoint": "calendar", "icon": "15"},
+                {"label": "Service History", "endpoint": "module_page", "slug": "service-history", "icon": "16"},
+                {"label": "Workshop Queue", "endpoint": "recon_board", "icon": "17"},
+            ],
+        },
+        {
+            "label": "Reports",
+            "items": [
+                {"label": "Sales Reports", "endpoint": "module_page", "slug": "sales-reports", "icon": "18"},
+                {"label": "Inventory Reports", "endpoint": "module_page", "slug": "inventory-reports", "icon": "19"},
+                {"label": "Lead Performance", "endpoint": "module_page", "slug": "lead-performance", "icon": "20"},
+                {"label": "Reports Hub", "endpoint": "reports", "icon": "21"},
+            ],
+        },
+        {
+            "label": "Integrations",
+            "items": [
+                {"label": "AutoTrader", "endpoint": "module_page", "slug": "autotrader", "icon": "22"},
+                {"label": "Cars.co.za", "endpoint": "module_page", "slug": "cars", "icon": "23"},
+                {"label": "Meta Leads", "endpoint": "module_page", "slug": "meta-leads", "icon": "24"},
+                {"label": "Finance Applications", "endpoint": "module_page", "slug": "finance-applications", "icon": "25"},
+                {"label": "Integrations Hub", "endpoint": "integrations", "icon": "26"},
+            ],
+        },
+        {
+            "label": "Settings",
+            "items": [
+                {"label": "Dealership Profile", "endpoint": "module_page", "slug": "dealership-profile", "icon": "27"},
+                {"label": "Users / Roles", "endpoint": "module_page", "slug": "users-roles", "icon": "28"},
+                {"label": "Preferences", "endpoint": "module_page", "slug": "preferences", "icon": "29"},
+                {"label": "Settings Hub", "endpoint": "settings", "icon": "30"},
+            ],
+        },
+    ]
+
+
+def nav_href(item):
+    if item.get("endpoint") == "module_page":
+        return url_for("module_page", slug=item.get("slug", "leads"))
+    return url_for(item.get("endpoint", "dashboard"))
+
+
+def is_nav_active(item, active_page):
+    if not active_page:
+        return False
+    label = item.get("label", "")
+    aliases = {
+        "Dashboard": {"Dashboard", "Control Room"},
+        "All Vehicles": {"Stock", "Vehicle Stock", "All Vehicles"},
+        "Deals": {"Deal Flow", "Sales Pipeline", "Deals"},
+        "Customers": {"Buyers", "Customers"},
+        "Appointments": {"Calendar", "Appointments"},
+        "Workshop Queue": {"Workshop Queue", "Recon Board"},
+    }
+    return active_page == label or active_page in aliases.get(label, set())
 
 
 def dealership_data():
@@ -208,6 +480,62 @@ def dealership_data():
         "deals_stuck": len(stuck_deals),
         "aged_vehicles": len(aged_vehicles),
     }
+    lead_sources = Counter(lead.get("source", "Unknown") for lead in leads)
+    lead_source_performance = []
+    for source, count in lead_sources.most_common():
+        source_leads = [lead for lead in leads if lead.get("source") == source]
+        won = len([lead for lead in source_leads if lead.get("stage") == "Sold"])
+        overdue = len([lead for lead in source_leads if lead_needs_followup(lead)])
+        lead_source_performance.append(
+            {
+                "source": source,
+                "count": count,
+                "won": won,
+                "overdue": overdue,
+                "conversion": int((won / count) * 100) if count else 0,
+            }
+        )
+    top_salespeople = sorted(
+        salespeople,
+        key=lambda person: person.get("gross_profit", 0),
+        reverse=True,
+    )[:4]
+    inventory_aging_summary = [
+        {"label": "0-30 days", "count": len([v for v in vehicles if v.get("days_in_stock", 0) <= 30 and v.get("status") != "Sold"]), "tone": "success"},
+        {"label": "31-60 days", "count": len([v for v in vehicles if 31 <= v.get("days_in_stock", 0) <= 60 and v.get("status") != "Sold"]), "tone": "info"},
+        {"label": "61-90 days", "count": len([v for v in vehicles if 61 <= v.get("days_in_stock", 0) <= 90 and v.get("status") != "Sold"]), "tone": "warning"},
+        {"label": "90+ days", "count": len([v for v in vehicles if v.get("days_in_stock", 0) > 90 and v.get("status") != "Sold"]), "tone": "danger"},
+    ]
+    dashboard_metrics = [
+        {"label": "Total Stock", "value": len(vehicles), "detail": "All captured vehicles"},
+        {"label": "Active Leads", "value": len(active_leads), "detail": "Buyers still in Deal Flow"},
+        {"label": "Cars Sold This Month", "value": len(sold_this_month), "detail": "Units closed and delivered"},
+        {"label": "Monthly Revenue", "value": sum(vehicle.get("selling_price", 0) for vehicle in sold_this_month), "detail": "Sold-unit retail value", "currency": True},
+        {"label": "Workshop Jobs Open", "value": len(recon_board), "detail": "Active Job Cards"},
+        {"label": "Vehicles Aged 60+ Days", "value": len(aged_vehicles), "detail": "Stock tying up cash"},
+    ]
+    dashboard_alerts = [
+        {
+            "title": "Overdue follow-ups",
+            "detail": f"{len(unfollowed_leads)} buyer follow-ups need action before close of business.",
+            "severity": "critical" if unfollowed_leads else "info",
+        },
+        {
+            "title": "Stale stock",
+            "detail": f"{len(aged_vehicles)} vehicles have crossed 60 Days in Stock.",
+            "severity": "warning" if aged_vehicles else "info",
+        },
+        {
+            "title": "Missing vehicle photos",
+            "detail": "4 listings need photo completion before AutoTrader or Cars.co.za sync.",
+            "severity": "warning",
+        },
+        {
+            "title": "Incomplete listings",
+            "detail": "5 stock records need VIN, registration, or retail description checks.",
+            "severity": "info",
+        },
+    ]
     notifications = []
     if unfollowed_leads:
         lead = unfollowed_leads[0]
@@ -287,6 +615,11 @@ def dealership_data():
         "missed_opportunities": missed_opportunities,
         "alert_counts": alert_counts,
         "notifications": notifications,
+        "dashboard_metrics": dashboard_metrics,
+        "dashboard_alerts": dashboard_alerts,
+        "lead_source_performance": lead_source_performance,
+        "top_salespeople": top_salespeople,
+        "inventory_aging_summary": inventory_aging_summary,
     }
 
 
@@ -397,6 +730,9 @@ def inject_globals():
         "branding": branding,
         "app_name": branding["company_name"],
         "current_year": date.today().year,
+        "navigation_groups": build_navigation_groups(),
+        "nav_href": nav_href,
+        "is_nav_active": is_nav_active,
     }
 
 
@@ -441,17 +777,24 @@ def stock():
     vehicles = context["vehicles"]
     stock_summary = Counter(vehicle.get("status", "Unknown") for vehicle in vehicles)
     stock_vehicles = []
-    for vehicle in vehicles:
+    for index, vehicle in enumerate(vehicles):
         selling_price = vehicle.get("selling_price", 0) or 0
         cost_price = vehicle.get("cost_price", 0) or 0
         profit = selling_price - cost_price
         margin = (profit / selling_price * 100) if selling_price else 0
         days_in_stock = vehicle.get("days_in_stock", 0) or 0
+        completeness = max(58, min(100, 98 - (12 if days_in_stock > 60 else 0) - (8 if margin < 10 else 0) - (index % 3) * 4))
+        photo_count = 6 - (index % 4)
         stock_vehicles.append(
             {
                 **vehicle,
                 "profit": profit,
                 "margin": margin,
+                "listing_completeness": completeness,
+                "photo_count": photo_count,
+                "vin": f"AAVZZZ{vehicle.get('stock_number', 'AF-0000').replace('-', '')}{index:02d}",
+                "registration": f"{['GP', 'NW', 'FS', 'KZN'][index % 4]} {1042 + index} {['AF', 'PX', 'ZA'][index % 3]}",
+                "channel_status": "Ready to sync" if completeness >= 90 else "Needs listing work",
                 "is_aged": days_in_stock > 60,
                 "is_low_margin": margin < 10,
                 "is_high_margin": margin >= 15,
@@ -523,12 +866,17 @@ def pipeline():
     grouped = {column: [] for column in columns}
     for lead in context["leads"]:
         grouped.setdefault(lead.get("stage", "New Lead"), []).append(lead)
+    overdue_leads = [lead for lead in context["leads"] if lead_needs_followup(lead)]
+    lead_sources = Counter(lead.get("source", "Unknown") for lead in context["leads"])
+    lead_source_summary = [{"source": source, "count": count} for source, count in lead_sources.most_common()]
     return render_template(
         "pipeline.html",
         page_title="Deal Flow",
         active_page="Deal Flow",
         columns=columns,
         grouped_leads=grouped,
+        overdue_leads=overdue_leads,
+        lead_source_summary=lead_source_summary,
         **context,
     )
 
@@ -677,6 +1025,38 @@ def integrations():
 def settings():
     context = dealership_data()
     return render_template("settings.html", page_title="Settings", active_page="Settings", **context)
+
+
+@app.route("/module/<slug>")
+def module_page(slug):
+    context = dealership_data()
+    module = MODULE_PAGES.get(slug, MODULE_PAGES["leads"])
+    return render_template(
+        "module_page.html",
+        page_title=module["title"],
+        active_page=module["title"],
+        module=module,
+        **context,
+    )
+
+
+@app.route("/role/<role_key>")
+def role_dashboard(role_key):
+    if role_key == "salesperson":
+        return sales_executive_view()
+    context = dealership_data()
+    role = ROLE_DASHBOARDS.get(role_key, ROLE_DASHBOARDS["owner"])
+    return render_template(
+        "role_dashboard.html",
+        page_title=role["title"],
+        active_page="Dashboard",
+        active_view="principal" if role_key != "salesperson" else "salesman",
+        role_badge=role["badge"],
+        user_initials="MV" if role_key in {"owner", "sales-manager"} else "WM" if role_key == "workshop-manager" else "AD",
+        selected_role=role,
+        selected_role_key=role_key,
+        **context,
+    )
 
 
 @app.route("/api/dashboard")

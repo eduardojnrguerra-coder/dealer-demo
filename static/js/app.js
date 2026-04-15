@@ -28,21 +28,24 @@ const mobileOverflowMenu = document.getElementById('mobileOverflowMenu');
 
 mobileAlertsBtn?.addEventListener('click', (e) => {
   e.stopPropagation();
-  mobileAlertsMenu?.classList.toggle('hidden');
+  const isHidden = mobileAlertsMenu?.classList.toggle('hidden');
+  mobileAlertsBtn.setAttribute('aria-expanded', String(!isHidden));
   mobileQuickMenu?.classList.add('hidden');
   mobileOverflowMenu?.classList.add('hidden');
 });
 
 mobileQuickAction?.addEventListener('click', (e) => {
   e.stopPropagation();
-  mobileQuickMenu?.classList.toggle('hidden');
+  const isHidden = mobileQuickMenu?.classList.toggle('hidden');
+  mobileQuickAction.setAttribute('aria-expanded', String(!isHidden));
   mobileAlertsMenu?.classList.add('hidden');
   mobileOverflowMenu?.classList.add('hidden');
 });
 
 mobileOverflowBtn?.addEventListener('click', (e) => {
   e.stopPropagation();
-  mobileOverflowMenu?.classList.toggle('hidden');
+  const isHidden = mobileOverflowMenu?.classList.toggle('hidden');
+  mobileOverflowBtn.setAttribute('aria-expanded', String(!isHidden));
   mobileAlertsMenu?.classList.add('hidden');
   mobileQuickMenu?.classList.add('hidden');
 });
@@ -61,13 +64,15 @@ const notificationMenu = document.getElementById('notificationMenu');
 
 quickActionButton?.addEventListener('click', (event) => {
   event.stopPropagation();
-  quickActionMenu?.classList.toggle('hidden');
+  const isHidden = quickActionMenu?.classList.toggle('hidden');
+  quickActionButton.setAttribute('aria-expanded', String(!isHidden));
   notificationMenu?.classList.add('hidden');
 });
 
 notificationButton?.addEventListener('click', (event) => {
   event.stopPropagation();
-  notificationMenu?.classList.toggle('hidden');
+  const isHidden = notificationMenu?.classList.toggle('hidden');
+  notificationButton.setAttribute('aria-expanded', String(!isHidden));
   quickActionMenu?.classList.add('hidden');
 });
 
@@ -192,6 +197,7 @@ document.querySelectorAll('[data-counter]').forEach(element => {
   if (!Number.isFinite(target)) return;
   
   const prefix = element.dataset.prefix || '';
+  const suffix = element.dataset.suffix || '';
   const duration = 700;
   const start = performance.now();
 
@@ -199,7 +205,7 @@ document.querySelectorAll('[data-counter]').forEach(element => {
     const progress = Math.min((now - start) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
     const value = Math.round(target * eased);
-    element.textContent = `${prefix}${value.toLocaleString('en-ZA').replace(/,/g, ' ')}`;
+    element.textContent = `${prefix}${value.toLocaleString('en-ZA').replace(/,/g, ' ')}${suffix}`;
     if (progress < 1) requestAnimationFrame(tick);
   }
 
@@ -220,6 +226,18 @@ const quickActions = document.querySelectorAll('.quick-action-item');
 quickActions.forEach(action => {
   action.addEventListener('click', () => {
     console.log('Action:', action.dataset.action);
+  });
+});
+
+// Demo confirmation for enterprise trust cues on destructive or external actions
+document.querySelectorAll('[data-confirm-action]').forEach(button => {
+  button.addEventListener('click', () => {
+    const action = button.dataset.confirmAction || 'This action';
+    const confirmed = window.confirm(`${action}?\n\nDemo only: no live records will be changed.`);
+    if (confirmed) {
+      button.classList.add('is-confirmed');
+      button.setAttribute('aria-label', `${action} queued in demo mode`);
+    }
   });
 });
 

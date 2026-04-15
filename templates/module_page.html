@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+  <section class="panel bg-slate-950 text-white">
+    <div class="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+      <div>
+        <p class="eyebrow text-blue-200">{{ module.section }}</p>
+        <h2 class="mt-2 text-3xl font-black text-white">{{ module.title }}</h2>
+        <p class="mt-3 max-w-3xl text-sm font-semibold leading-6 text-slate-300">{{ module.summary }}</p>
+      </div>
+      <span class="rounded-lg bg-white/10 px-4 py-2 text-sm font-black text-blue-100">Roadmap-ready module</span>
+    </div>
+  </section>
+
+  <div class="grid gap-4 md:grid-cols-3">
+    {% for label, value in module.metrics %}
+    <article class="metric-card">
+      <span>{{ label }}</span>
+      <strong>{{ value }}</strong>
+      <small>Demo data for dealership workflow planning</small>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Workflow</p>
+          <h2>Next best actions</h2>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% for action in module.actions %}
+        <button class="module-action" type="button" data-confirm-action="{{ action }}">
+          <span>{{ loop.index }}</span>
+          <strong>{{ action }}</strong>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Enterprise Readiness</p>
+          <h2>Built for the next integration phase</h2>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <article class="readiness-card">
+          <strong>Role-aware access</strong>
+          <span>Designed so managers, Sales Executives, workshop, F&I, and admin can see the right queue.</span>
+        </article>
+        <article class="readiness-card">
+          <strong>Audit trail ready</strong>
+          <span>Actions are shaped for future activity logging, approvals, and compliance reporting.</span>
+        </article>
+        <article class="readiness-card">
+          <strong>Channel hooks</strong>
+          <span>Prepared for AutoTrader, Cars.co.za, Meta leads, finance apps, and document workflows.</span>
+        </article>
+        <article class="readiness-card">
+          <strong>Mobile workflow</strong>
+          <span>Fast enough for sales floor, F&I desk, and workshop status checks from a phone.</span>
+        </article>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

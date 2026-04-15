@@ -23,6 +23,49 @@
     </div>
   </section>
 
+  <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Call Priority</p>
+          <h2>Buyers going cold</h2>
+        </div>
+        <span class="red-badge">{{ overdue_leads|length }} overdue</span>
+      </div>
+      <div class="space-y-3">
+        {% for lead in overdue_leads[:4] %}
+        <article class="source-row">
+          <div>
+            <strong>{{ lead.customer }}</strong>
+            <span>{{ lead.vehicle }} - last contact {{ lead.last_contact }}</span>
+          </div>
+          <button class="stock-row-action" type="button" data-confirm-action="Call {{ lead.customer }}">Call now</button>
+        </article>
+        {% endfor %}
+        {% if not overdue_leads %}
+        <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-800">Every active buyer has a recent contact logged.</div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Lead Source Mix</p>
+          <h2>Demand by acquisition channel</h2>
+        </div>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {% for source in lead_source_summary %}
+        <article class="readiness-card">
+          <strong>{{ source.source }}</strong>
+          <span>{{ source.count }} active and historic opportunities</span>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
   <section class="kanban">
     {% for column in columns %}
     <div class="kanban-column">
@@ -44,6 +87,9 @@
             <p><strong>Salesperson:</strong> {{ lead.salesperson }}</p>
             <p><strong>Source:</strong> {{ lead.source }}</p>
             <p><strong>Last contact:</strong> {{ lead.last_contact }}</p>
+          </div>
+          <div class="mt-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-500">
+            Next step: {% if lead.stage == "New Lead" %}call within 30 minutes{% elif lead.stage == "Finance Review" %}check F&I documents{% elif lead.stage == "Test Drive Booked" %}confirm test drive and licence{% elif lead.stage == "Negotiation" %}protect Gross Profit before discounting{% else %}keep buyer momentum active{% endif %}
           </div>
           <div class="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-right text-sm font-black text-ocean">{{ lead.value|currency }}</div>
         </article>

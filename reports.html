@@ -23,6 +23,7 @@
     }
   </script>
   <link rel="stylesheet" href="static/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body class="bg-slate-100 text-slate-900">
   <div class="min-h-screen lg:flex">
@@ -52,8 +53,7 @@
           <a href="reports.html" class="nav-link active"><span class="nav-dot"></span>Reports</a>
           <a href="finance.html" class="nav-link"><span class="nav-dot"></span>Finance & Compliance</a>
           <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
-          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
-          <a href="sales-exec-view.html" class="nav-link"><span class="nav-dot"></span>Sales Exec</a>
+          <a href="settings.html" class="nav-link"><span class="nav-dot"></span>System Settings</a>
         </nav>
         <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
           <p class="text-sm font-semibold">April retail target</p>
@@ -119,90 +119,347 @@
           <section class="panel">
             <div class="panel-heading">
               <div>
-                <p class="eyebrow">Management Reports</p>
-                <h2>Available Reports</h2>
+                <p class="eyebrow">Executive Overview</p>
+                <h2>This Month's Performance</h2>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="date-range-picker flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                  <svg class="h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <select class="bg-transparent text-sm font-semibold text-slate-700 outline-none">
+                    <option>Apr 1 - Apr 15, 2026</option>
+                    <option>Apr 1 - Apr 30, 2026</option>
+                    <option>Mar 1 - Mar 31, 2026</option>
+                    <option>Q1 2026</option>
+                  </select>
+                </div>
               </div>
             </div>
-            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <article class="report-tile">
-                <div class="report-icon">RS</div>
-                <h3>Retail Sales Summary</h3>
-                <p>Unit sales, GP, and revenue by period</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">SR</div>
-                <h3>Stock Recon Report</h3>
-                <p>Vehicles in recon, costs, and turnaround</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">FI</div>
-                <h3>F&I Performance</h3>
-                <p>Finance penetration, insurance, GP</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">TD</div>
-                <h3>Team Dashboard</h3>
-                <p>Sales executive rankings and metrics</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">DL</div>
-                <h3>Deal Funnel Analysis</h3>
-                <p>Conversion rates by pipeline stage</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">SG</div>
-                <h3>Stock Ageing Report</h3>
-                <p>Days in stock by bucket and value</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">LP</div>
-                <h3>Lost Profit Analysis</h3>
-                <p>Leads lost and estimated value</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">DV</div>
-                <h3>Delivery Metrics</h3>
-                <p>Handovers, roadworthy, registrations</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">TI</div>
-                <h3>Trade-in Analysis</h3>
-                <p>Trade values, margins, and stock mix</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">AR</div>
-                <h3>Aged Receivables</h3>
-                <p>Outstanding commissions and rebates</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">KR</div>
-                <h3>Key Performance Indicators</h3>
-                <p>Daily, weekly, monthly KPIs</p>
-                <button class="report-action">Generate</button>
-              </article>
-              <article class="report-tile">
-                <div class="report-icon">CF</div>
-                <h3>Cash Flow Summary</h3>
-                <p>Payouts, rebates, and cash position</p>
-                <button class="report-action">Generate</button>
-              </article>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div class="premium-summary-card revenue">
+                <div class="flex items-center justify-between">
+                  <div class="icon-wrapper">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <span class="trend-badge up">+12.4%</span>
+                </div>
+                <div class="metric-value">R 2,847,500</div>
+                <div class="metric-label">Total Revenue</div>
+                <div class="metric-compare">vs R 2,532,000 last month</div>
+              </div>
+              <div class="premium-summary-card profit">
+                <div class="flex items-center justify-between">
+                  <div class="icon-wrapper">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                  </div>
+                  <span class="trend-badge up">+8.7%</span>
+                </div>
+                <div class="metric-value">R 342,800</div>
+                <div class="metric-label">Gross Profit</div>
+                <div class="metric-compare">vs R 315,400 last month</div>
+              </div>
+              <div class="premium-summary-card units">
+                <div class="flex items-center justify-between">
+                  <div class="icon-wrapper">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                  </div>
+                  <span class="trend-badge up">+3 units</span>
+                </div>
+                <div class="metric-value">17</div>
+                <div class="metric-label">Units Sold</div>
+                <div class="metric-compare">vs 14 units last month</div>
+              </div>
+              <div class="premium-summary-card conversion">
+                <div class="flex items-center justify-between">
+                  <div class="icon-wrapper">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <span class="trend-badge up">+4.2%</span>
+                </div>
+                <div class="metric-value">68%</div>
+                <div class="metric-label">Conversion Rate</div>
+                <div class="metric-compare">vs 63.8% last month</div>
+              </div>
             </div>
           </section>
+
           <section class="panel">
             <div class="panel-heading">
               <div>
-                <p class="eyebrow">Quick Exports</p>
-                <h2>Recent Reports</h2>
+                <p class="eyebrow">Analytics Suite</p>
+                <h2>Premium Reports</h2>
+              </div>
+            </div>
+            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <div class="premium-report-tile">
+                <div class="report-header">
+                  <div class="report-icon-wrapper stock">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+                  </div>
+                  <div class="report-status ready">Ready</div>
+                </div>
+                <h3>Stock Ageing & Margin</h3>
+                <p>Comprehensive view of inventory age, stock holding costs, and GP per unit by age bucket and category.</p>
+                <div class="report-meta">
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    2 min generation
+                  </span>
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    12 pages
+                  </span>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-generate">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Generate
+                  </button>
+                  <div class="export-dropdown">
+                    <button class="btn-export">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      Export
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 13.5a.5.5 0 00-.5.5v4c0 .28.22.5.5.5h7a.5.5 0 00.5-.5v-4a.5.5 0 00-.5-.5h-7zm1 2v2h2v-2h-2z"></path></svg>
+                        Export PDF
+                      </button>
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 17l-2 2h6l-2-2H7zm0-5l2-2h2l-2 2H7zm5 3l2-2h2l-2 2h-2zm5-5l2-2h2l-2 2h-2z"></path></svg>
+                        Export Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="premium-report-tile">
+                <div class="report-header">
+                  <div class="report-icon-wrapper conversion">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                  </div>
+                  <div class="report-status ready">Ready</div>
+                </div>
+                <h3>Deal Flow Conversion</h3>
+                <p>Track leads through the pipeline stages with conversion rates, drop-off analysis, and velocity metrics.</p>
+                <div class="report-meta">
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    3 min generation
+                  </span>
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    8 pages
+                  </span>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-generate">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Generate
+                  </button>
+                  <div class="export-dropdown">
+                    <button class="btn-export">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      Export
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 13.5a.5.5 0 00-.5.5v4c0 .28.22.5.5.5h7a.5.5 0 00.5-.5v-4a.5.5 0 00-.5-.5h-7zm1 2v2h2v-2h-2z"></path></svg>
+                        Export PDF
+                      </button>
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 17l-2 2h6l-2-2H7zm0-5l2-2h2l-2 2H7zm5 3l2-2h2l-2 2h-2zm5-5l2-2h2l-2 2h-2z"></path></svg>
+                        Export Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="premium-report-tile">
+                <div class="report-header">
+                  <div class="report-icon-wrapper gp">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <div class="report-status generating">Generating</div>
+                </div>
+                <h3>Gross Profit Pack</h3>
+                <p>Detailed GP breakdown including F&I, accessories, service plans, and after-market products performance.</p>
+                <div class="report-meta">
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    5 min generation
+                  </span>
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    15 pages
+                  </span>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-generate">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Generate
+                  </button>
+                  <div class="export-dropdown">
+                    <button class="btn-export" disabled>
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      Export
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 13.5a.5.5 0 00-.5.5v4c0 .28.22.5.5.5h7a.5.5 0 00.5-.5v-4a.5.5 0 00-.5-.5h-7zm1 2v2h2v-2h-2z"></path></svg>
+                        Export PDF
+                      </button>
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 17l-2 2h6l-2-2H7zm0-5l2-2h2l-2 2H7zm5 3l2-2h2l-2 2h-2zm5-5l2-2h2l-2 2h-2z"></path></svg>
+                        Export Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="premium-report-tile">
+                <div class="report-header">
+                  <div class="report-icon-wrapper finance">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                  </div>
+                  <div class="report-status ready">Ready</div>
+                </div>
+                <h3>Finance Pipeline</h3>
+                <p>Active finance applications, approval rates, lender performance, and F&I product attachment metrics.</p>
+                <div class="report-meta">
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    2 min generation
+                  </span>
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    10 pages
+                  </span>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-view">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    View
+                  </button>
+                  <div class="export-dropdown">
+                    <button class="btn-export">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      Export
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 13.5a.5.5 0 00-.5.5v4c0 .28.22.5.5.5h7a.5.5 0 00.5-.5v-4a.5.5 0 00-.5-.5h-7zm1 2v2h2v-2h-2z"></path></svg>
+                        Export PDF
+                      </button>
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 17l-2 2h6l-2-2H7zm0-5l2-2h2l-2 2H7zm5 3l2-2h2l-2 2h-2zm5-5l2-2h2l-2 2h-2z"></path></svg>
+                        Export Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="premium-report-tile">
+                <div class="report-header">
+                  <div class="report-icon-wrapper compliance">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                  </div>
+                  <div class="report-status warning">2 Issues</div>
+                </div>
+                <h3>Compliance Status</h3>
+                <p>Regulatory compliance tracking, document expiry alerts, and audit trail for finance and sales operations.</p>
+                <div class="report-meta">
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    1 min generation
+                  </span>
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    6 pages
+                  </span>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-view">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    View
+                  </button>
+                  <div class="export-dropdown">
+                    <button class="btn-export">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      Export
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 13.5a.5.5 0 00-.5.5v4c0 .28.22.5.5.5h7a.5.5 0 00.5-.5v-4a.5.5 0 00-.5-.5h-7zm1 2v2h2v-2h-2z"></path></svg>
+                        Export PDF
+                      </button>
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 17l-2 2h6l-2-2H7zm0-5l2-2h2l-2 2H7zm5 3l2-2h2l-2 2h-2zm5-5l2-2h2l-2 2h-2z"></path></svg>
+                        Export Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="premium-report-tile">
+                <div class="report-header">
+                  <div class="report-icon-wrapper team">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                  </div>
+                  <div class="report-status ready">Ready</div>
+                </div>
+                <h3>Sales Team Performance</h3>
+                <p>Individual and team rankings, activity metrics, conversion rates, and GP contribution analysis.</p>
+                <div class="report-meta">
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    4 min generation
+                  </span>
+                  <span class="meta-item">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    18 pages
+                  </span>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-view">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    View
+                  </button>
+                  <div class="export-dropdown">
+                    <button class="btn-export">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      Export
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 13.5a.5.5 0 00-.5.5v4c0 .28.22.5.5.5h7a.5.5 0 00.5-.5v-4a.5.5 0 00-.5-.5h-7zm1 2v2h2v-2h-2z"></path></svg>
+                        Export PDF
+                      </button>
+                      <button class="dropdown-item">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 17l-2 2h6l-2-2H7zm0-5l2-2h2l-2 2H7zm5 3l2-2h2l-2 2h-2zm5-5l2-2h2l-2 2h-2z"></path></svg>
+                        Export Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Recent Activity</p>
+                <h2>Report History</h2>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="premium-filter-btn active">All</button>
+                <button class="premium-filter-btn">Generated</button>
+                <button class="premium-filter-btn">Exported</button>
               </div>
             </div>
             <div class="overflow-x-auto">
@@ -211,42 +468,157 @@
                   <tr class="border-b border-slate-200 bg-slate-50 text-left">
                     <th class="px-4 py-3 font-bold text-slate-700">Report Name</th>
                     <th class="px-4 py-3 font-bold text-slate-700">Period</th>
+                    <th class="px-4 py-3 font-bold text-slate-700">Generated By</th>
                     <th class="px-4 py-3 font-bold text-slate-700">Generated</th>
                     <th class="px-4 py-3 font-bold text-slate-700">Status</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Action</th>
+                    <th class="px-4 py-3 font-bold text-slate-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Retail Sales Summary</td>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-ocean/10 flex items-center justify-center">
+                          <svg class="h-4 w-4 text-ocean" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-900">Stock Ageing & Margin</span>
+                      </div>
+                    </td>
                     <td class="px-4 py-3 text-slate-600">April 2026</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white font-bold">MV</div>
+                        <span class="text-slate-600">M. van der Merwe</span>
+                      </div>
+                    </td>
                     <td class="px-4 py-3 text-slate-600">Today, 08:00</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">Download</button></td>
+                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <button class="rounded-lg bg-ocean px-2.5 py-1.5 text-xs font-bold text-white hover:bg-ocean/90 transition-colors">Download</button>
+                        <button class="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Team Dashboard</td>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                          <svg class="h-4 w-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-900">Deal Flow Conversion</span>
+                      </div>
+                    </td>
                     <td class="px-4 py-3 text-slate-600">April 2026</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white font-bold">MV</div>
+                        <span class="text-slate-600">M. van der Merwe</span>
+                      </div>
+                    </td>
                     <td class="px-4 py-3 text-slate-600">Today, 08:00</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">Download</button></td>
+                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <button class="rounded-lg bg-ocean px-2.5 py-1.5 text-xs font-bold text-white hover:bg-ocean/90 transition-colors">Download</button>
+                        <button class="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Stock Ageing Report</td>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                          <svg class="h-4 w-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-900">Gross Profit Pack</span>
+                      </div>
+                    </td>
                     <td class="px-4 py-3 text-slate-600">April 2026</td>
-                    <td class="px-4 py-3 text-slate-600">Yesterday</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">Download</button></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white font-bold">MV</div>
+                        <span class="text-slate-600">M. van der Merwe</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">Yesterday, 16:42</td>
+                    <td class="px-4 py-3"><span class="rounded-lg bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700">Processing</span></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <button class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-bold text-slate-400 cursor-not-allowed" disabled>Download</button>
+                        <button class="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">F&I Performance</td>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                          <svg class="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-900">Sales Team Performance</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">Q1 2026</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white font-bold">MV</div>
+                        <span class="text-slate-600">M. van der Merwe</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">Apr 10, 2026</td>
+                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <button class="rounded-lg bg-ocean px-2.5 py-1.5 text-xs font-bold text-white hover:bg-ocean/90 transition-colors">Download</button>
+                        <button class="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-sky-500/10 flex items-center justify-center">
+                          <svg class="h-4 w-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-900">Compliance Status</span>
+                      </div>
+                    </td>
                     <td class="px-4 py-3 text-slate-600">April 2026</td>
-                    <td class="px-4 py-3 text-slate-600">Apr 12, 2026</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">Ready</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">Download</button></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white font-bold">JS</div>
+                        <span class="text-slate-600">J. Smith</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">Apr 8, 2026</td>
+                    <td class="px-4 py-3"><span class="rounded-lg bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700">Issues Found</span></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <button class="rounded-lg bg-ocean px-2.5 py-1.5 text-xs font-bold text-white hover:bg-ocean/90 transition-colors">Download</button>
+                        <button class="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+            <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+              <p class="text-sm text-slate-500">Showing 5 of 47 reports</p>
+              <div class="flex items-center gap-2">
+                <button class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors">Previous</button>
+                <button class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors">Next</button>
+              </div>
             </div>
           </section>
         </div>
@@ -271,5 +643,273 @@
       <span>Move Deal</span>
     </button>
   </nav>
+  <style>
+    .premium-summary-card {
+      background: white;
+      border: 1px solid rgb(226 232 240);
+      border-radius: 12px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 200ms ease;
+    }
+
+    .premium-summary-card::before {
+      content: "";
+      height: 4px;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .premium-summary-card:hover {
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .premium-summary-card.revenue::before { background: linear-gradient(90deg, #0f4c81, #3b82f6); }
+    .premium-summary-card.profit::before { background: linear-gradient(90deg, #059669, #34d399); }
+    .premium-summary-card.units::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .premium-summary-card.conversion::before { background: linear-gradient(90deg, #ea580c, #fb923c); }
+
+    .premium-summary-card .icon-wrapper {
+      background: rgb(248 250 252);
+      border-radius: 10px;
+      display: grid;
+      height: 44px;
+      place-items: center;
+      width: 44px;
+    }
+
+    .premium-summary-card.revenue .icon-wrapper { color: #0f4c81; }
+    .premium-summary-card.profit .icon-wrapper { color: #059669; }
+    .premium-summary-card.units .icon-wrapper { color: #7c3aed; }
+    .premium-summary-card.conversion .icon-wrapper { color: #ea580c; }
+
+    .premium-summary-card .metric-value {
+      color: rgb(15 23 42);
+      font-size: 1.75rem;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      margin-top: 1rem;
+    }
+
+    .premium-summary-card .metric-label {
+      color: rgb(100 116 139);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 0.35rem;
+    }
+
+    .premium-summary-card .metric-compare {
+      color: rgb(148 163 184);
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .trend-badge {
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.25rem 0.6rem;
+    }
+
+    .trend-badge.up {
+      background: rgb(236 253 245);
+      color: rgb(4 120 87);
+    }
+
+    .trend-badge.down {
+      background: rgb(254 242 242);
+      color: rgb(185 28 28);
+    }
+
+    .premium-report-tile {
+      background: white;
+      border: 1px solid rgb(226 232 240);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 200ms ease;
+    }
+
+    .premium-report-tile:hover {
+      border-color: rgb(148 163 184);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .report-header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .report-icon-wrapper {
+      border-radius: 12px;
+      display: grid;
+      height: 52px;
+      place-items: center;
+      width: 52px;
+    }
+
+    .report-icon-wrapper.stock { background: rgb(239 246 255); color: #0f4c81; }
+    .report-icon-wrapper.conversion { background: rgb(236 253 245); color: #059669; }
+    .report-icon-wrapper.gp { background: rgb(255 251 235); color: #d97706; }
+    .report-icon-wrapper.finance { background: rgb(255 247 239); color: #ea580c; }
+    .report-icon-wrapper.compliance { background: rgb(248 245 255); color: #7c3aed; }
+    .report-icon-wrapper.team { background: rgb(243 232 255); color: #a855f7; }
+
+    .report-status {
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.3rem 0.75rem;
+    }
+
+    .report-status.ready { background: rgb(236 253 245); color: rgb(4 120 87); }
+    .report-status.generating { background: rgb(255 251 235); color: rgb(146 64 14); }
+    .report-status.warning { background: rgb(254 242 242); color: rgb(185 28 28); }
+
+    .premium-report-tile h3 {
+      color: rgb(15 23 42);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .premium-report-tile p {
+      color: rgb(100 116 139);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-top: 0.75rem;
+    }
+
+    .report-meta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .meta-item {
+      align-items: center;
+      color: rgb(148 163 184);
+      display: flex;
+      font-size: 0.78rem;
+      font-weight: 600;
+      gap: 0.35rem;
+    }
+
+    .report-actions {
+      border-top: 1px solid rgb(241 245 249);
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+    }
+
+    .btn-generate, .btn-view, .btn-export {
+      align-items: center;
+      border-radius: 8px;
+      display: flex;
+      font-size: 0.82rem;
+      font-weight: 800;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      transition: all 160ms ease;
+    }
+
+    .btn-generate {
+      background: #0f4c81;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-generate:hover {
+      background: #0a3a66;
+    }
+
+    .btn-view {
+      background: rgb(248 250 252);
+      border: 1px solid rgb(226 232 240);
+      color: rgb(51 65 85);
+      flex: 1;
+    }
+
+    .btn-view:hover {
+      background: rgb(241 245 249);
+      border-color: rgb(148 163 184);
+    }
+
+    .btn-export {
+      background: white;
+      border: 1px solid rgb(226 232 240);
+      color: rgb(51 65 85);
+    }
+
+    .btn-export:hover {
+      background: rgb(248 250 252);
+      border-color: rgb(148 163 184);
+    }
+
+    .btn-export:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .export-dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      background: white;
+      border: 1px solid rgb(226 232 240);
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(15, 23, 42, 0.15);
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      min-width: 160px;
+      z-index: 10;
+    }
+
+    .export-dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-item {
+      align-items: center;
+      display: flex;
+      font-size: 0.82rem;
+      font-weight: 600;
+      gap: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      transition: background 160ms ease;
+      width: 100%;
+    }
+
+    .dropdown-item:hover {
+      background: rgb(248 250 252);
+    }
+
+    .dropdown-item:first-child {
+      border-radius: 8px 8px 0 0;
+    }
+
+    .dropdown-item:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .date-range-picker {
+      transition: border-color 160ms ease;
+    }
+
+    .date-range-picker:focus-within {
+      border-color: #0f4c81;
+    }
+  </style>
   <script src="static/js/app.js"></script>
 </body>
+</html>

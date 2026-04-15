@@ -20,7 +20,7 @@
         <div class="space-y-3">
           {% for item in grouped_recon[stage] %}
           <article class="workflow-card">
-            <p class="text-xs font-black uppercase tracking-wide text-ocean">{{ item.stock_number }} · {{ item.job_card }}</p>
+            <p class="text-xs font-black uppercase tracking-wide text-ocean">{{ item.stock_number }} - {{ item.job_card }}</p>
             <h4 class="mt-2 font-black text-slate-950">{{ item.vehicle }}</h4>
             <div class="mt-4 space-y-2 text-sm">
               <p><strong>Owner:</strong> {{ item.owner }}</p>
@@ -34,5 +34,36 @@
       {% endfor %}
     </div>
   </section>
+
+  <div class="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Workshop Dashboard</p>
+          <h2>Turnaround and blocker view</h2>
+        </div>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <article class="metric-card"><span>Open Job Cards</span><strong>{{ recon_board|length }}</strong><small>Stock and sold units in prep</small></article>
+        <article class="metric-card"><span>Parts / blocker risk</span><strong>{{ grouped_recon["Parts Ordered"]|length }}</strong><small>Units waiting on parts</small></article>
+        <article class="metric-card"><span>Ready for Floor</span><strong>{{ grouped_recon["Ready for Floor"]|length }}</strong><small>Units available for retail push</small></article>
+        <article class="metric-card"><span>Ready for Delivery</span><strong>{{ grouped_recon["Ready for Delivery"]|length }}</strong><small>Customer handover priority</small></article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Service Operations</p>
+          <h2>Connected dealership workflow</h2>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-3">
+        <article class="readiness-card"><strong>Technician allocation</strong><span>Queue is shaped for future technician assignment and SLA tracking.</span></article>
+        <article class="readiness-card"><strong>Service history</strong><span>Prep notes can become a service history attached to each stock record.</span></article>
+        <article class="readiness-card"><strong>Customer reminders</strong><span>Workshop appointments can trigger WhatsApp and calendar reminders.</span></article>
+      </div>
+    </section>
+  </div>
 </div>
 {% endblock %}

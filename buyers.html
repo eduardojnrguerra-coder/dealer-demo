@@ -23,6 +23,20 @@
     }
   </script>
   <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    .status-pill { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold; }
+    .status-new { @apply bg-blue-100 text-blue-700; }
+    .status-contacted { @apply bg-violet-100 text-violet-700; }
+    .status-interested { @apply bg-amber-100 text-amber-700; }
+    .status-test-drive { @apply bg-purple-100 text-purple-700; }
+    .status-negotiation { @apply bg-orange-100 text-orange-700; }
+    .status-sold { @apply bg-emerald-100 text-emerald-700; }
+    .status-lost { @apply bg-slate-200 text-slate-600; }
+    .action-btn { @apply rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-ocean transition-colors; }
+    .segment-card { @apply rounded-xl border border-slate-200 bg-white p-5 transition-all hover:shadow-lg hover:-translate-y-0.5; }
+    .activity-item { @apply flex items-start gap-3 py-3 border-b border-slate-100 last:border-0; }
+    .activity-icon { @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full; }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-900">
   <div class="min-h-screen lg:flex">
@@ -52,8 +66,7 @@
           <a href="reports.html" class="nav-link"><span class="nav-dot"></span>Reports</a>
           <a href="finance.html" class="nav-link"><span class="nav-dot"></span>Finance & Compliance</a>
           <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
-          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
-          <a href="sales-exec-view.html" class="nav-link"><span class="nav-dot"></span>Sales Exec</a>
+          <a href="settings.html" class="nav-link"><span class="nav-dot"></span>System Settings</a>
         </nav>
         <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
           <p class="text-sm font-semibold">April retail target</p>
@@ -83,7 +96,7 @@
             </div>
             <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
               <button class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700">Filters</button>
-              <button class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">+ Add</button>
+              <button onclick="openAddCustomerModal()" class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">+ Add</button>
               <button class="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-700">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
               </button>
@@ -106,158 +119,536 @@
               </div>
             </div>
           </div>
-          <div class="hidden lg:grid lg:gap-3 xl:grid-cols-[180px_180px_1fr_190px]">
-            <label class="top-control"><span>Source</span><select><option>All Sources</option><option>AutoTrader</option><option>Website</option><option>Walk-in</option><option>Referral</option></select></label>
-            <label class="top-control"><span>Status</span><select><option>All Statuses</option><option>New Lead</option><option>Contacted</option><option>Test Drive</option><option>Negotiation</option></select></label>
-            <label class="top-control"><span>Search</span><input type="search" placeholder="Search customer name..."></label>
-            <button class="h-full rounded-lg bg-ocean px-4 py-3 text-sm font-black text-white shadow-sm">+ Add Customer</button>
+          <div class="hidden lg:mt-4 lg:grid lg:gap-3 xl:grid-cols-[180px_180px_1fr_190px]">
+            <label class="top-control"><span>Source</span>
+              <select id="filterSource">
+                <option>All Sources</option>
+                <option>AutoTrader</option>
+                <option>Website</option>
+                <option>Walk-in</option>
+                <option>Referral</option>
+                <option>Facebook</option>
+                <option>Instagram</option>
+              </select>
+            </label>
+            <label class="top-control"><span>Status</span>
+              <select id="filterStatus">
+                <option value="">All Statuses</option>
+                <option value="new">New</option>
+                <option value="contacted">Contacted</option>
+                <option value="interested">Interested</option>
+                <option value="test-drive">Test Drive</option>
+                <option value="negotiation">Negotiation</option>
+                <option value="sold">Sold</option>
+                <option value="lost">Lost</option>
+              </select>
+            </label>
+            <label class="top-control"><span>Search</span><input type="search" id="searchInput" placeholder="Search name, email, phone..."></label>
+            <button onclick="openAddCustomerModal()" class="h-full rounded-lg bg-ocean px-4 py-3 text-sm font-black text-white shadow-sm hover:bg-ocean/90 transition-colors">+ Add Customer</button>
           </div>
         </div>
       </header>
       <section class="page-shell px-4 py-6 pb-24 lg:pb-6 sm:px-6 lg:px-8">
         <div class="space-y-6">
           <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div class="metric-card">
-              <span>Total Leads</span>
-              <strong>24</strong>
-              <small>This month</small>
+            <div class="segment-card border-l-4 border-l-ocean">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total Customers</p>
+                  <p class="mt-1 text-3xl font-bold text-slate-900">248</p>
+                  <p class="mt-1 text-xs text-slate-500">All time records</p>
+                </div>
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-ocean/10">
+                  <svg class="h-6 w-6 text-ocean" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+              </div>
             </div>
-            <div class="metric-card">
-              <span>Hot Leads</span>
-              <strong>11</strong>
-              <small>High priority</small>
+            <div class="segment-card border-l-4 border-l-amber-500">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Active Leads</p>
+                  <p class="mt-1 text-3xl font-bold text-slate-900">67</p>
+                  <p class="mt-1 text-xs text-amber-600">+12 this week</p>
+                </div>
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50">
+                  <svg class="h-6 w-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                </div>
+              </div>
             </div>
-            <div class="metric-card">
-              <span>Converted</span>
-              <strong>8</strong>
-              <small>This month</small>
+            <div class="segment-card border-l-4 border-l-emerald-500">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Sold Customers</p>
+                  <p class="mt-1 text-3xl font-bold text-slate-900">142</p>
+                  <p class="mt-1 text-xs text-emerald-600">R 8.4M total value</p>
+                </div>
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50">
+                  <svg class="h-6 w-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+              </div>
             </div>
-            <div class="metric-card">
-              <span>Conversion Rate</span>
-              <strong>33%</strong>
-              <small>Lead to deal</small>
+            <div class="segment-card border-l-4 border-l-slate-400">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Lapsed Customers</p>
+                  <p class="mt-1 text-3xl font-bold text-slate-900">39</p>
+                  <p class="mt-1 text-xs text-slate-500">Needs follow-up</p>
+                </div>
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+                  <svg class="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+              </div>
             </div>
           </div>
-          <section class="panel">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">Customer Database</p>
-                <h2>All Leads & Buyers</h2>
+
+          <div class="flex flex-col gap-6 xl:flex-row">
+            <section class="panel flex-1">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Customer Database</p>
+                  <h2>All Leads & Buyers</h2>
+                </div>
+                <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">24 records</span>
               </div>
-              <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">24 records</span>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-sm">
-                <thead>
-                  <tr class="border-b border-slate-200 bg-slate-50 text-left">
-                    <th class="px-4 py-3 font-bold text-slate-700">Customer</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Vehicle</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Phone</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Source</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Last Contact</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Status</th>
-                    <th class="px-4 py-3 font-bold text-slate-700">Action</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Thabo Khumalo</td>
-                    <td class="px-4 py-3 text-slate-600">2021 Ford Ranger</td>
-                    <td class="px-4 py-3 text-slate-600">+27 73 555 0148</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">AutoTrader</span></td>
-                    <td class="px-4 py-3 text-slate-600">Today, 09:15</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700">Finance Review</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Nadia Petersen</td>
-                    <td class="px-4 py-3 text-slate-600">2023 Toyota Corolla Cross</td>
-                    <td class="px-4 py-3 text-slate-600">+27 82 555 0194</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-green-100 px-2 py-1 text-xs font-bold text-green-700">Website</span></td>
-                    <td class="px-4 py-3 text-slate-600">Today, 10:40</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">Approved</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Brandon Moodley</td>
-                    <td class="px-4 py-3 text-slate-600">2020 Mercedes-Benz A200</td>
-                    <td class="px-4 py-3 text-slate-600">+27 83 555 0212</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-purple-100 px-2 py-1 text-xs font-bold text-purple-700">Facebook</span></td>
-                    <td class="px-4 py-3 text-slate-600">Yesterday, 16:20</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700">Negotiation</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Zanele Nkosi</td>
-                    <td class="px-4 py-3 text-slate-600">2022 Suzuki Swift</td>
-                    <td class="px-4 py-3 text-slate-600">+27 71 555 0186</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Walk-in</span></td>
-                    <td class="px-4 py-3 text-slate-600">Today, 08:55</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">Test Drive Booked</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Pieter van Wyk</td>
-                    <td class="px-4 py-3 text-slate-600">2019 Toyota Hilux</td>
-                    <td class="px-4 py-3 text-slate-600">+27 82 555 0155</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-pink-100 px-2 py-1 text-xs font-bold text-pink-700">Referral</span></td>
-                    <td class="px-4 py-3 text-slate-600">2 days ago</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Interested</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Mandisa Maseko</td>
-                    <td class="px-4 py-3 text-slate-600">2021 Toyota Starlet</td>
-                    <td class="px-4 py-3 text-slate-600">+27 78 555 0177</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-green-100 px-2 py-1 text-xs font-bold text-green-700">Website</span></td>
-                    <td class="px-4 py-3 text-slate-600">Today, 12:05</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Contacted</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Ethan Smit</td>
-                    <td class="px-4 py-3 text-slate-600">2018 BMW 320d</td>
-                    <td class="px-4 py-3 text-slate-600">+27 84 555 0133</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">AutoTrader</span></td>
-                    <td class="px-4 py-3 text-slate-600">3 days ago</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-red-100 px-2 py-1 text-xs font-bold text-red-700">New Lead</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Fatima Khan</td>
-                    <td class="px-4 py-3 text-slate-600">2022 Haval Jolion</td>
-                    <td class="px-4 py-3 text-slate-600">+27 83 555 0201</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-purple-100 px-2 py-1 text-xs font-bold text-purple-700">Instagram</span></td>
-                    <td class="px-4 py-3 text-slate-600">Yesterday, 11:10</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Interested</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Michael Coetzee</td>
-                    <td class="px-4 py-3 text-slate-600">2020 VW Polo TSI</td>
-                    <td class="px-4 py-3 text-slate-600">+27 82 555 0188</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-green-100 px-2 py-1 text-xs font-bold text-green-700">Website</span></td>
-                    <td class="px-4 py-3 text-slate-600">4 days ago</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Contacted</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-bold text-slate-900">Busisiwe Cele</td>
-                    <td class="px-4 py-3 text-slate-600">2021 Isuzu D-Max</td>
-                    <td class="px-4 py-3 text-slate-600">+27 79 555 0166</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Walk-in</span></td>
-                    <td class="px-4 py-3 text-slate-600">Today, 14:30</td>
-                    <td class="px-4 py-3"><span class="rounded-lg bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700">Negotiation</span></td>
-                    <td class="px-4 py-3"><button class="rounded-lg bg-ocean px-2 py-1 text-xs font-bold text-white">View</button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                      <th class="px-4 py-3 font-semibold">Name</th>
+                      <th class="px-4 py-3 font-semibold">Contact</th>
+                      <th class="px-4 py-3 font-semibold">Vehicle Interest</th>
+                      <th class="px-4 py-3 font-semibold">Source</th>
+                      <th class="px-4 py-3 font-semibold">Last Contact</th>
+                      <th class="px-4 py-3 font-semibold">Status</th>
+                      <th class="px-4 py-3 font-semibold text-right">Deal Value</th>
+                      <th class="px-4 py-3 font-semibold text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100" id="customerTableBody">
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Thabo Khumalo</div>
+                        <div class="text-xs text-slate-400">ID: THA001</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 73 555 0148</div>
+                        <div class="text-xs text-slate-400">thabo.k@email.co.za</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2021 Ford Ranger</div>
+                        <div class="text-xs text-slate-400">2.0T DC Auto</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">AutoTrader</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">Today, 09:15</div>
+                        <div class="text-xs text-slate-400">2 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-negotiation">Negotiation</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-900">R 485,000</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Nadia Petersen</div>
+                        <div class="text-xs text-slate-400">ID: NAD002</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 82 555 0194</div>
+                        <div class="text-xs text-slate-400">nadia.p@email.co.za</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2023 Toyota Corolla Cross</div>
+                        <div class="text-xs text-slate-400">Hybrid GX</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-green-100 px-2 py-1 text-xs font-bold text-green-700">Website</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">Today, 10:40</div>
+                        <div class="text-xs text-slate-400">5 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-sold">Sold</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-emerald-600">R 412,900</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Brandon Moodley</div>
+                        <div class="text-xs text-slate-400">ID: BRA003</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 83 555 0212</div>
+                        <div class="text-xs text-slate-400">brandon.m@gmail.com</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2020 Mercedes-Benz A200</div>
+                        <div class="text-xs text-slate-400"> AMG Line</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-purple-100 px-2 py-1 text-xs font-bold text-purple-700">Facebook</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">Yesterday, 16:20</div>
+                        <div class="text-xs text-slate-400">4 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-negotiation">Negotiation</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-900">R 389,000</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Zanele Nkosi</div>
+                        <div class="text-xs text-slate-400">ID: ZAN004</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 71 555 0186</div>
+                        <div class="text-xs text-slate-400">zanele.n@email.co.za</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2022 Suzuki Swift</div>
+                        <div class="text-xs text-slate-400">GLX Turbo</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-700">Walk-in</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">Today, 08:55</div>
+                        <div class="text-xs text-slate-400">3 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-test-drive">Test Drive</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-900">R 235,000</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Pieter van Wyk</div>
+                        <div class="text-xs text-slate-400">ID: PIE005</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 82 555 0155</div>
+                        <div class="text-xs text-slate-400">pieter.vw@gmail.com</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2019 Toyota Hilux</div>
+                        <div class="text-xs text-slate-400">2.8 GD-6 Raider</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-pink-100 px-2 py-1 text-xs font-bold text-pink-700">Referral</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">2 days ago</div>
+                        <div class="text-xs text-slate-400">2 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-interested">Interested</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-900">R 485,000</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Mandisa Maseko</div>
+                        <div class="text-xs text-slate-400">ID: MAN006</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 78 555 0177</div>
+                        <div class="text-xs text-slate-400">mandisa.m@email.co.za</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2021 Toyota Starlet</div>
+                        <div class="text-xs text-slate-400">GT Turbo</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-green-100 px-2 py-1 text-xs font-bold text-green-700">Website</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">Today, 12:05</div>
+                        <div class="text-xs text-slate-400">1 interaction</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-contacted">Contacted</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-900">R 189,900</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Ethan Smit</div>
+                        <div class="text-xs text-slate-400">ID: ETH007</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 84 555 0133</div>
+                        <div class="text-xs text-slate-400">ethan.smit@gmail.com</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2018 BMW 320d</div>
+                        <div class="text-xs text-slate-400">M Sport</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">AutoTrader</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">3 days ago</div>
+                        <div class="text-xs text-slate-400">0 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-new">New</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-400">-</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-slate-50/80">
+                      <td class="px-4 py-3.5">
+                        <div class="font-semibold text-slate-900">Fatima Khan</div>
+                        <div class="text-xs text-slate-400">ID: FAT008</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-700">+27 83 555 0201</div>
+                        <div class="text-xs text-slate-400">fatima.k@email.co.za</div>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <div class="font-medium text-slate-700">2022 Haval Jolion</div>
+                        <div class="text-xs text-slate-400">Supreme</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="rounded-lg bg-purple-100 px-2 py-1 text-xs font-bold text-purple-700">Instagram</span></td>
+                      <td class="px-4 py-3.5">
+                        <div class="text-slate-600">Yesterday, 11:10</div>
+                        <div class="text-xs text-slate-400">3 interactions</div>
+                      </td>
+                      <td class="px-4 py-3.5"><span class="status-pill status-interested">Interested</span></td>
+                      <td class="px-4 py-3.5 text-right font-semibold text-slate-900">R 289,900</td>
+                      <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-center gap-1">
+                          <button class="action-btn" title="View"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+                          <button class="action-btn" title="Call"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></button>
+                          <button class="action-btn" title="Email"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
+                          <button class="action-btn text-emerald-600 hover:text-emerald-700" title="WhatsApp"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.59-.001-.018-.011-.037-.025-.053-.014-.168-.016-.337.016-.506.01-.168.03-.336.075-.504a4.993 4.993 0 013-3.072 4.667 4.667 0 012.868-.401c.744-.006 1.473-.013 2.207-.025.366-.005.71.123.99.372.286.254.977.775 1.052 1.486.074.71.025 1.557-.17 2.227-.198.67-.427 1.341-.611 1.785-.183.443-.498.925-.855 1.677l-.004.006a1.998 1.998 0 01-.576 1.086 10.103 10.103 0 01-2.875.386z"></path></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <aside class="w-full xl:w-80 shrink-0">
+              <div class="panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="eyebrow">Activity Feed</p>
+                    <h2>Recent Activity</h2>
+                  </div>
+                </div>
+                <div class="p-4 space-y-1">
+                  <div class="activity-item">
+                    <div class="activity-icon bg-emerald-100 text-emerald-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Deal closed with Nadia Petersen</p>
+                      <p class="text-xs text-slate-500">Toyota Corolla Cross - R 412,900</p>
+                      <p class="text-xs text-slate-400">Today, 10:45</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-blue-100 text-blue-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">New lead: Ethan Smit</p>
+                      <p class="text-xs text-slate-500">2018 BMW 320d via AutoTrader</p>
+                      <p class="text-xs text-slate-400">Today, 09:30</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-amber-100 text-amber-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Test drive booked: Zanele Nkosi</p>
+                      <p class="text-xs text-slate-500">Suzuki Swift - Tomorrow 10:00</p>
+                      <p class="text-xs text-slate-400">Today, 08:55</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-purple-100 text-purple-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Follow-up call: Thabo Khumalo</p>
+                      <p class="text-xs text-slate-500">Discussed finance options</p>
+                      <p class="text-xs text-slate-400">Today, 09:15</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-violet-100 text-violet-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Email sent: Pieter van Wyk</p>
+                      <p class="text-xs text-slate-500">Hilux pricing details</p>
+                      <p class="text-xs text-slate-400">Yesterday, 14:20</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-rose-100 text-rose-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Lead lapsed: David Theron</p>
+                      <p class="text-xs text-slate-500">No response for 14 days</p>
+                      <p class="text-xs text-slate-400">Yesterday, 12:00</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-sky-100 text-sky-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Quote sent: Fatima Khan</p>
+                      <p class="text-xs text-slate-500">Haval Jolion Supreme</p>
+                      <p class="text-xs text-slate-400">Yesterday, 11:10</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-teal-100 text-teal-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Referral received: Pieter van Wyk</p>
+                      <p class="text-xs text-slate-500">Referred by Johann Smit</p>
+                      <p class="text-xs text-slate-400">2 days ago</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-orange-100 text-orange-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">Negotiation: Brandon Moodley</p>
+                      <p class="text-xs text-slate-500">Mercedes A200 - Discussing trade-in</p>
+                      <p class="text-xs text-slate-400">Yesterday, 16:20</p>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-indigo-100 text-indigo-600">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-900">5-star review received</p>
+                      <p class="text-xs text-slate-500">From Nadia Petersen</p>
+                      <p class="text-xs text-slate-400">Yesterday, 18:30</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
     </main>
   </div>
+
+  <div id="addCustomerModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm">
+    <div class="mx-4 w-full max-w-lg rounded-2xl bg-white shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Add New Customer</h3>
+          <p class="text-sm text-slate-500">Add a new lead to your database</p>
+        </div>
+        <button onclick="closeAddCustomerModal()" class="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <form id="addCustomerForm" class="p-6 space-y-5">
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700">Full Name *</label>
+            <input type="text" name="name" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" placeholder="Enter customer name">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700">Email</label>
+            <input type="email" name="email" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" placeholder="email@example.com">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700">Phone *</label>
+            <input type="tel" name="phone" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" placeholder="+27 XX XXX XXXX">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700">Preferred Contact Method</label>
+            <div class="mt-2 flex flex-wrap gap-3">
+              <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 cursor-pointer hover:bg-slate-50 has-[:checked]:border-ocean has-[:checked]:bg-ocean/5">
+                <input type="radio" name="contactMethod" value="phone" checked class="text-ocean focus:ring-ocean">
+                <span class="text-sm font-medium text-slate-700">Phone</span>
+              </label>
+              <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 cursor-pointer hover:bg-slate-50 has-[:checked]:border-ocean has-[:checked]:bg-ocean/5">
+                <input type="radio" name="contactMethod" value="email" class="text-ocean focus:ring-ocean">
+                <span class="text-sm font-medium text-slate-700">Email</span>
+              </label>
+              <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 cursor-pointer hover:bg-slate-50 has-[:checked]:border-ocean has-[:checked]:bg-ocean/5">
+                <input type="radio" name="contactMethod" value="whatsapp" class="text-ocean focus:ring-ocean">
+                <span class="text-sm font-medium text-slate-700">WhatsApp</span>
+              </label>
+            </div>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700">Vehicle Interest</label>
+            <input type="text" name="vehicle" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" placeholder="e.g., 2023 Toyota Corolla Cross">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700">Source</label>
+            <select name="source" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20">
+              <option value="">Select source...</option>
+              <option>AutoTrader</option>
+              <option>Website</option>
+              <option>Walk-in</option>
+              <option>Referral</option>
+              <option>Facebook</option>
+              <option>Instagram</option>
+              <option>Google Ads</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button type="button" onclick="closeAddCustomerModal()" class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+          <button type="submit" class="rounded-lg bg-ocean px-5 py-2.5 text-sm font-semibold text-white hover:bg-ocean/90">Add Customer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-200 bg-white px-2 py-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
     <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="tel:">
       <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.113-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
@@ -277,5 +668,57 @@
     </button>
   </nav>
   <script src="static/js/app.js"></script>
+  <script>
+    function openAddCustomerModal() {
+      const modal = document.getElementById('addCustomerModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddCustomerModal() {
+      const modal = document.getElementById('addCustomerModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('addCustomerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      console.log('New customer:', data);
+      closeAddCustomerModal();
+      this.reset();
+      alert('Customer added successfully!');
+    });
+
+    document.getElementById('filterSource').addEventListener('change', filterTable);
+    document.getElementById('filterStatus').addEventListener('change', filterTable);
+    document.getElementById('searchInput').addEventListener('input', filterTable);
+
+    function filterTable() {
+      const source = document.getElementById('filterSource').value.toLowerCase();
+      const status = document.getElementById('filterStatus').value.toLowerCase();
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#customerTableBody tr');
+
+      rows.forEach(row => {
+        const sourceText = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+        const statusText = row.querySelector('td:nth-child(6) span').textContent.toLowerCase();
+        const searchText = row.textContent.toLowerCase();
+
+        const matchSource = source === '' || sourceText.includes(source);
+        const matchStatus = status === '' || statusText.includes(status);
+        const matchSearch = search === '' || searchText.includes(search);
+
+        row.style.display = matchSource && matchStatus && matchSearch ? '' : 'none';
+      });
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeAddCustomerModal();
+    });
+  </script>
 </body>
 </html>

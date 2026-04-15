@@ -13,16 +13,163 @@
             ink: '#111827',
             graphite: '#202734',
             ocean: '#0f4c81',
-            steel: '#f4f7fb'
+            steel: '#f4f7fb',
+            profit: {
+              high: '#059669',
+              medium: '#d97706',
+              low: '#dc2626'
+            },
+            stock: {
+              fresh: '#10b981',
+              aging: '#f59e0b',
+              urgent: '#ef4444'
+            }
           },
           boxShadow: {
-            premium: '0 18px 45px rgba(15, 23, 42, 0.08)'
+            premium: '0 18px 45px rgba(15, 23, 42, 0.08)',
+            modal: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }
         }
       }
     }
   </script>
   <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    .margin-badge {
+      @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-black;
+    }
+    .margin-badge.high {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      color: #059669;
+    }
+    .margin-badge.medium {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      color: #d97706;
+    }
+    .margin-badge.low {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      color: #dc2626;
+    }
+    .days-badge {
+      @apply inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-black;
+    }
+    .days-badge.fresh {
+      background: #ecfdf5;
+      color: #059669;
+    }
+    .days-badge.aging {
+      background: #fffbeb;
+      color: #d97706;
+    }
+    .days-badge.urgent {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+    .filter-btn {
+      @apply relative border border-slate-200 rounded-lg text-slate-600 text-sm font-bold px-4 py-2 transition-all duration-200;
+      background: white;
+    }
+    .filter-btn:hover {
+      @apply border-ocean text-ocean bg-blue-50;
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #0f4c81, #1e40af);
+      border-color: #0f4c81;
+      color: white;
+      box-shadow: 0 4px 12px rgba(15, 76, 129, 0.3);
+    }
+    .filter-btn .count {
+      @apply ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1 text-xs;
+    }
+    .filter-btn.active .count {
+      background: rgba(255,255,255,0.3);
+    }
+    .vehicle-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
+      overflow: hidden;
+    }
+    .vehicle-card:hover {
+      border-color: #93c5fd;
+      box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
+      transform: translateY(-4px);
+    }
+    .vehicle-card.needs-attention {
+      border-color: #fcd34d;
+      background: linear-gradient(to bottom, #fffbeb, white);
+    }
+    .vehicle-card.needs-attention::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+    .quick-action-btn {
+      @apply flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-600 transition-all duration-200 flex items-center justify-center gap-1.5;
+    }
+    .quick-action-btn:hover {
+      transform: translateY(-2px);
+    }
+    .quick-action-btn.promote {
+      @apply border-blue-300 bg-blue-50 text-ocean hover:bg-blue-100 hover:border-blue-400;
+    }
+    .quick-action-btn.discount {
+      @apply border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:border-amber-400;
+    }
+    .quick-action-btn.details {
+      @apply border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:border-slate-400;
+    }
+    .quick-action-btn.reserve {
+      @apply border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400;
+    }
+    .modal-overlay {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      animation: modalSlideIn 0.3s ease-out;
+    }
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .form-input {
+      @apply w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 placeholder-slate-400 transition-all focus:border-ocean focus:ring-2 focus:ring-ocean/20 focus:outline-none;
+    }
+    .form-label {
+      @apply block text-xs font-black uppercase tracking-wider text-slate-500 mb-1.5;
+    }
+    .checkbox-custom {
+      @apply h-4 w-4 rounded border-slate-300 text-ocean focus:ring-ocean/20;
+    }
+    .health-indicator {
+      @apply flex items-center gap-3 rounded-xl p-4 border border-slate-200 bg-white;
+    }
+    .health-bar {
+      @apply flex-1 h-2 rounded-full bg-slate-100 overflow-hidden;
+    }
+    .health-bar-fill {
+      @apply h-full rounded-full transition-all duration-500;
+    }
+    .stat-tile {
+      @apply flex flex-col items-center justify-center p-4 rounded-xl border border-slate-200 bg-white text-center;
+    }
+    .stat-tile-icon {
+      @apply w-10 h-10 rounded-lg flex items-center justify-center mb-2;
+    }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-900">
   <div class="min-h-screen lg:flex">
@@ -42,19 +189,18 @@
           <a href="dashboard.html" class="nav-link"><span class="nav-dot"></span>Control Room</a>
           <a href="stock.html" class="nav-link active"><span class="nav-dot"></span>Vehicle Stock</a>
           <a href="deal-flow.html" class="nav-link"><span class="nav-dot"></span>Deal Flow</a>
-          <a href="customers.html" class="nav-link"><span class="nav-dot"></span>Customers</a>
-          <a href="deal_jackets.html" class="nav-link"><span class="nav-dot"></span>Deal Files</a>
-          <a href="fi_desk.html" class="nav-link"><span class="nav-dot"></span>F&I Finance</a>
-          <a href="trade_ins.html" class="nav-link"><span class="nav-dot"></span>Trade-ins</a>
+          <a href="buyers.html" class="nav-link"><span class="nav-dot"></span>Customers</a>
+          <a href="deal-files.html" class="nav-link"><span class="nav-dot"></span>Deal Files</a>
+          <a href="fi-desk.html" class="nav-link"><span class="nav-dot"></span>F&I Finance</a>
+          <a href="trade-ins.html" class="nav-link"><span class="nav-dot"></span>Trade-ins</a>
           <a href="calendar.html" class="nav-link"><span class="nav-dot"></span>Calendar</a>
-          <a href="recon_board.html" class="nav-link"><span class="nav-dot"></span>Workshop Queue</a>
-          <a href="delivery_planning.html" class="nav-link"><span class="nav-dot"></span>Handover Board</a>
-          <a href="sales_team.html" class="nav-link"><span class="nav-dot"></span>Sales Team</a>
+          <a href="workshop.html" class="nav-link"><span class="nav-dot"></span>Workshop Queue</a>
+          <a href="handover.html" class="nav-link"><span class="nav-dot"></span>Handover Board</a>
+          <a href="team.html" class="nav-link"><span class="nav-dot"></span>Sales Team</a>
           <a href="reports.html" class="nav-link"><span class="nav-dot"></span>Reports</a>
           <a href="finance.html" class="nav-link"><span class="nav-dot"></span>Finance & Compliance</a>
           <a href="integrations.html" class="nav-link"><span class="nav-dot"></span>Integrations</a>
-          <a href="principal-view.html" class="nav-link"><span class="nav-dot"></span>Dealer Principal</a>
-          <a href="sales-exec-view.html" class="nav-link"><span class="nav-dot"></span>Sales Exec</a>
+          <a href="settings.html" class="nav-link"><span class="nav-dot"></span>System Settings</a>
         </nav>
         <div class="m-4 rounded-lg border border-white/10 bg-white/5 p-4">
           <p class="text-sm font-semibold">April retail target</p>
@@ -87,7 +233,7 @@
             </div>
             <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
               <button class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700">Filters</button>
-              <button class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">+ Add</button>
+              <button onclick="openAddVehicleModal()" class="flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-black text-white">+ Add</button>
             </div>
             <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
               <div class="flex flex-col">
@@ -95,8 +241,11 @@
                 <h1 class="text-xl font-bold tracking-tight text-slate-950">Vehicle Stock</h1>
                 <p class="text-xs text-slate-500">Floor stock management and pricing</p>
               </div>
-              <div class="flex items-center gap-2">
-                <button class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm">Search</button>
+              <div class="flex items-center gap-3">
+                <button onclick="openAddVehicleModal()" class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-ocean to-blue-700 px-4 py-2.5 text-sm font-black text-white shadow-lg shadow-ocean/30 transition-all hover:shadow-xl hover:shadow-ocean/40 hover:-translate-y-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                  Add Vehicle
+                </button>
                 <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">MV</div>
               </div>
             </div>
@@ -107,420 +256,493 @@
       <!-- Page Content -->
       <section class="page-shell px-4 py-6 pb-24 lg:pb-6 sm:px-6 lg:px-8">
         <div class="space-y-6">
-          <!-- Filter Bar -->
-          <div class="flex flex-wrap gap-2">
-            <button class="filter-btn active">All Stock (24)</button>
-            <button class="filter-btn">Needs Attention (6)</button>
-            <button class="filter-btn">Aging Stock (5)</button>
-            <button class="filter-btn">Low Margin (4)</button>
-            <button class="filter-btn">High Margin (8)</button>
-            <button class="filter-btn">Fast Movers (7)</button>
+          <!-- Stock Health Indicators -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="health-indicator">
+              <div class="stat-tile-icon bg-blue-100">
+                <svg class="w-5 h-5 text-ocean" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs font-semibold text-slate-500">Stock Turn Rate</span>
+                <strong class="block text-xl font-black text-slate-900">4.2x</strong>
+                <small class="text-xs text-emerald-600 font-medium">+0.8 vs last month</small>
+              </div>
+            </div>
+            <div class="health-indicator">
+              <div class="stat-tile-icon bg-amber-100">
+                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs font-semibold text-slate-500">Avg Days in Stock</span>
+                <strong class="block text-xl font-black text-slate-900">43</strong>
+                <small class="text-xs text-slate-500">Target: 45 days</small>
+              </div>
+            </div>
+            <div class="health-indicator">
+              <div class="stat-tile-icon bg-emerald-100">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs font-semibold text-slate-500">Profit Per Unit</span>
+                <strong class="block text-xl font-black text-slate-900">R48.4k</strong>
+                <small class="text-xs text-emerald-600 font-medium">Above target</small>
+              </div>
+            </div>
+            <div class="health-indicator">
+              <div class="stat-tile-icon bg-purple-100">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs font-semibold text-slate-500">Total Potential GP</span>
+                <strong class="block text-xl font-black text-slate-900">R826k</strong>
+                <small class="text-xs text-emerald-600 font-medium">14.2% avg margin</small>
+              </div>
+            </div>
           </div>
 
-          <!-- Stock Summary Cards -->
-          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-            <div class="metric-card">
-              <span>Total Units</span>
-              <strong>24</strong>
-              <small>3 reserved, 21 retail-ready</small>
+          <!-- Premium Stats Summary -->
+          <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="stat-tile bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200">
+              <div class="stat-tile-icon bg-slate-900">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Value</span>
+              <strong class="text-2xl font-black text-slate-900">R5.8M</strong>
+              <small class="text-xs text-slate-500">24 units</small>
             </div>
-            <div class="metric-card">
-              <span>Stock Value</span>
-              <strong>R5.8M</strong>
-              <small>Cost price total</small>
+            <div class="stat-tile bg-gradient-to-br from-emerald-50 to-white border-2 border-emerald-200">
+              <div class="stat-tile-icon bg-emerald-500">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Potential Profit</span>
+              <strong class="text-2xl font-black text-emerald-700">R826k</strong>
+              <small class="text-xs text-emerald-600">Gross profit</small>
             </div>
-            <div class="metric-card">
-              <span>Avg Days in Stock</span>
-              <strong>43</strong>
-              <small>Industry benchmark: 45</small>
+            <div class="stat-tile bg-gradient-to-br from-red-50 to-white border-2 border-red-200">
+              <div class="stat-tile-icon bg-red-500">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              </div>
+              <span class="text-xs font-semibold text-red-600 uppercase tracking-wider">Aged 60+ Days</span>
+              <strong class="text-2xl font-black text-red-700">5</strong>
+              <small class="text-xs text-red-500">Needs review</small>
             </div>
-            <div class="metric-card">
-              <span>Aging 60+ Days</span>
-              <strong>5</strong>
-              <small>Requires price review</small>
+            <div class="stat-tile bg-gradient-to-br from-amber-50 to-white border-2 border-amber-200">
+              <div class="stat-tile-icon bg-amber-500">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+              </div>
+              <span class="text-xs font-semibold text-amber-600 uppercase tracking-wider">Low Margin &lt;10%</span>
+              <strong class="text-2xl font-black text-amber-700">2</strong>
+              <small class="text-xs text-amber-500">At risk units</small>
             </div>
-            <div class="metric-card">
-              <span>Avg Margin %</span>
-              <strong>14.2%</strong>
-              <small>R826k potential GP</small>
+            <div class="stat-tile bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+              <div class="stat-tile-icon bg-blue-500">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Fast Movers &lt;30d</span>
+              <strong class="text-2xl font-black text-blue-700">9</strong>
+              <small class="text-xs text-blue-500">Quick turnover</small>
             </div>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="flex flex-wrap gap-3">
+            <button class="filter-btn active" data-filter="all">All Stock <span class="count">24</span></button>
+            <button class="filter-btn" data-filter="attention">Needs Attention <span class="count">6</span></button>
+            <button class="filter-btn" data-filter="aging">Aging Stock <span class="count">5</span></button>
+            <button class="filter-btn" data-filter="lowmargin">Low Margin <span class="count">2</span></button>
+            <button class="filter-btn" data-filter="highmargin">High Margin <span class="count">10</span></button>
+            <button class="filter-btn" data-filter="fast">Fast Movers <span class="count">9</span></button>
           </div>
 
           <!-- Vehicle Grid -->
-          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <!-- Vehicle Card 1 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-reserved">Reserved</span>
-                <span class="text-xs font-bold text-slate-500">AF-1042</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/hatch.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2020 VW Polo 1.0 TSI</h3>
-                  <p class="text-sm text-slate-500">Comfortline</p>
+          <div id="vehicleGrid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <!-- Vehicle Card 1 - High Margin, Reserved -->
+            <article class="vehicle-card relative" data-margin="high" data-days="38" data-stock="normal">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-reserved">Reserved</span>
+                  <span class="margin-badge high">+16.4%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>58,200 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/hatch.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2020 VW Polo 1.0 TSI</h3>
+                    <p class="text-sm text-slate-500">Comfortline</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1042</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Pure White</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge fresh">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    38 days
+                  </span>
+                  <span class="text-xs text-slate-400">58,200 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R224,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R224,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R36,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Promote
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Reserve
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R36,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold">38</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">16.4%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn">Reserve</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 2 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-reserved">Reserved</span>
-                <span class="text-xs font-bold text-slate-500">AF-1058</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/bakkie.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2021 Ford Ranger 2.0</h3>
-                  <p class="text-sm text-slate-500">Wildtrak Bi-Turbo</p>
+            <!-- Vehicle Card 2 - Medium Margin, Reserved -->
+            <article class="vehicle-card relative" data-margin="medium" data-days="22" data-stock="fast">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-reserved">Reserved</span>
+                  <span class="margin-badge medium">+12.4%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>74,100 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/bakkie.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2021 Ford Ranger 2.0</h3>
+                    <p class="text-sm text-slate-500">Wildtrak Bi-Turbo</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1058</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Sea Grey</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge fresh">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    22 days
+                  </span>
+                  <span class="text-xs text-slate-400">74,100 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R499,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R499,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R61,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Promote
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Reserve
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R61,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold">22</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">12.4%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn">Reserve</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 3 - Aging Stock -->
-            <article class="vehicle-card needs-attention-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-in-stock">In Stock</span>
-                <span class="text-xs font-bold text-red-600">AF-1061</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/bakkie.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2019 Toyota Hilux 2.8</h3>
-                  <p class="text-sm text-slate-500">Raider 4x4 GD-6</p>
+            <!-- Vehicle Card 3 - Aging Stock, Low Margin -->
+            <article class="vehicle-card relative needs-attention" data-margin="medium" data-days="73" data-stock="urgent">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-in-stock">In Stock</span>
+                  <span class="margin-badge medium">+12.9%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>96,200 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/bakkie.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2019 Toyota Hilux 2.8</h3>
+                    <p class="text-sm text-slate-500">Raider 4x4 GD-6</p>
+                    <span class="text-xs font-bold text-red-500 mt-1 block">AF-1061</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Glacier White</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge urgent">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    73 days
+                  </span>
+                  <span class="text-xs text-slate-400">96,200 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R449,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R449,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-amber-600">R57,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn discount">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                    Discount
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Recon
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-amber-600">R57,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold text-red-600">73</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold">12.9%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn primary">Price Review</button>
-                <button class="stock-action-btn">Recon</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 4 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-in-stock">In Stock</span>
-                <span class="text-xs font-bold text-slate-500">AF-1070</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/hatch.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2022 Suzuki Swift 1.2</h3>
-                  <p class="text-sm text-slate-500">GL</p>
+            <!-- Vehicle Card 4 - High Margin, Fast Mover -->
+            <article class="vehicle-card relative" data-margin="high" data-days="18" data-stock="fast">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-in-stock">In Stock</span>
+                  <span class="margin-badge high">+16.1%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>33,600 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/hatch.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2022 Suzuki Swift 1.2</h3>
+                    <p class="text-sm text-slate-500">GL</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1070</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Silky Silver</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge fresh">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    18 days
+                  </span>
+                  <span class="text-xs text-slate-400">33,600 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R179,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R179,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R28,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Promote
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Reserve
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R28,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold">18</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">16.1%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn">Reserve</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 5 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-in-stock">In Stock</span>
-                <span class="text-xs font-bold text-slate-500">AF-1074</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/sedan.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2018 BMW 320d</h3>
-                  <p class="text-sm text-slate-500">M Sport Auto</p>
+            <!-- Vehicle Card 5 - High Margin, Aging -->
+            <article class="vehicle-card relative needs-attention" data-margin="high" data-days="66" data-stock="aging">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-in-stock">In Stock</span>
+                  <span class="margin-badge high">+17.2%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>88,400 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/sedan.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2018 BMW 320d</h3>
+                    <p class="text-sm text-slate-500">M Sport Auto</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1074</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Mineral Grey</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge aging">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    66 days
+                  </span>
+                  <span class="text-xs text-slate-400">88,400 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R359,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R359,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R61,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Promote
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Reserve
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R61,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold text-amber-600">66</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">17.2%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn">Reserve</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 6 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-reserved">Reserved</span>
-                <span class="text-xs font-bold text-slate-500">AF-1082</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/suv.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2023 Toyota Corolla Cross</h3>
-                  <p class="text-sm text-slate-500">1.8 XS</p>
+            <!-- Vehicle Card 6 - Medium Margin, Fast Mover, Reserved -->
+            <article class="vehicle-card relative" data-margin="medium" data-days="11" data-stock="fast">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-reserved">Reserved</span>
+                  <span class="margin-badge medium">+14.3%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>21,400 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/suv.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2023 Toyota Corolla Cross</h3>
+                    <p class="text-sm text-slate-500">1.8 XS</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1082</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Platinum White</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge fresh">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    11 days
+                  </span>
+                  <span class="text-xs text-slate-400">21,400 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R369,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R369,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R52,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve bg-emerald-100 border-emerald-300 text-emerald-700">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Confirmed
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R52,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold">11</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">14.3%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn is-confirmed">Reserved</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 7 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-in-stock">In Stock</span>
-                <span class="text-xs font-bold text-slate-500">AF-1088</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/bakkie.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2021 Isuzu D-Max 250</h3>
-                  <p class="text-sm text-slate-500">HO X-Rider</p>
+            <!-- Vehicle Card 7 - Medium Margin, Normal -->
+            <article class="vehicle-card relative" data-margin="medium" data-days="45" data-stock="normal">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-in-stock">In Stock</span>
+                  <span class="margin-badge medium">+14.5%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>68,100 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/bakkie.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2021 Isuzu D-Max 250</h3>
+                    <p class="text-sm text-slate-500">HO X-Rider</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1088</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Splash White</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge aging">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    45 days
+                  </span>
+                  <span class="text-xs text-slate-400">68,100 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R384,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R384,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R55,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Promote
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Reserve
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R55,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold text-amber-600">45</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">14.5%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn">Reserve</button>
               </div>
             </article>
 
-            <!-- Vehicle Card 8 -->
-            <article class="vehicle-card">
-              <div class="mb-3 flex items-center justify-between">
-                <span class="status-pill status-in-stock">In Stock</span>
-                <span class="text-xs font-bold text-slate-500">AF-1092</span>
-              </div>
-              <div class="mb-3 flex items-center gap-3">
-                <img src="static/images/sedan.svg" alt="Vehicle" class="h-16 w-16 rounded-lg bg-slate-100 p-2">
-                <div>
-                  <h3 class="font-black text-slate-950">2020 Mercedes A200</h3>
-                  <p class="text-sm text-slate-500">Progressive Auto</p>
+            <!-- Vehicle Card 8 - High Margin, Aging -->
+            <article class="vehicle-card relative" data-margin="high" data-days="57" data-stock="aging">
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="status-pill status-in-stock">In Stock</span>
+                  <span class="margin-badge high">+15.5%</span>
                 </div>
-              </div>
-              <dl class="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <dt>Mileage</dt>
-                  <dd>59,200 km</dd>
+                <div class="flex items-center gap-3 mb-4">
+                  <img src="static/images/sedan.svg" alt="Vehicle" class="h-20 w-20 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 p-2 object-contain">
+                  <div>
+                    <h3 class="font-black text-slate-950 leading-tight">2020 Mercedes A200</h3>
+                    <p class="text-sm text-slate-500">Progressive Auto</p>
+                    <span class="text-xs font-bold text-slate-400 mt-1 block">AF-1092</span>
+                  </div>
                 </div>
-                <div>
-                  <dt>Color</dt>
-                  <dd>Cosmos Black</dd>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="days-badge aging">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    57 days
+                  </span>
+                  <span class="text-xs text-slate-400">59,200 km</span>
                 </div>
-                <div>
-                  <dt>Selling Price</dt>
-                  <dd class="font-black text-ocean">R419,900</dd>
+                <dl class="grid grid-cols-2 gap-2 text-sm mb-4">
+                  <div>
+                    <dt class="text-xs text-slate-500">Selling</dt>
+                    <dd class="font-black text-ocean">R419,900</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-slate-500">Profit</dt>
+                    <dd class="font-bold text-emerald-600">R64,900</dd>
+                  </div>
+                </dl>
+                <div class="flex gap-2">
+                  <button class="quick-action-btn promote">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    Promote
+                  </button>
+                  <button class="quick-action-btn details">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Details
+                  </button>
+                  <button class="quick-action-btn reserve">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Reserve
+                  </button>
                 </div>
-                <div>
-                  <dt>Profit</dt>
-                  <dd class="font-bold text-emerald-600">R64,900</dd>
-                </div>
-                <div>
-                  <dt>Days in Stock</dt>
-                  <dd class="font-bold text-amber-600">57</dd>
-                </div>
-                <div>
-                  <dt>Margin</dt>
-                  <dd class="font-bold text-emerald-600">15.5%</dd>
-                </div>
-              </dl>
-              <div class="mt-3 flex gap-2">
-                <button class="stock-action-btn">View</button>
-                <button class="stock-action-btn">Price</button>
-                <button class="stock-action-btn">Reserve</button>
               </div>
             </article>
-          </div>
-
-          <!-- Add Vehicle Button -->
-          <div class="flex justify-center">
-            <button class="rounded-lg bg-ocean px-6 py-3 text-sm font-black text-white shadow-sm">
-              + Add Vehicle
-            </button>
           </div>
         </div>
       </section>
@@ -533,10 +755,10 @@
       <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       <span>Search</span>
     </a>
-    <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean" href="#">
+    <button onclick="openAddVehicleModal()" class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-ocean">
       <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
       <span>Add</span>
-    </a>
+    </button>
     <a class="flex flex-col items-center gap-1 rounded-lg p-2 text-xs font-bold text-slate-600" href="#">
       <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
       <span>Filter</span>
@@ -547,6 +769,224 @@
     </a>
   </nav>
 
+  <!-- Add Vehicle Modal -->
+  <div id="addVehicleModal" class="fixed inset-0 z-[100] hidden">
+    <div class="modal-overlay absolute inset-0" onclick="closeAddVehicleModal()"></div>
+    <div class="relative flex min-h-full items-center justify-center p-4">
+      <div class="modal-content w-full max-w-2xl bg-white rounded-2xl shadow-modal overflow-hidden">
+        <div class="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+          <div>
+            <h2 class="text-xl font-black text-slate-900">Add New Vehicle</h2>
+            <p class="text-sm text-slate-500">Enter vehicle details and pricing information</p>
+          </div>
+          <button onclick="closeAddVehicleModal()" class="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <form id="addVehicleForm" class="p-6">
+          <div class="space-y-6">
+            <!-- Vehicle Details Section -->
+            <div class="rounded-xl bg-slate-50 p-5 border border-slate-200">
+              <h3 class="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-700 mb-4">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                Vehicle Details
+              </h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Year</label>
+                  <input type="text" name="year" placeholder="2024" class="form-input" required>
+                </div>
+                <div>
+                  <label class="form-label">Make</label>
+                  <input type="text" name="make" placeholder="Toyota" class="form-input" required>
+                </div>
+                <div>
+                  <label class="form-label">Model</label>
+                  <input type="text" name="model" placeholder="Corolla" class="form-input" required>
+                </div>
+                <div>
+                  <label class="form-label">Variant</label>
+                  <input type="text" name="variant" placeholder="1.8 XS" class="form-input">
+                </div>
+                <div>
+                  <label class="form-label">VIN Number</label>
+                  <input type="text" name="vin" placeholder="VIN123456789" class="form-input uppercase" required>
+                </div>
+                <div>
+                  <label class="form-label">Color</label>
+                  <input type="text" name="color" placeholder="Pearl White" class="form-input">
+                </div>
+                <div>
+                  <label class="form-label">Mileage (km)</label>
+                  <input type="number" name="mileage" placeholder="15000" class="form-input">
+                </div>
+                <div>
+                  <label class="form-label">Registration</label>
+                  <input type="text" name="registration" placeholder="AF-1234" class="form-input uppercase">
+                </div>
+              </div>
+            </div>
+
+            <!-- Pricing Section -->
+            <div class="rounded-xl bg-slate-50 p-5 border border-slate-200">
+              <h3 class="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-700 mb-4">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Pricing
+              </h3>
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label">Cost Price</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">R</span>
+                    <input type="number" name="costPrice" placeholder="280000" class="form-input pl-8" required>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">Selling Price</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">R</span>
+                    <input type="number" name="sellingPrice" placeholder="329900" class="form-input pl-8" required>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">Trade-in Allowance</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">R</span>
+                    <input type="number" name="tradeInAllowance" placeholder="0" class="form-input pl-8">
+                  </div>
+                </div>
+              </div>
+              <div id="marginPreview" class="mt-4 hidden">
+                <div class="flex items-center gap-3 rounded-lg bg-white border border-slate-200 p-3">
+                  <span class="text-xs font-semibold text-slate-500">Calculated Margin:</span>
+                  <span id="marginValue" class="font-black text-emerald-600"></span>
+                  <span class="text-xs font-semibold text-slate-500">| Potential Profit:</span>
+                  <span id="profitValue" class="font-black text-emerald-600"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Smart Actions Section -->
+            <div class="rounded-xl bg-slate-50 p-5 border border-slate-200">
+              <h3 class="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-700 mb-4">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                Smart Actions
+              </h3>
+              <div class="space-y-3">
+                <label class="flex items-center gap-3 rounded-lg bg-white p-3 border border-slate-200 cursor-pointer hover:border-ocean/50 transition-colors">
+                  <input type="checkbox" name="autoUpload" class="checkbox-custom" checked>
+                  <div>
+                    <span class="font-semibold text-slate-700">Auto-upload to AutoTrader</span>
+                    <p class="text-xs text-slate-500">Automatically list this vehicle on AutoTrader</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 rounded-lg bg-white p-3 border border-slate-200 cursor-pointer hover:border-ocean/50 transition-colors">
+                  <input type="checkbox" name="generateListing" class="checkbox-custom" checked>
+                  <div>
+                    <span class="font-semibold text-slate-700">Generate Online Listing</span>
+                    <p class="text-xs text-slate-500">Create a professional listing with photos and specs</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 rounded-lg bg-white p-3 border border-slate-200 cursor-pointer hover:border-ocean/50 transition-colors">
+                  <input type="checkbox" name="assignSalesperson" class="checkbox-custom">
+                  <div>
+                    <span class="font-semibold text-slate-700">Assign to Salesperson</span>
+                    <p class="text-xs text-slate-500">Assign a team member to manage this vehicle</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 rounded-lg bg-white p-3 border border-slate-200 cursor-pointer hover:border-ocean/50 transition-colors">
+                  <input type="checkbox" name="sendToWorkshop" class="checkbox-custom">
+                  <div>
+                    <span class="font-semibold text-slate-700">Send to Workshop</span>
+                    <p class="text-xs text-slate-500">Schedule pre-sale inspection and detailing</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="mt-6 flex items-center justify-end gap-3 border-t border-slate-200 pt-6">
+            <button type="button" onclick="closeAddVehicleModal()" class="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+              Cancel
+            </button>
+            <button type="submit" class="rounded-lg bg-gradient-to-r from-ocean to-blue-700 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-ocean/30 hover:shadow-xl hover:shadow-ocean/40 transition-all">
+              Add Vehicle
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script src="static/js/app.js"></script>
+  <script>
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Modal functionality
+    function openAddVehicleModal() {
+      document.getElementById('addVehicleModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddVehicleModal() {
+      document.getElementById('addVehicleModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Calculate margin preview
+    document.querySelector('#addVehicleForm').addEventListener('input', function(e) {
+      const costPrice = parseFloat(document.querySelector('[name="costPrice"]').value) || 0;
+      const sellingPrice = parseFloat(document.querySelector('[name="sellingPrice"]').value) || 0;
+      
+      if (costPrice > 0 && sellingPrice > 0) {
+        const profit = sellingPrice - costPrice;
+        const margin = (profit / sellingPrice) * 100;
+        
+        document.getElementById('marginPreview').classList.remove('hidden');
+        document.getElementById('marginValue').textContent = margin.toFixed(1) + '%';
+        document.getElementById('profitValue').textContent = 'R' + profit.toLocaleString();
+        
+        // Color code the margin
+        const marginEl = document.getElementById('marginValue');
+        const profitEl = document.getElementById('profitValue');
+        
+        if (margin >= 15) {
+          marginEl.className = 'font-black text-emerald-600';
+          profitEl.className = 'font-black text-emerald-600';
+        } else if (margin >= 10) {
+          marginEl.className = 'font-black text-amber-600';
+          profitEl.className = 'font-black text-amber-600';
+        } else {
+          marginEl.className = 'font-black text-red-600';
+          profitEl.className = 'font-black text-red-600';
+        }
+      } else {
+        document.getElementById('marginPreview').classList.add('hidden');
+      }
+    });
+
+    // Form submission
+    document.getElementById('addVehicleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Vehicle added successfully!');
+      closeAddVehicleModal();
+      this.reset();
+      document.getElementById('marginPreview').classList.add('hidden');
+    });
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeAddVehicleModal();
+      }
+    });
+  </script>
 </body>
 </html>
