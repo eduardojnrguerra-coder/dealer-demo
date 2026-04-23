@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="space-y-6">
-  <section class="panel bg-slate-950 text-white">
+<div class="space-y-6" data-dashboard-onboarding-root>
+  <section id="tourTodaysPerformance" data-tour="dashboard-overview" class="panel bg-slate-950 text-white">
     <div class="panel-heading">
       <div>
         <p class="eyebrow text-blue-200">Control Room</p>
@@ -35,7 +35,7 @@
   </section>
 
   <div class="grid gap-6 xl:grid-cols-[0.78fr_1.22fr]">
-    <section class="panel missed-panel">
+    <section id="tourLostMoneyEngine" class="panel missed-panel">
       <div class="panel-heading">
         <div>
           <p class="eyebrow text-red-700">Lost Money Engine</p>
@@ -168,6 +168,109 @@
   </div>
 
   <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Lead Operations System</p>
+        <h2>Source visibility, fair distribution, accountability, and channel flow</h2>
+      </div>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Built for owner control</span>
+    </div>
+    <div class="grid gap-6 xl:grid-cols-2">
+      <article id="tourLeadSourceTracking" data-tour="lead-source-tracking" class="business-tour-card">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Lead Source Tracking</p>
+            <h2>Know exactly where your leads come from</h2>
+          </div>
+        </div>
+        <div class="source-tag-row">
+          {% for source in source_showcase %}
+          <span class="source-tag">{{ source.label }}</span>
+          {% endfor %}
+        </div>
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          {% for source in source_showcase %}
+          <article class="source-metric-card">
+            <span>{{ source.label }}</span>
+            <strong>{{ source.count }}</strong>
+          </article>
+          {% endfor %}
+        </div>
+        <p class="owner-value-line">You can finally see which channels are producing real opportunities and which ones are wasting budget.</p>
+      </article>
+
+      <article id="tourLeadDistribution" data-tour="lead-distribution" class="business-tour-card">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Lead Distribution</p>
+            <h2>Divide leads fairly and keep sales accountable</h2>
+          </div>
+        </div>
+        <div class="space-y-3">
+          {% for method in lead_distribution_methods %}
+          <div class="distribution-method-row">
+            <strong>{{ method.label }}</strong>
+            <span>{{ method.detail }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="owner-value-line">This reduces missed leads, removes confusion, and helps prevent unfair lead allocation between staff.</p>
+      </article>
+
+      <article id="tourSalesAccountability" data-tour="sales-accountability" class="business-tour-card">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Sales Accountability</p>
+            <h2>Track response time, follow-up, and performance</h2>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="data-table accountability-table">
+            <thead>
+              <tr>
+                <th>Sales Executive</th>
+                <th>Leads</th>
+                <th>Response</th>
+                <th>Overdue</th>
+                <th>Conversion</th>
+                <th>Closed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for person in sales_accountability %}
+              <tr>
+                <td class="font-black">{{ person.name }}</td>
+                <td>{{ person.leads_assigned }}</td>
+                <td>{{ person.response_time }}</td>
+                <td>{% if person.follow_up_overdue %}<span class="red-badge">{{ person.follow_up_overdue }}</span>{% else %}<span class="automation-label success">0</span>{% endif %}</td>
+                <td>{{ person.conversion_rate }}%</td>
+                <td>{{ person.deals_closed }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <p class="owner-value-line">Owners and managers can clearly see who is working their leads properly and where deals are being lost.</p>
+      </article>
+
+      <article id="tourIntegrationOverview" class="business-tour-card">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Integration Overview</p>
+            <h2>Bring dealership activity into one control room</h2>
+          </div>
+        </div>
+        <div class="integration-chip-grid">
+          {% for item in integration_showcase %}
+          <span class="integration-chip">{{ item }}</span>
+          {% endfor %}
+        </div>
+        <p class="owner-value-line">Less admin chaos, more visibility, and faster decision-making.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="tourAdminOperations" data-tour="admin-operations" class="panel">
     <div class="panel-heading">
       <div>
         <p class="eyebrow">Operational Snapshot</p>
@@ -391,9 +494,10 @@
       </div>
     </section>
   </div>
+
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js', v=asset_versions.dashboard_js) }}"></script>
 {% endblock %}

@@ -2,74 +2,103 @@
 
 {% block content %}
 <div class="space-y-6">
-  <section class="panel">
-    <div class="panel-heading">
+  <section class="panel bg-slate-950 text-white" data-tour="integrations-main">
+    <div class="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
       <div>
-        <p class="eyebrow">Finance & Compliance</p>
-        <h2>Financial oversight and regulatory readiness</h2>
+        <p class="eyebrow text-blue-200">Integrations Hub</p>
+        <h2 class="mt-2 text-3xl font-black text-white">Bring stock, leads, and buyer activity into one control room</h2>
+        <p class="mt-3 max-w-3xl text-sm font-semibold leading-6 text-slate-300">PineX Systems stays the operating layer while dealership teams connect listing feeds, Meta campaigns, customer channels, calendars, documents, and finance workflows into one guided process.</p>
       </div>
-      <span class="rounded-lg bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700">Enterprise Layer</span>
+      <span class="rounded-lg bg-white/10 px-4 py-2 text-sm font-black text-blue-100">Connected dealership workflow</span>
     </div>
-    <p class="max-w-3xl text-sm leading-6 text-slate-600">{{ branding.company_name }} can be configured to support payroll workflows, VAT processes, SARS reporting preparation, approval chains, and financial oversight through a connected finance and compliance layer.</p>
   </section>
 
   <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-    <article class="integration-card">
+    <article class="integration-card" data-tour="autotrader-main">
       <div class="flex items-start justify-between gap-4">
-        <span class="integration-icon bg-emerald-600">PF</span>
-        <span class="status-pill status-in-stock">Ready</span>
+        <span class="integration-icon">AT</span>
+        <span class="status-pill status-in-stock">Available</span>
       </div>
-      <h3 class="mt-5 text-lg font-black text-slate-950">Payroll Visibility</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600">Commission tracking, SPIF calculations, and payroll-ready export for Finance Team.</p>
+      <h3 class="mt-5 text-lg font-black text-slate-950">AutoTrader</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600">Sync dealership stock to AutoTrader, track missing photos, and monitor listing readiness before publication.</p>
     </article>
-    <article class="integration-card">
+
+    <article class="integration-card" data-tour="cars-main">
       <div class="flex items-start justify-between gap-4">
-        <span class="integration-icon bg-emerald-600">VT</span>
-        <span class="status-pill status-in-stock">Ready</span>
+        <span class="integration-icon">CZ</span>
+        <span class="status-pill status-in-stock">Available</span>
       </div>
-      <h3 class="mt-5 text-lg font-black text-slate-950">VAT Workflow</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600">Input/output VAT tracking, VAT65 preparation data, and period close visibility.</p>
+      <h3 class="mt-5 text-lg font-black text-slate-950">Cars.co.za</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600">Keep Cars.co.za listings accurate, complete, and easier to publish without duplicate admin across the stock team.</p>
     </article>
-    <article class="integration-card">
+
+    <article class="integration-card" data-tour="meta-leads-main">
       <div class="flex items-start justify-between gap-4">
-        <span class="integration-icon bg-emerald-600">SR</span>
+        <span class="integration-icon">ML</span>
         <span class="status-pill status-reserved">Planned</span>
       </div>
-      <h3 class="mt-5 text-lg font-black text-slate-950">SARS Reporting</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600">Audit-ready records, exportable IRP5/IT3 data, and dividend declarations.</p>
+      <h3 class="mt-5 text-lg font-black text-slate-950">Meta Leads</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600">Capture Facebook and Instagram campaign enquiries directly into the lead workflow so response time does not depend on manual forwarding.</p>
     </article>
+
     <article class="integration-card">
       <div class="flex items-start justify-between gap-4">
-        <span class="integration-icon bg-emerald-600">AP</span>
-        <span class="status-pill status-in-stock">Ready</span>
+        <span class="integration-icon">FA</span>
+        <span class="status-pill status-in-stock">Connected</span>
       </div>
-      <h3 class="mt-5 text-lg font-black text-slate-950">Finance Approvals</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600">Deal-level approval chains, discount thresholds, and financial authority limits.</p>
+      <h3 class="mt-5 text-lg font-black text-slate-950">Finance Applications</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600">Link finance progress back into the deal so approvals, outstanding documents, and handover readiness stay visible.</p>
     </article>
   </section>
 
   <section class="panel">
     <div class="panel-heading">
       <div>
-        <p class="eyebrow">Accounting Connectors</p>
-        <h2>ERP and accounting integrations</h2>
+        <p class="eyebrow">Integration Value</p>
+        <h2>Why owners care about connected systems</h2>
       </div>
-      <span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">Operational Links</span>
+      <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Less admin chaos</span>
     </div>
-    <p class="max-w-3xl text-sm leading-6 text-slate-600">{{ branding.company_name }} stays the primary operating layer. These connectors represent practical systems a business may link for buyer messaging, test-drive diaries, route planning, accounting, and compliance notifications.</p>
+    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <article class="readiness-card">
+        <strong>Faster listing control</strong>
+        <span>Stock can move to buyer platforms with fewer manual checks and cleaner data.</span>
+      </article>
+      <article class="readiness-card">
+        <strong>Better lead attribution</strong>
+        <span>Owners can see whether Meta, website forms, AutoTrader, or referrals are producing real enquiries.</span>
+      </article>
+      <article class="readiness-card">
+        <strong>Stronger response discipline</strong>
+        <span>Leads arrive into one queue instead of being lost across inboxes, ad managers, and call notes.</span>
+      </article>
+      <article class="readiness-card">
+        <strong>Visible finance progress</strong>
+        <span>Approvals and documents stay linked to the buyer and deal instead of living in separate files.</span>
+      </article>
+    </div>
   </section>
 
-  <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-    {% for item in integrations %}
-    <article class="integration-card">
-      <div class="flex items-start justify-between gap-4">
-        <span class="integration-icon">{{ item.initial }}</span>
-        <span class="status-pill">{{ item.status }}</span>
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Extended Connectors</p>
+        <h2>Operational systems that can plug into the platform</h2>
       </div>
-      <h3 class="mt-5 text-lg font-black text-slate-950">{{ item.name }}</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600">{{ item.use_case }}</p>
-    </article>
-    {% endfor %}
+      <span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">Future-ready</span>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {% for item in integrations %}
+      <article class="integration-card">
+        <div class="flex items-start justify-between gap-4">
+          <span class="integration-icon">{{ item.initial }}</span>
+          <span class="status-pill">{{ item.status }}</span>
+        </div>
+        <h3 class="mt-5 text-lg font-black text-slate-950">{{ item.name }}</h3>
+        <p class="mt-2 text-sm leading-6 text-slate-600">{{ item.use_case }}</p>
+      </article>
+      {% endfor %}
+    </div>
   </section>
 </div>
 {% endblock %}

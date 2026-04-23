@@ -24,7 +24,7 @@
   </div>
 
   <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-    <section class="panel">
+  <section class="panel" data-tour="{{ module_tour_target }}">
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Workflow</p>
@@ -68,5 +68,52 @@
       </div>
     </section>
   </div>
+
+  {% if module_slug == 'leads' %}
+  <section class="grid gap-6 xl:grid-cols-2">
+    <article class="panel" data-tour="lead-source-tracking-main">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Lead Source Tracking</p>
+          <h2>Know exactly which channel created the enquiry</h2>
+        </div>
+        <span class="rounded-lg bg-blue-50 px-3 py-1 text-sm font-bold text-ocean">Marketing visibility</span>
+      </div>
+      <div class="source-tag-row">
+        {% for source in source_showcase %}
+        <span class="source-tag">{{ source.label }}</span>
+        {% endfor %}
+      </div>
+      <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        {% for source in source_showcase %}
+        <article class="source-metric-card">
+          <span>{{ source.label }}</span>
+          <strong>{{ source.count }}</strong>
+        </article>
+        {% endfor %}
+      </div>
+      <p class="owner-value-line">Website, Meta Ads, Google campaigns, WhatsApp, referrals, and walk-ins can all be tracked into one operating queue.</p>
+    </article>
+
+    <article class="panel" data-tour="lead-distribution-main">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Lead Distribution</p>
+          <h2>Fair allocation and branch-ready routing</h2>
+        </div>
+        <span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-600">Manager control</span>
+      </div>
+      <div class="space-y-3">
+        {% for method in lead_distribution_methods %}
+        <div class="distribution-method-row">
+          <strong>{{ method.label }}</strong>
+          <span>{{ method.detail }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="owner-value-line">Leads can be shared fairly, routed by branch, or reassigned if no one responds, which keeps the sales floor accountable.</p>
+    </article>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}

@@ -1,3 +1,5 @@
+console.log('dashboard.js loaded (charts only, no tour controller)');
+
 async function loadDashboardCharts() {
   const response = await fetch('/api/dashboard');
   const data = await response.json();

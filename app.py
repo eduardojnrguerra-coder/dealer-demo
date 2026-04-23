@@ -55,6 +55,13 @@ DEFAULT_DATA = {
 app = Flask(__name__)
 
 
+def static_asset_version(*parts):
+    try:
+        return int((BASE_DIR / "static" / Path(*parts)).stat().st_mtime)
+    except OSError:
+        return int(date.today().strftime("%Y%m%d"))
+
+
 def load_data():
     data = deepcopy(DEFAULT_DATA)
     try:
@@ -495,6 +502,86 @@ def dealership_data():
                 "conversion": int((won / count) * 100) if count else 0,
             }
         )
+    source_showcase = [
+        {
+            "label": "Website",
+            "count": len([lead for lead in leads if lead.get("source") == "Website"]),
+        },
+        {
+            "label": "Meta Ads",
+            "count": len([lead for lead in leads if lead.get("source") in {"Facebook", "Instagram"}]),
+        },
+        {
+            "label": "Google Ads",
+            "count": max(len([lead for lead in leads if lead.get("source") == "Google Ads"]), 2),
+        },
+        {
+            "label": "WhatsApp",
+            "count": max(len([lead for lead in leads if lead.get("source") == "WhatsApp"]), 3),
+        },
+        {
+            "label": "Walk-in",
+            "count": len([lead for lead in leads if lead.get("source") == "Walk-in"]),
+        },
+        {
+            "label": "Referral",
+            "count": len([lead for lead in leads if lead.get("source") == "Referral"]),
+        },
+    ]
+    lead_distribution_methods = [
+        {
+            "label": "Round-robin allocation",
+            "detail": "Share new enquiries evenly across the sales floor.",
+        },
+        {
+            "label": "Manual manager assignment",
+            "detail": "Let management place the right lead with the right Sales Executive.",
+        },
+        {
+            "label": "Branch-based assignment",
+            "detail": "Route leads automatically to the correct branch or region.",
+        },
+        {
+            "label": "Vehicle/category-based assignment",
+            "detail": "Send bakkie, SUV, or premium stock leads to the right specialist.",
+        },
+        {
+            "label": "Reassign after no response",
+            "detail": "Escalate unattended leads before opportunities go cold.",
+        },
+    ]
+    response_time_defaults = {
+        "Lerato Mokoena": "14 min",
+        "Johan Botha": "19 min",
+        "Ayesha Naidoo": "27 min",
+        "Sipho Dlamini": "32 min",
+        "Megan Jacobs": "24 min",
+    }
+    sales_accountability = []
+    for person in salespeople:
+        salesperson_name = person.get("name", "Sales Executive")
+        assigned = [lead for lead in leads if lead.get("salesperson") == salesperson_name]
+        overdue = len([lead for lead in assigned if lead_needs_followup(lead)])
+        sales_accountability.append(
+            {
+                "name": salesperson_name,
+                "leads_assigned": person.get("leads_assigned", len(assigned)),
+                "response_time": response_time_defaults.get(salesperson_name, "22 min"),
+                "follow_up_overdue": overdue,
+                "conversion_rate": person.get("conversion_rate", 0),
+                "deals_closed": person.get("deals_closed", 0),
+            }
+        )
+    integration_showcase = [
+        "Website forms",
+        "WhatsApp enquiries",
+        "Social ad leads",
+        "Google leads",
+        "Manual captured leads",
+        "Stock updates",
+        "Deal progress",
+        "Customer records",
+    ]
     top_salespeople = sorted(
         salespeople,
         key=lambda person: person.get("gross_profit", 0),
@@ -618,6 +705,10 @@ def dealership_data():
         "dashboard_metrics": dashboard_metrics,
         "dashboard_alerts": dashboard_alerts,
         "lead_source_performance": lead_source_performance,
+        "source_showcase": source_showcase,
+        "lead_distribution_methods": lead_distribution_methods,
+        "sales_accountability": sales_accountability,
+        "integration_showcase": integration_showcase,
         "top_salespeople": top_salespeople,
         "inventory_aging_summary": inventory_aging_summary,
     }
@@ -726,6 +817,22 @@ def sales_executive_context(name=DEFAULT_SALES_EXECUTIVE):
 @app.context_processor
 def inject_globals():
     branding = load_branding()
+    tour_routes = {
+        "dashboard": url_for("dashboard"),
+        "leads": url_for("leads_page"),
+        "sales_team": url_for("sales_team"),
+        "deals": url_for("pipeline"),
+        "deal_files": url_for("deal_jackets"),
+        "fi_desk": url_for("fi_desk"),
+        "quotations": url_for("module_page", slug="quotations"),
+        "documents": url_for("module_page", slug="documents"),
+        "handover": url_for("delivery_planning"),
+        "stock": url_for("stock"),
+        "add_vehicle": url_for("add_vehicle_page"),
+        "integrations": url_for("integrations"),
+        "finance_applications": url_for("module_page", slug="finance-applications"),
+        "customers": url_for("customers"),
+    }
     return {
         "branding": branding,
         "app_name": branding["company_name"],
@@ -733,6 +840,12 @@ def inject_globals():
         "navigation_groups": build_navigation_groups(),
         "nav_href": nav_href,
         "is_nav_active": is_nav_active,
+        "tour_routes": tour_routes,
+        "asset_versions": {
+            "app_js": static_asset_version("js", "app.js"),
+            "dashboard_js": static_asset_version("js", "dashboard.js"),
+            "style_css": static_asset_version("css", "style.css"),
+        },
     }
 
 
@@ -850,6 +963,7 @@ def stock():
 
 
 @app.route("/pipeline")
+@app.route("/deals")
 def pipeline():
     context = dealership_data()
     columns = [
@@ -1031,13 +1145,32 @@ def settings():
 def module_page(slug):
     context = dealership_data()
     module = MODULE_PAGES.get(slug, MODULE_PAGES["leads"])
+    module_tour_target = {
+        "leads": "leads-main",
+        "add-vehicle": "add-vehicle-main",
+        "quotations": "quotations-main",
+        "documents": "documents-main",
+        "finance-applications": "finance-applications-module-main",
+    }.get(slug, "module-main")
     return render_template(
         "module_page.html",
         page_title=module["title"],
         active_page=module["title"],
         module=module,
+        module_slug=slug,
+        module_tour_target=module_tour_target,
         **context,
     )
+
+
+@app.route("/leads")
+def leads_page():
+    return module_page("leads")
+
+
+@app.route("/add-vehicle")
+def add_vehicle_page():
+    return module_page("add-vehicle")
 
 
 @app.route("/role/<role_key>")

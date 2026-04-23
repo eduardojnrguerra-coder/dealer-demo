@@ -9,10 +9,10 @@
 </head>
 <body class="min-h-screen bg-[#151b24] text-white">
   <main class="grid min-h-screen lg:grid-cols-[1.08fr_0.92fr]">
-    <section class="relative flex items-center overflow-hidden px-6 py-10 sm:px-10 lg:px-16">
+    <section class="relative flex items-center px-6 py-10 sm:px-10 lg:px-16">
       <div class="absolute inset-0 login-visual"></div>
-      <div class="relative z-10 max-w-2xl">
-        <div class="flex items-center gap-3">
+      <div class="relative z-10 w-full max-w-3xl">
+        <div class="login-brand flex items-center gap-3">
           <img
             src="{{ url_for('static', filename=branding.logo) }}"
             alt="{{ branding.company_name }} logo"
@@ -23,21 +23,91 @@
             <p class="text-sm uppercase tracking-[0.2em] text-blue-200">{{ branding.system_tagline }}</p>
           </div>
         </div>
-        <h1 class="mt-16 max-w-xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">One system. Full control. Built to run the business.</h1>
-        <p class="mt-6 max-w-xl text-lg leading-8 text-slate-300">Operating system for dealership operations - visibility across stock, deals, teams, finance, and handover workflow.</p>
-        <div class="mt-10 grid max-w-xl gap-4 sm:grid-cols-3">
-          <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
-            <p class="text-3xl font-bold">24</p>
-            <p class="mt-1 text-sm text-slate-300">Retail units</p>
+        <div class="login-intro-card mt-12">
+          <p class="login-hero-eyebrow">DEALERSHIP OPERATIONS PLATFORM</p>
+          <h1 class="login-hero-title mt-4">Run Your Dealership From One Smart System</h1>
+          <p class="login-hero-copy mt-6">Track stock, manage customers, follow deals, monitor team activity, and stay on top of daily operations from one easy-to-use system built for real dealership workflow.</p>
+          <p class="login-hero-support mt-4">Clean layout. Easy navigation. No complicated training needed.</p>
+
+          <div class="login-cta-stack mt-8">
+            <a class="login-hero-cta" href="{{ url_for('dashboard', tour='welcome') }}">Start Demo</a>
+            <p class="login-trust-line">Built for dealership owners, managers, and sales teams.</p>
           </div>
-          <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
-            <p class="text-3xl font-bold">9</p>
-            <p class="mt-1 text-sm text-slate-300">Deal Flow stages</p>
+
+          <div class="login-benefits mt-8 grid gap-4 sm:grid-cols-3">
+            <article class="login-feature-card">
+              <strong>Better control</strong>
+              <span>See stock, deals, and team activity from one clear operating view.</span>
+            </article>
+            <article class="login-feature-card">
+              <strong>Faster workflow</strong>
+              <span>Move from lead to handover without wasted time or scattered admin.</span>
+            </article>
+            <article class="login-feature-card">
+              <strong>One central dashboard</strong>
+              <span>Give your team one place to work, track progress, and stay aligned.</span>
+            </article>
           </div>
-          <div class="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
-            <p class="text-3xl font-bold">5</p>
-            <p class="mt-1 text-sm text-slate-300">Salespeople</p>
-          </div>
+
+          <section class="login-steps mt-8">
+            <p class="login-section-label">How it works</p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-3">
+              <article class="login-step-card">
+                <span>1</span>
+                <strong>Log in</strong>
+              </article>
+              <article class="login-step-card">
+                <span>2</span>
+                <strong>Choose your section</strong>
+              </article>
+              <article class="login-step-card">
+                <span>3</span>
+                <strong>Manage instantly</strong>
+              </article>
+            </div>
+          </section>
+
+          <section class="login-preview-section mt-8">
+            <p class="login-section-label">Platform preview</p>
+            <div class="login-dashboard-preview">
+              <div class="login-preview-shell">
+                <div class="login-preview-topbar">
+                  <span class="login-preview-pill">Dealer Control Room</span>
+                  <span class="login-preview-status">Live overview</span>
+                </div>
+                <div class="login-preview-grid">
+                  <article class="login-preview-metric">
+                    <span>Stock</span>
+                    <strong>24</strong>
+                    <small>Retail-ready units</small>
+                  </article>
+                  <article class="login-preview-metric">
+                    <span>Active Leads</span>
+                    <strong>21</strong>
+                    <small>Buyers in Deal Flow</small>
+                  </article>
+                  <article class="login-preview-panel">
+                    <div class="login-preview-chart" aria-hidden="true">
+                      <span style="height: 38%"></span>
+                      <span style="height: 64%"></span>
+                      <span style="height: 52%"></span>
+                      <span style="height: 76%"></span>
+                      <span style="height: 58%"></span>
+                    </div>
+                    <p>Sales activity</p>
+                  </article>
+                  <article class="login-preview-panel">
+                    <div class="space-y-2">
+                      <div class="login-preview-line"><span></span><span></span></div>
+                      <div class="login-preview-line"><span></span><span></span></div>
+                      <div class="login-preview-line"><span></span><span></span></div>
+                    </div>
+                    <p>Operational visibility</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </section>

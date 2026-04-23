@@ -23,7 +23,7 @@
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=asset_versions.style_css) }}">
 </head>
 <body class="bg-slate-100 text-slate-900">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -51,7 +51,26 @@
               {% for item in group["items"] %}
               {% set href = nav_href(item) %}
               {% set active = is_nav_active(item, active_page|default('')) %}
-              <a href="{{ href }}" class="nav-link {% if active %}active{% endif %}" {% if active %}aria-current="page"{% endif %}>
+              {% set nav_id = item.slug if item.get('endpoint') == 'module_page' and item.get('slug') else item.get('endpoint') %}
+              {% set nav_tour = '' %}
+              {% if nav_id == 'leads' %}
+                {% set nav_tour = 'nav-leads' %}
+              {% elif nav_id == 'pipeline' %}
+                {% set nav_tour = 'nav-deals' %}
+              {% elif nav_id == 'stock' %}
+                {% set nav_tour = 'nav-stock' %}
+              {% elif nav_id == 'add-vehicle' %}
+                {% set nav_tour = 'nav-add-vehicle' %}
+              {% elif nav_id == 'fi-desk' %}
+                {% set nav_tour = 'nav-fi-desk' %}
+              {% elif nav_id == 'customers' %}
+                {% set nav_tour = 'nav-customers' %}
+              {% elif nav_id == 'sales-team' %}
+                {% set nav_tour = 'nav-sales-team' %}
+              {% elif nav_id == 'integrations' %}
+                {% set nav_tour = 'nav-integrations' %}
+              {% endif %}
+              <a id="nav-{{ nav_id|replace('_', '-') }}" href="{{ href }}" class="nav-link {% if active %}active{% endif %}" {% if active %}aria-current="page"{% endif %}{% if nav_tour %} data-tour="{{ nav_tour }}"{% endif %}>
                 <span class="nav-icon">{{ item.icon }}</span>
                 <span>{{ item.label }}</span>
               </a>
@@ -94,6 +113,11 @@
           </div>
           <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
             <div class="flex items-center gap-2">
+              {% if active_page|default('') == 'Dashboard' and active_view|default('principal') == 'principal' %}
+              <button class="dashboard-help-btn dashboard-help-mobile" type="button" data-open-dashboard-intro>
+                How it works
+              </button>
+              {% endif %}
               <button id="mobileAlertsBtn" class="relative flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 shadow-sm" type="button" aria-label="Alerts" aria-expanded="false" aria-controls="mobileAlertsMenu">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.659 6 8.338 6 10v4.158a2.032 2.032 0 01-.595 1.405L5 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                 <span>{{ notifications|default([])|length }}</span>
@@ -160,6 +184,9 @@
               {% endif %}
             </div>
             <div class="flex items-center gap-2">
+              {% if active_page|default('') == 'Dashboard' and active_view|default('principal') == 'principal' %}
+              <button class="dashboard-help-btn" type="button" data-open-dashboard-intro>How it works</button>
+              {% endif %}
               <div class="relative">
               <button id="notificationButton" class="relative rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationMenu">
                 <span>Alerts</span>
@@ -262,7 +289,8 @@
   </div>
 
   <script id="global-search-data" type="application/json">{{ search_records|default([])|tojson }}</script>
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script id="tour-route-data" type="application/json">{{ tour_routes|default({})|tojson }}</script>
+  <script src="{{ url_for('static', filename='js/app.js', v=asset_versions.app_js) }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
