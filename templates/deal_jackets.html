@@ -18,22 +18,22 @@
 
   {% if selected_jacket %}
   <section class="space-y-6">
-    <div class="space-y-6" data-tour="deal-files-main">
-      <div class="page-intro">
-        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
-          <div>
-            <p class="text-xs font-black uppercase tracking-[0.18em] text-ocean">{{ selected_jacket.id }} - {{ selected_jacket.stock_number }}</p>
-            <h2>{{ selected_jacket.customer }}</h2>
-            <p class="mt-2">{{ selected_jacket.vehicle }}</p>
-          </div>
-          <div class="grid gap-3 sm:grid-cols-3">
-            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Deal Value</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.deal_value|currency }}</strong></div>
-            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Gross Profit</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.gross_profit|currency }}</strong></div>
-            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Finance Stage</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.finance_stage }}</strong></div>
-          </div>
+    <div class="page-intro">
+      <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
+        <div>
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-ocean">{{ selected_jacket.id }} - {{ selected_jacket.stock_number }}</p>
+          <h2>{{ selected_jacket.customer }}</h2>
+          <p class="mt-2">{{ selected_jacket.vehicle }}</p>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Deal Value</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.deal_value|currency }}</strong></div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Gross Profit</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.gross_profit|currency }}</strong></div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Finance Stage</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.finance_stage }}</strong></div>
         </div>
       </div>
+    </div>
 
+    <div class="space-y-6 tour-focus" data-tour="deal-files-main" data-tour-card="true">
       <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         <section class="panel">
           <div class="panel-heading">

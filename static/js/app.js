@@ -1,5 +1,5 @@
 // PineX Systems Demo - Interactive Features
-console.log('Dealer tour JS version: premium-polish-1');
+console.log('Dealer tour JS version: spotlight-cutout-1');
 window.addEventListener('error', (event) => {
   console.error('Dealer tour boot error:', event.error || event.message || event);
 });
@@ -389,7 +389,10 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
   let skipLinkState = null;
   let tourTransitionStartedAt = 0;
   let activeTourTarget = null;
+  let currentTourTargetMeta = null;
+  let currentSpotlightRect = null;
   let routeLoadingTimer = null;
+  let spotlightRefreshFrame = null;
   const warmedTourRoutes = new Set();
 
   function normalizeTourRoute(route) {
@@ -412,14 +415,40 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     };
   }
 
+  function getElementArea(rect) {
+    if (!rect) return 0;
+    return Math.max(0, rect.width) * Math.max(0, rect.height);
+  }
+
   function isRectTooLarge(rect) {
     if (!rect) return false;
-    return rect.height > (window.innerHeight * 0.75) || rect.width > (window.innerWidth * 0.95);
+    return rect.height > (window.innerHeight * 0.70) || rect.width > (window.innerWidth * 0.90);
   }
 
   function isRectTooSmall(rect) {
     if (!rect) return false;
     return rect.height < 20 || rect.width < 20;
+  }
+
+  function isElementVisibleForTour(element) {
+    if (!element) return false;
+    const styles = window.getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    return (
+      styles.display !== 'none'
+      && styles.visibility !== 'hidden'
+      && Number.parseFloat(styles.opacity || '1') > 0.04
+      && rect.width >= 1
+      && rect.height >= 1
+    );
+  }
+
+  function looksLikeLayoutWrapper(element) {
+    if (!element) return false;
+    const className = typeof element.className === 'string' ? element.className : '';
+    const tag = element.tagName?.toLowerCase() || '';
+    return /(grid|wrapper|container|layout|shell|page-intro|space-y-|flow-root|stack)/.test(className)
+      || ['main'].includes(tag);
   }
 
   function describeTourElement(element) {
@@ -431,13 +460,94 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     };
   }
 
+  function computeSpotlightRect(target) {
+    if (!target) return null;
+    const rect = target.getBoundingClientRect();
+    const inset = window.innerWidth < 768 ? 6 : 10;
+    const edgePadding = 8;
+    const left = Math.max(edgePadding, rect.left - inset);
+    const top = Math.max(edgePadding, rect.top - inset);
+    const right = Math.min(window.innerWidth - edgePadding, rect.right + inset);
+    const bottom = Math.min(window.innerHeight - edgePadding, rect.bottom + inset);
+    const width = Math.max(0, right - left);
+    const height = Math.max(0, bottom - top);
+
+    return {
+      left,
+      top,
+      right,
+      bottom,
+      width,
+      height
+    };
+  }
+
   function findMoreSpecificTourChild(step, target) {
-    if (!step?.childSelector || !target) return null;
-    const childTarget = target.querySelector(step.childSelector);
-    if (!childTarget) return null;
-    const rect = childTarget.getBoundingClientRect();
-    if (isRectTooSmall(rect)) return null;
-    return childTarget;
+    if (!target) return { target: null, refined: false, reason: null };
+
+    const parentRect = target.getBoundingClientRect();
+    const parentArea = getElementArea(parentRect);
+    const selectors = [];
+
+    if (step?.childSelector) {
+      selectors.push(step.childSelector);
+    }
+
+    selectors.push(
+      '[data-tour-inner]',
+      '[data-tour-card]',
+      '.tour-focus',
+      '.tour-focus-block',
+      '.tour-focus-card',
+      '.workflow-card',
+      '.integration-card',
+      '.business-tour-card',
+      '.inventory-table',
+      '.kanban',
+      '.data-table',
+      'table',
+      '.panel',
+      '.card'
+    );
+
+    let bestCandidate = null;
+
+    selectors.forEach((selector, index) => {
+      const matches = target.querySelectorAll(selector);
+      matches.forEach((candidate) => {
+        if (candidate === target || !target.contains(candidate) || !isElementVisibleForTour(candidate)) return;
+
+        const rect = candidate.getBoundingClientRect();
+        if (isRectTooSmall(rect)) return;
+
+        const area = getElementArea(rect);
+        if (!area || area >= parentArea * 0.98) return;
+
+        const widthRatio = parentRect.width ? rect.width / parentRect.width : 0;
+        const heightRatio = parentRect.height ? rect.height / parentRect.height : 0;
+        if (widthRatio < 0.25 || heightRatio < 0.18) return;
+
+        let score = 100 - (index * 6);
+        if (!isRectTooLarge(rect)) score += 26;
+        if (!looksLikeLayoutWrapper(candidate)) score += 18;
+        if (area <= parentArea * 0.90) score += 16;
+        if (area <= parentArea * 0.68 && area >= parentArea * 0.22) score += 16;
+        if (candidate.hasAttribute('data-tour-inner') || candidate.hasAttribute('data-tour-card')) score += 24;
+        if (candidate.classList.contains('tour-focus') || candidate.classList.contains('tour-focus-block')) score += 20;
+        if (candidate.matches('.kanban, .inventory-table, .data-table, table')) score += 10;
+
+        if (!bestCandidate || score > bestCandidate.score) {
+          bestCandidate = {
+            target: candidate,
+            refined: true,
+            reason: selector,
+            score
+          };
+        }
+      });
+    });
+
+    return bestCandidate || { target: null, refined: false, reason: null };
   }
 
   function resolveTourRouteKey(routeKey) {
@@ -767,6 +877,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
   function clearTourHighlight() {
     if (!dashboardTourDom) return;
     dashboardTourDom.highlightBox.classList.add('hidden');
+    dashboardTourDom.stepOverlay.classList.remove('spotlight-active');
+    currentSpotlightRect = null;
+    currentTourTargetMeta = null;
     if (activeTourTarget) {
       activeTourTarget.classList.remove('tour-target-active');
       activeTourTarget = null;
@@ -857,17 +970,17 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
   function positionHighlightBox(target) {
     if (!dashboardTourDom || !target) return;
-    const rect = target.getBoundingClientRect();
-    const inset = window.innerWidth < 768 ? 6 : 10;
-    const left = Math.max(8, rect.left - inset);
-    const top = Math.max(8, rect.top - inset);
-    const right = Math.min(window.innerWidth - 8, rect.right + inset);
-    const bottom = Math.min(window.innerHeight - 8, rect.bottom + inset);
-    dashboardTourDom.highlightBox.style.left = `${left}px`;
-    dashboardTourDom.highlightBox.style.top = `${top}px`;
-    dashboardTourDom.highlightBox.style.width = `${Math.max(0, right - left)}px`;
-    dashboardTourDom.highlightBox.style.height = `${Math.max(0, bottom - top)}px`;
+    const spotlightRect = computeSpotlightRect(target);
+    if (!spotlightRect) return;
+    dashboardTourDom.stepOverlay.classList.add('spotlight-active');
+    dashboardTourDom.highlightBox.style.left = `${spotlightRect.left}px`;
+    dashboardTourDom.highlightBox.style.top = `${spotlightRect.top}px`;
+    dashboardTourDom.highlightBox.style.width = `${spotlightRect.width}px`;
+    dashboardTourDom.highlightBox.style.height = `${spotlightRect.height}px`;
+    const targetRadius = Number.parseFloat(window.getComputedStyle(target).borderRadius || '10') || 10;
+    dashboardTourDom.highlightBox.style.borderRadius = `${Math.max(8, Math.min(18, targetRadius + 2))}px`;
     dashboardTourDom.highlightBox.classList.remove('hidden');
+    currentSpotlightRect = spotlightRect;
     if (activeTourTarget && activeTourTarget !== target) {
       activeTourTarget.classList.remove('tour-target-active');
     }
@@ -902,7 +1015,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
     stepCard.classList.remove('centered');
     const gap = 18;
-    const rect = target.getBoundingClientRect();
+    const rect = computeSpotlightRect(target) || target.getBoundingClientRect();
     const cardRect = stepCard.getBoundingClientRect();
     const cardWidth = cardRect.width || 420;
     const cardHeight = cardRect.height || Math.min(520, window.innerHeight - (padding * 2));
@@ -943,112 +1056,211 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     stepCard.style.width = '';
   }
 
-  function getTourTarget(step, options = {}) {
-    const { allowFallback = true } = options;
-    if (!step?.selector && !step?.fallbackSelector) {
-      console.log('Tour target lookup:', {
-        stepId: step?.id || '(unknown)',
-        stepTitle: step?.title || '(unknown)',
-        route: resolveTourStepRoute(step) || '(current page)',
-        selectorUsed: null,
-        targetFound: false,
-        selectedElement: null,
-        dimensions: null,
-        fallbackUsed: false
+  function refreshActiveTourPresentation(reason = 'refresh') {
+    if (dashboardTourIndex < 0 || !dashboardTourDom || dashboardTourDom.stepCard.classList.contains('hidden')) return;
+    const step = dashboardTourSteps[dashboardTourIndex];
+    if (!step) return;
+    const targetInfo = getTourTarget(step, { allowFallback: true, silent: true });
+    currentTourTargetMeta = {
+      ...currentTourTargetMeta,
+      stepId: step.id,
+      stepTitle: step.title,
+      selectorUsed: targetInfo.selectorUsed || step.selector || step.fallbackSelector || null,
+      refinementUsed: !!targetInfo.refined,
+      refinementReason: targetInfo.refinementReason || null,
+      fallbackUsed: !!targetInfo.usedFallback,
+      refreshReason: reason
+    };
+
+    if (targetInfo.target) {
+      positionHighlightBox(targetInfo.target);
+      positionStepCard(targetInfo.target, false);
+      return;
+    }
+
+    clearTourHighlight();
+    positionStepCard(null, true);
+  }
+
+  function scheduleTourSpotlightRefresh(reason = 'refresh') {
+    if (spotlightRefreshFrame) {
+      window.cancelAnimationFrame(spotlightRefreshFrame);
+    }
+    spotlightRefreshFrame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        spotlightRefreshFrame = null;
+        refreshActiveTourPresentation(reason);
       });
-      return { target: null, usedFallback: false };
+    });
+  }
+
+  function getTourTarget(step, options = {}) {
+    const { allowFallback = true, silent = false } = options;
+    if (!step?.selector && !step?.fallbackSelector) {
+      if (!silent) {
+        console.log('Tour target lookup:', {
+          stepId: step?.id || '(unknown)',
+          stepTitle: step?.title || '(unknown)',
+          route: resolveTourStepRoute(step) || '(current page)',
+          selectorUsed: null,
+          targetFound: false,
+          selectedElement: null,
+          dimensions: null,
+          fallbackUsed: false,
+          refinementUsed: false
+        });
+      }
+      return {
+        target: null,
+        usedFallback: false,
+        refined: false,
+        refinementReason: null,
+        selectorUsed: null
+      };
     }
 
     if (step.selector) {
       let exactTarget = document.querySelector(step.selector);
-      if (exactTarget) {
+      if (exactTarget && isElementVisibleForTour(exactTarget)) {
         let rect = exactTarget.getBoundingClientRect();
-        if (isRectTooLarge(rect)) {
-          const childTarget = findMoreSpecificTourChild(step, exactTarget);
-          if (childTarget) {
-            exactTarget = childTarget;
+        let refined = false;
+        let refinementReason = null;
+
+        if (isRectTooLarge(rect) || looksLikeLayoutWrapper(exactTarget)) {
+          const refinedTarget = findMoreSpecificTourChild(step, exactTarget);
+          if (refinedTarget.target) {
+            exactTarget = refinedTarget.target;
             rect = exactTarget.getBoundingClientRect();
-          }
-        }
-        const tooLarge = isRectTooLarge(rect);
-        const tooSmall = isRectTooSmall(rect);
-        if (tooLarge) {
-          console.warn('Tour target appears too large for precise highlight:', step.id, rectToSummary(rect));
-        }
-        if (tooSmall) {
-          console.warn('Tour target appears too small for precise highlight:', step.id, rectToSummary(rect));
-          if (allowFallback && step.fallbackSelector) {
-            const fallbackTarget = document.querySelector(step.fallbackSelector);
-            if (fallbackTarget) {
-              const fallbackRect = fallbackTarget.getBoundingClientRect();
-              console.warn('Using fallback because exact target is too small:', step.fallbackSelector, 'for step', step.id);
-              console.log('Tour target lookup:', {
+            refined = refinedTarget.refined;
+            refinementReason = refinedTarget.reason;
+            if (!silent) {
+              console.warn('Tour target refined to a more specific child:', {
                 stepId: step.id,
-                stepTitle: step.title,
-                route: resolveTourStepRoute(step) || '(current page)',
-                selectorUsed: step.fallbackSelector,
-                targetFound: true,
-                selectedElement: describeTourElement(fallbackTarget),
-                dimensions: rectToSummary(fallbackRect),
-                tooLarge: isRectTooLarge(fallbackRect),
-                tooSmall: isRectTooSmall(fallbackRect),
-                fallbackUsed: true
+                fromSelector: step.selector,
+                refinementReason,
+                refinedTarget: describeTourElement(exactTarget),
+                dimensions: rectToSummary(rect)
               });
-              return { target: fallbackTarget, usedFallback: true };
             }
           }
         }
-        console.log('Tour target lookup:', {
-          stepId: step.id,
-          stepTitle: step.title,
-          route: resolveTourStepRoute(step) || '(current page)',
-          selectorUsed: step.selector,
-          targetFound: true,
-          selectedElement: describeTourElement(exactTarget),
-          dimensions: rectToSummary(rect),
-          tooLarge,
-          tooSmall,
-          fallbackUsed: false
-        });
-        return { target: exactTarget, usedFallback: false };
+
+        const tooLarge = isRectTooLarge(rect);
+        const tooSmall = isRectTooSmall(rect);
+        if (tooLarge) {
+          if (!silent) console.warn('Tour target appears too large for precise highlight:', step.id, rectToSummary(rect));
+        }
+        if (tooSmall) {
+          if (!silent) console.warn('Tour target appears too small for precise highlight:', step.id, rectToSummary(rect));
+          if (allowFallback && step.fallbackSelector) {
+            const fallbackTarget = document.querySelector(step.fallbackSelector);
+            if (fallbackTarget && isElementVisibleForTour(fallbackTarget)) {
+              const fallbackRect = fallbackTarget.getBoundingClientRect();
+              if (!silent) {
+                console.warn('Using fallback because exact target is too small:', step.fallbackSelector, 'for step', step.id);
+                console.log('Tour target lookup:', {
+                  stepId: step.id,
+                  stepTitle: step.title,
+                  route: resolveTourStepRoute(step) || '(current page)',
+                  selectorUsed: step.fallbackSelector,
+                  targetFound: true,
+                  selectedElement: describeTourElement(fallbackTarget),
+                  dimensions: rectToSummary(fallbackRect),
+                  tooLarge: isRectTooLarge(fallbackRect),
+                  tooSmall: isRectTooSmall(fallbackRect),
+                  fallbackUsed: true,
+                  refinementUsed: false
+                });
+              }
+              return {
+                target: fallbackTarget,
+                usedFallback: true,
+                refined: false,
+                refinementReason: null,
+                selectorUsed: step.fallbackSelector
+              };
+            }
+          }
+        }
+        if (!silent) {
+          console.log('Tour target lookup:', {
+            stepId: step.id,
+            stepTitle: step.title,
+            route: resolveTourStepRoute(step) || '(current page)',
+            selectorUsed: refined && refinementReason ? `${step.selector} -> ${refinementReason}` : step.selector,
+            targetFound: true,
+            selectedElement: describeTourElement(exactTarget),
+            dimensions: rectToSummary(rect),
+            tooLarge,
+            tooSmall,
+            fallbackUsed: false,
+            refinementUsed: refined,
+            refinementReason
+          });
+        }
+        return {
+          target: exactTarget,
+          usedFallback: false,
+          refined,
+          refinementReason,
+          selectorUsed: refined && refinementReason ? `${step.selector} -> ${refinementReason}` : step.selector
+        };
       }
     }
 
     if (allowFallback && step.fallbackSelector) {
       const fallbackTarget = document.querySelector(step.fallbackSelector);
-      if (fallbackTarget) {
+      if (fallbackTarget && isElementVisibleForTour(fallbackTarget)) {
         const rect = fallbackTarget.getBoundingClientRect();
         const tooLarge = isRectTooLarge(rect);
         const tooSmall = isRectTooSmall(rect);
-        console.warn('Fallback target used on correct page:', step.fallbackSelector, 'for step', step.id);
-        console.log('Tour target lookup:', {
-          stepId: step.id,
-          stepTitle: step.title,
-          route: resolveTourStepRoute(step) || '(current page)',
-          selectorUsed: step.fallbackSelector,
-          targetFound: true,
-          selectedElement: describeTourElement(fallbackTarget),
-          dimensions: rectToSummary(rect),
-          tooLarge,
-          tooSmall,
-          fallbackUsed: true
-        });
-        return { target: fallbackTarget, usedFallback: true };
+        if (!silent) {
+          console.warn('Fallback target used on correct page:', step.fallbackSelector, 'for step', step.id);
+          console.log('Tour target lookup:', {
+            stepId: step.id,
+            stepTitle: step.title,
+            route: resolveTourStepRoute(step) || '(current page)',
+            selectorUsed: step.fallbackSelector,
+            targetFound: true,
+            selectedElement: describeTourElement(fallbackTarget),
+            dimensions: rectToSummary(rect),
+            tooLarge,
+            tooSmall,
+            fallbackUsed: true,
+            refinementUsed: false
+          });
+        }
+        return {
+          target: fallbackTarget,
+          usedFallback: true,
+          refined: false,
+          refinementReason: null,
+          selectorUsed: step.fallbackSelector
+        };
       }
     }
 
-    console.warn('Tour target not found for step on current route:', step.id);
-    console.log('Tour target lookup:', {
-      stepId: step.id,
-      stepTitle: step.title,
-      route: resolveTourStepRoute(step) || '(current page)',
-      selectorUsed: step.selector || step.fallbackSelector || null,
-      targetFound: false,
-      selectedElement: null,
-      dimensions: null,
-      fallbackUsed: false
-    });
-    return { target: null, usedFallback: false };
+    if (!silent) {
+      console.warn('Tour target not found for step on current route:', step.id);
+      console.log('Tour target lookup:', {
+        stepId: step.id,
+        stepTitle: step.title,
+        route: resolveTourStepRoute(step) || '(current page)',
+        selectorUsed: step.selector || step.fallbackSelector || null,
+        targetFound: false,
+        selectedElement: null,
+        dimensions: null,
+        fallbackUsed: false,
+        refinementUsed: false
+      });
+    }
+    return {
+      target: null,
+      usedFallback: false,
+      refined: false,
+      refinementReason: null,
+      selectorUsed: step.selector || step.fallbackSelector || null
+    };
   }
 
   function isTargetMostlyInView(target) {
@@ -1174,17 +1386,28 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     }
   };
 
-  function revealDashboardTourStep(step, target) {
+  function revealDashboardTourStep(step, targetInfo) {
+    const target = targetInfo?.target || null;
     dashboardTourDom.stepOverlay.classList.remove('hidden');
     dashboardTourDom.stepCard.classList.remove('hidden');
+    currentTourTargetMeta = {
+      stepId: step.id,
+      stepTitle: step.title,
+      selectorUsed: targetInfo?.selectorUsed || step.selector || step.fallbackSelector || null,
+      refinementUsed: !!targetInfo?.refined,
+      refinementReason: targetInfo?.refinementReason || null,
+      fallbackUsed: !!targetInfo?.usedFallback
+    };
     if (target) {
       positionHighlightBox(target);
       positionStepCard(target, false);
     } else {
+      dashboardTourDom.stepOverlay.classList.remove('spotlight-active');
       positionStepCard(null, true);
     }
     hideRouteLoading();
     dashboardTourDom.nextButton.focus({ preventScroll: true });
+    scheduleTourSpotlightRefresh('reveal settle');
     logTourTransitionDuration('render complete');
   }
 
@@ -1234,7 +1457,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
     const waitForTarget = (attempts = 0) => {
       console.log('Looking for target on current page only after route match');
-      const { target, usedFallback } = getTourTarget(step, { allowFallback: true });
+      const targetInfo = getTourTarget(step, { allowFallback: true });
+      const { target, usedFallback } = targetInfo;
       if (step.selector && !target && attempts < 4) {
         window.setTimeout(() => waitForTarget(attempts + 1), 40);
         return;
@@ -1266,10 +1490,10 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
       const revealDelay = target.closest('#sidebar') && window.innerWidth < 1024 ? 48 : isTargetMostlyInView(target) ? 0 : 10;
       if (revealDelay === 0) {
-        window.requestAnimationFrame(() => revealDashboardTourStep(step, target));
+        window.requestAnimationFrame(() => revealDashboardTourStep(step, targetInfo));
         return;
       }
-      window.setTimeout(() => revealDashboardTourStep(step, target), revealDelay);
+      window.setTimeout(() => revealDashboardTourStep(step, targetInfo), revealDelay);
     };
 
     waitForTarget();
@@ -1360,29 +1584,34 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     });
 
     window.addEventListener('resize', () => {
-      if (dashboardTourIndex < 0 || !dashboardTourDom || dashboardTourDom.stepCard.classList.contains('hidden')) return;
-      const step = dashboardTourSteps[dashboardTourIndex];
-      const { target } = getTourTarget(step, { allowFallback: true });
-      if (target) {
-        positionHighlightBox(target);
-        positionStepCard(target, false);
-      } else {
-        positionStepCard(null, true);
-      }
+      scheduleTourSpotlightRefresh('resize');
     });
+
+    window.addEventListener('scroll', () => {
+      scheduleTourSpotlightRefresh('scroll');
+    }, { passive: true, capture: true });
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        scheduleTourSpotlightRefresh('fonts ready');
+      }).catch(() => {});
+    }
   }
 
   function buildTourDebugRecord(step) {
     const route = resolveTourStepRoute(step) || '(current page)';
     const routeMatches = !route || route === getCurrentTourPathname();
-    const targetInfo = routeMatches ? getTourTarget(step, { allowFallback: true }) : { target: null, usedFallback: false };
+    const targetInfo = routeMatches
+      ? getTourTarget(step, { allowFallback: true })
+      : { target: null, usedFallback: false, refined: false, refinementReason: null, selectorUsed: step.selector || null };
     const rect = targetInfo.target ? targetInfo.target.getBoundingClientRect() : null;
+    const spotlightRect = targetInfo.target ? computeSpotlightRect(targetInfo.target) : null;
     return {
       stepId: step.id,
       title: step.title,
       route,
       routeMatchesCurrentPage: route === '(current page)' || route === getCurrentTourPathname(),
-      selector: step.selector || '(none)',
+      selector: targetInfo.selectorUsed || step.selector || '(none)',
       exists: !!targetInfo.target,
       tag: targetInfo.target?.tagName?.toLowerCase() || '',
       className: typeof targetInfo.target?.className === 'string' ? targetInfo.target.className : '',
@@ -1391,8 +1620,16 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       left: rect ? Math.round(rect.left) : null,
       width: rect ? Math.round(rect.width) : null,
       height: rect ? Math.round(rect.height) : null,
+      spotlightRect: spotlightRect ? {
+        top: Math.round(spotlightRect.top),
+        left: Math.round(spotlightRect.left),
+        width: Math.round(spotlightRect.width),
+        height: Math.round(spotlightRect.height)
+      } : null,
       tooLarge: rect ? isRectTooLarge(rect) : false,
       tooSmall: rect ? isRectTooSmall(rect) : false,
+      refinementUsed: !!targetInfo.refined,
+      refinementReason: targetInfo.refinementReason || null,
       fallbackUsed: !!targetInfo.usedFallback
     };
   }
@@ -1409,9 +1646,27 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       return null;
     }
 
-    const record = buildTourDebugRecord(dashboardTourSteps[dashboardTourIndex]);
-    console.log('Current tour target:', record);
-    return record;
+    const step = dashboardTourSteps[dashboardTourIndex];
+    const targetInfo = getTourTarget(step, { allowFallback: true });
+    const rect = targetInfo.target ? targetInfo.target.getBoundingClientRect() : null;
+    const spotlightRect = targetInfo.target ? computeSpotlightRect(targetInfo.target) : null;
+    const payload = {
+      currentStepTitle: step.title,
+      selectorUsed: targetInfo.selectorUsed || step.selector || step.fallbackSelector || null,
+      actualSelectedElement: targetInfo.target || null,
+      boundingRect: rectToSummary(rect),
+      spotlightRect: spotlightRect ? {
+        top: Math.round(spotlightRect.top),
+        left: Math.round(spotlightRect.left),
+        width: Math.round(spotlightRect.width),
+        height: Math.round(spotlightRect.height)
+      } : null,
+      targetRefinementUsed: !!targetInfo.refined,
+      targetRefinementReason: targetInfo.refinementReason || null,
+      fallbackUsed: !!targetInfo.usedFallback
+    };
+    console.log('Current tour target inspection:', payload);
+    return payload;
   };
 
   function resumeDashboardTourFromState() {
