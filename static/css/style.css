@@ -136,6 +136,44 @@ body {
   max-width: 52rem;
 }
 
+.login-proof-strip {
+  max-width: 58rem;
+}
+
+.login-proof-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 0.95rem;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.login-proof-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(191, 219, 254, 0.45);
+  transform: translateY(-2px);
+}
+
+.login-proof-card strong,
+.login-proof-card span {
+  display: block;
+}
+
+.login-proof-card strong {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.login-proof-card span {
+  color: rgb(226 232 240);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.55;
+  margin-top: 0.35rem;
+}
+
 .login-feature-card,
 .login-step-card {
   backdrop-filter: blur(10px);
@@ -333,6 +371,63 @@ body {
   width: 58%;
 }
 
+.login-form-proof {
+  border-top: 1px solid rgb(226 232 240);
+  padding-top: 1rem;
+}
+
+.login-role-card {
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  display: block;
+  padding: 0.95rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.login-role-card:hover {
+  border-color: rgb(96 165 250);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.login-role-card strong,
+.login-role-card span {
+  display: block;
+}
+
+.login-role-card strong {
+  color: rgb(15 23 42);
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.login-role-card span {
+  color: rgb(100 116 139);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.55;
+  margin-top: 0.3rem;
+}
+
+.login-form-proof strong,
+.login-form-proof span {
+  display: block;
+}
+
+.login-form-proof strong {
+  color: rgb(15 23 42);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.login-form-proof span {
+  color: rgb(100 116 139);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-top: 0.3rem;
+}
+
 @media (max-width: 640px) {
   .login-hero-title {
     max-width: none;
@@ -449,6 +544,37 @@ body {
 
 .panel.bg-slate-950 h2 {
   color: white;
+}
+
+.page-intro {
+  background: linear-gradient(180deg, rgb(255 255 255), rgb(248 250 252));
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  padding: 1.4rem;
+}
+
+.page-intro h2 {
+  color: rgb(15 23 42);
+  font-size: clamp(1.55rem, 2.3vw, 2.2rem);
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  margin-top: 0.45rem;
+}
+
+.page-intro p {
+  color: rgb(71 85 105);
+}
+
+.page-intro-badge {
+  align-self: flex-start;
+  background: rgb(239 246 255);
+  border: 1px solid rgb(191 219 254);
+  border-radius: 8px;
+  color: rgb(15 76 129);
+  font-size: 0.82rem;
+  font-weight: 900;
+  padding: 0.65rem 0.9rem;
 }
 
 .eyebrow {
@@ -2318,10 +2444,24 @@ textarea.form-input {
 }
 
 .tour-highlight-box {
+  animation: tourHighlightPulse 1.6s ease-in-out infinite;
+  background: linear-gradient(180deg, rgba(147, 197, 253, 0.1), rgba(96, 165, 250, 0.06));
+  border: 1px solid rgba(191, 219, 254, 0.98);
   border-radius: 10px;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.95), 0 20px 50px rgba(15, 23, 42, 0.24);
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.98), 0 18px 42px rgba(15, 23, 42, 0.18), inset 0 0 0 1px rgba(255,255,255,0.26);
   position: fixed;
   z-index: 10020;
+}
+
+@keyframes tourHighlightPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.92), 0 18px 42px rgba(15, 23, 42, 0.2), inset 0 0 0 1px rgba(255,255,255,0.24);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(125, 211, 252, 1), 0 22px 52px rgba(15, 23, 42, 0.24), inset 0 0 0 1px rgba(255,255,255,0.34);
+    transform: scale(1.005);
+  }
 }
 
 .tour-route-loading {
@@ -2372,14 +2512,15 @@ textarea.form-input {
 }
 
 .tour-progress-bar {
-  background: rgb(226 232 240);
-  height: 4px;
+  background: linear-gradient(90deg, rgba(226, 232, 240, 0.85), rgba(226, 232, 240, 0.45));
+  height: 5px;
   overflow: hidden;
   width: 100%;
 }
 
 .tour-progress-bar span {
   background: linear-gradient(90deg, #0f4c81, #3b82f6);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.28);
   display: block;
   height: 100%;
   transition: width 180ms ease;
@@ -2422,6 +2563,38 @@ textarea.form-input {
 
 .tour-copy {
   font-size: 0.88rem;
+  margin-top: 0.3rem;
+}
+
+.tour-role-summary {
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  border-radius: 8px;
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+}
+
+.tour-role-label {
+  color: #0f4c81;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tour-role-summary strong {
+  color: rgb(15 23 42);
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 900;
+  margin-top: 0.25rem;
+}
+
+.tour-role-summary p:last-child {
+  color: rgb(71 85 105);
+  font-size: 0.83rem;
+  font-weight: 700;
+  line-height: 1.6;
   margin-top: 0.3rem;
 }
 

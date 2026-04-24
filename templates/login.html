@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ app_name }} | Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=asset_versions.style_css) }}">
 </head>
 <body class="min-h-screen bg-[#151b24] text-white">
   <main class="grid min-h-screen lg:grid-cols-[1.08fr_0.92fr]">
@@ -24,13 +24,32 @@
           </div>
         </div>
         <div class="login-intro-card mt-12">
-          <p class="login-hero-eyebrow">DEALERSHIP OPERATIONS PLATFORM</p>
-          <h1 class="login-hero-title mt-4">Run Your Dealership From One Smart System</h1>
-          <p class="login-hero-copy mt-6">Track stock, manage customers, follow deals, monitor team activity, and stay on top of daily operations from one easy-to-use system built for real dealership workflow.</p>
-          <p class="login-hero-support mt-4">Clean layout. Easy navigation. No complicated training needed.</p>
+          <p class="login-hero-eyebrow">DEALERSHIP CONTROL ROOM</p>
+          <h1 class="login-hero-title mt-4">Stop Lost Leads. Move Stock Faster. Run The Dealership From One Control Room.</h1>
+          <p class="login-hero-copy mt-6">PineX Systems gives dealership owners and managers one place to track stock, buyer activity, deal progress, handover readiness, and the daily issues that quietly cost time and money.</p>
+          <p class="login-hero-support mt-4">See revenue at risk, stalled deals, stock ageing, and lead-source performance without chasing updates across staff, inboxes, or spreadsheets.</p>
+
+          <div class="login-proof-strip mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <article class="login-proof-card">
+              <strong>Revenue at risk</strong>
+              <span>Spot finance delays, document blockers, and stuck deals before they slip.</span>
+            </article>
+            <article class="login-proof-card">
+              <strong>Lead source performance</strong>
+              <span>See which channels create real buyer activity and which ones waste budget.</span>
+            </article>
+            <article class="login-proof-card">
+              <strong>Stock movement</strong>
+              <span>Track aged units, listing gaps, and pricing pressure from one operating view.</span>
+            </article>
+            <article class="login-proof-card">
+              <strong>Owner control</strong>
+              <span>Keep sales, F&amp;I, documents, handovers, and customers tied together.</span>
+            </article>
+          </div>
 
           <div class="login-cta-stack mt-8">
-            <a class="login-hero-cta" href="{{ url_for('dashboard', tour='welcome') }}">Start Demo</a>
+            <a class="login-hero-cta" href="{{ url_for('dashboard', tour='welcome') }}">Start Guided Demo</a>
             <p class="login-trust-line">Built for dealership owners, managers, and sales teams.</p>
           </div>
 
@@ -116,7 +135,7 @@
       <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-premium">
         <p class="text-sm font-bold uppercase tracking-[0.2em] text-ocean">Secure dealer access</p>
         <h2 class="mt-3 text-3xl font-black tracking-tight">Sign in</h2>
-        <p class="mt-2 text-sm text-slate-500">Enter control room and see business operations in one view.</p>
+        <p class="mt-2 text-sm text-slate-500">Sign in goes straight to the workspace. Guided demo opens the owner story first.</p>
         <form class="mt-8 space-y-5" onsubmit="event.preventDefault(); window.location.href='/dashboard';">
           <label class="block">
             <span class="text-sm font-semibold text-slate-700">Email address</span>
@@ -126,9 +145,40 @@
             <span class="text-sm font-semibold text-slate-700">Password</span>
             <input class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-ocean focus:ring-4 focus:ring-blue-100" type="password" value="demoaccess">
           </label>
-          <button class="w-full rounded-lg bg-slate-950 px-5 py-3 font-bold text-white transition hover:bg-ocean" type="submit">Sign in</button>
-          <a class="block w-full rounded-lg border border-slate-300 px-5 py-3 text-center font-bold text-slate-950 transition hover:border-ocean hover:text-ocean" href="{{ url_for('dashboard') }}">Enter Demo</a>
+          <button class="w-full rounded-lg bg-slate-950 px-5 py-3 font-bold text-white transition hover:bg-ocean" type="submit">Sign in to Workspace</button>
+          <a class="block w-full rounded-lg border border-slate-300 px-5 py-3 text-center font-bold text-slate-950 transition hover:border-ocean hover:text-ocean" href="{{ url_for('dashboard', tour='welcome') }}">Enter Guided Demo</a>
         </form>
+        <section class="login-role-entry mt-8">
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Choose demo focus</p>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <a class="login-role-card" href="{{ url_for('dashboard', tour='welcome', role='owner') }}">
+              <strong>Dealer Principal</strong>
+              <span>Revenue risk, stock exposure, integrations, and owner control.</span>
+            </a>
+            <a class="login-role-card" href="{{ url_for('dashboard', tour='welcome', role='sales-manager') }}">
+              <strong>Sales Manager</strong>
+              <span>Lead distribution, accountability, overdue follow-up, and pipeline health.</span>
+            </a>
+            <a class="login-role-card" href="{{ url_for('dashboard', tour='welcome', role='salesperson') }}">
+              <strong>Sales Executive</strong>
+              <span>Next actions, buyer context, live deals, and handover readiness.</span>
+            </a>
+            <a class="login-role-card" href="{{ url_for('dashboard', tour='welcome', role='workshop-manager') }}">
+              <strong>Workshop Manager</strong>
+              <span>Delivery readiness, deal blockers, stock flow, and operational bottlenecks.</span>
+            </a>
+          </div>
+        </section>
+        <div class="login-form-proof mt-6 grid gap-3 sm:grid-cols-2">
+          <article>
+            <strong>See what costs money</strong>
+            <span>Open the guided path to view lost lead risk, stuck deals, and stock exposure first.</span>
+          </article>
+          <article>
+            <strong>Go straight to work</strong>
+            <span>Use sign-in when you want the live control room immediately without the walkthrough.</span>
+          </article>
+        </div>
         <p class="mt-6 text-xs leading-6 text-slate-500">Preview access only. No real customer, dealership, or financial information is stored.</p>
       </div>
     </section>

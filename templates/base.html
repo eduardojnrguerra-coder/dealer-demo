@@ -93,6 +93,7 @@
     <div id="overlay" class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden"></div>
 
     <main id="main-content" class="min-w-0 flex-1" tabindex="-1">
+      {% set rich_shell = active_page|default('') == 'Dashboard' %}
       <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
         <div class="px-4 py-3 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between gap-3">
@@ -111,6 +112,7 @@
               {% endif %}
             </div>
           </div>
+          {% if rich_shell %}
           <div class="mt-3 flex items-center justify-between gap-2 lg:hidden">
             <div class="flex items-center gap-2">
               {% if active_page|default('') == 'Dashboard' and active_view|default('principal') == 'principal' %}
@@ -173,6 +175,8 @@
             </div>
             <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">{{ user_initials|default('MV') }}</div>
           </div>
+          {% endif %}
+          {% if rich_shell %}
           <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
             <div class="flex flex-col">
               <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ocean">Johannesburg North</p>
@@ -218,6 +222,24 @@
               <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">{{ user_initials|default('MV') }}</div>
             </div>
           </div>
+          {% else %}
+          <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
+            <div class="flex flex-col">
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Dealership Workspace</p>
+              <h1 class="text-xl font-bold tracking-tight text-slate-950">{{ page_title }}</h1>
+              <p class="text-xs text-slate-500">Focused workflow with cleaner controls and clearer page priority.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <a href="{{ url_for('dashboard') }}" class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">Control Room</a>
+              <span class="rounded-lg bg-slate-100 px-3 py-2 text-sm font-bold text-slate-600">Johannesburg North</span>
+              {% if role_badge %}
+              <div class="rounded-lg bg-slate-900 px-3 py-2 text-sm font-bold text-white">{{ role_badge }}</div>
+              {% endif %}
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">{{ user_initials|default('MV') }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if rich_shell %}
           <div class="hidden lg:grid lg:gap-3 xl:grid-cols-[180px_180px_1fr_190px]">
             <label class="top-control">
               <span>Branch</span>
@@ -260,6 +282,7 @@
               </div>
             </div>
           </div>
+          {% endif %}
         </div>
       </header>
 

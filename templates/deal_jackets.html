@@ -17,18 +17,18 @@
   </aside>
 
   {% if selected_jacket %}
-  <section class="space-y-6" data-tour="deal-files-main">
-    <div class="panel bg-slate-950 text-white">
+  <section class="space-y-6">
+    <div class="page-intro">
       <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
         <div>
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-200">{{ selected_jacket.id }} - {{ selected_jacket.stock_number }}</p>
-          <h2 class="mt-3 text-3xl font-black text-white">{{ selected_jacket.customer }}</h2>
-          <p class="mt-2 text-slate-300">{{ selected_jacket.vehicle }}</p>
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-ocean">{{ selected_jacket.id }} - {{ selected_jacket.stock_number }}</p>
+          <h2>{{ selected_jacket.customer }}</h2>
+          <p class="mt-2">{{ selected_jacket.vehicle }}</p>
         </div>
         <div class="grid gap-3 sm:grid-cols-3">
-          <div class="rounded-lg bg-white/10 p-4"><span class="text-sm text-slate-300">Deal Value</span><strong class="mt-1 block text-xl">{{ selected_jacket.deal_value|currency }}</strong></div>
-          <div class="rounded-lg bg-white/10 p-4"><span class="text-sm text-slate-300">Gross Profit</span><strong class="mt-1 block text-xl">{{ selected_jacket.gross_profit|currency }}</strong></div>
-          <div class="rounded-lg bg-white/10 p-4"><span class="text-sm text-slate-300">Finance Stage</span><strong class="mt-1 block text-xl">{{ selected_jacket.finance_stage }}</strong></div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Deal Value</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.deal_value|currency }}</strong></div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Gross Profit</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.gross_profit|currency }}</strong></div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4"><span class="text-sm text-slate-500">Finance Stage</span><strong class="mt-1 block text-xl text-slate-950">{{ selected_jacket.finance_stage }}</strong></div>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@
     </div>
 
     <div class="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-      <section class="panel">
+      <section class="panel" data-tour="deal-files-main">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Deal File Documents</p>

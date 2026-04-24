@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="space-y-6" data-tour="fi-desk-main">
-  <section class="panel" data-tour="finance-applications-main">
+<div class="space-y-6">
+  <section class="panel" data-tour="fi-desk-main">
+    <div data-tour="finance-applications-main">
     <div class="panel-heading">
       <div>
         <p class="eyebrow">F&I Finance Control</p>
@@ -45,6 +46,7 @@
         </div>
       </article>
       {% endfor %}
+    </div>
     </div>
   </section>
 </div>

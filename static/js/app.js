@@ -1,9 +1,8 @@
 // PineX Systems Demo - Interactive Features
-console.log('Dealer tour JS version: nuclear-start-fix-1');
+console.log('Dealer tour JS version: role-aware-tour-1');
 window.addEventListener('error', (event) => {
   console.error('Dealer tour boot error:', event.error || event.message || event);
 });
-document.addEventListener('click', (e) => console.log('CAPTURE CLICK:', e.target), true);
 
 // Mobile Navigation
 const menuButton = document.getElementById('menuButton');
@@ -99,6 +98,71 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
   const tourRouteMap = JSON.parse(document.getElementById('tour-route-data')?.textContent || '{}');
   window.DEALER_TOUR_ROUTES = tourRouteMap;
   console.log('tour route map:', tourRouteMap);
+  const dashboardTourRoleKey = 'pinexDashboardTourRole';
+
+  function normalizeTourRoleKey(roleKey) {
+    const value = String(roleKey || '').trim().toLowerCase();
+    if (value === 'dealer-principal' || value === 'dealer_principal' || value === 'principal') return 'owner';
+    if (value === 'sales-manager' || value === 'manager') return 'sales-manager';
+    if (value === 'sales-executive' || value === 'salesman' || value === 'sales-exec') return 'salesperson';
+    if (value === 'workshop-manager' || value === 'workshop') return 'workshop-manager';
+    return ['owner', 'sales-manager', 'salesperson', 'workshop-manager'].includes(value) ? value : 'owner';
+  }
+
+  const dashboardTourRoleConfigs = {
+    owner: {
+      label: 'Dealer Principal',
+      focus: 'Start with revenue risk, stock exposure, lead quality, and the systems that give owners daily control.',
+      order: ['dashboard-overview', 'sales-accountability', 'lead-source-tracking', 'deals', 'stock', 'integrations-hub', 'autotrader', 'cars-coza', 'meta-leads', 'lead-distribution', 'deal-files', 'fi-desk', 'quotations', 'documents', 'handover', 'finance-applications', 'customers', 'leads', 'add-vehicle', 'final-summary'],
+    },
+    'sales-manager': {
+      label: 'Sales Manager',
+      focus: 'Start with overdue follow-up risk, fair lead sharing, team accountability, and pipeline movement.',
+      order: ['dashboard-overview', 'lead-distribution', 'sales-accountability', 'leads', 'deals', 'customers', 'deal-files', 'fi-desk', 'handover', 'quotations', 'documents', 'stock', 'lead-source-tracking', 'integrations-hub', 'autotrader', 'cars-coza', 'meta-leads', 'finance-applications', 'add-vehicle', 'final-summary'],
+    },
+    salesperson: {
+      label: 'Sales Executive',
+      focus: 'Start with next actions, live buyers, deal movement, customer context, and delivery readiness.',
+      order: ['leads', 'deals', 'customers', 'deal-files', 'handover', 'quotations', 'documents', 'fi-desk', 'dashboard-overview', 'sales-accountability', 'lead-source-tracking', 'lead-distribution', 'stock', 'integrations-hub', 'autotrader', 'cars-coza', 'meta-leads', 'finance-applications', 'add-vehicle', 'final-summary'],
+    },
+    'workshop-manager': {
+      label: 'Workshop Manager',
+      focus: 'Start with delivery readiness, deal-file blockers, finance dependencies, stock flow, and the operational bottlenecks that delay handover.',
+      order: ['handover', 'deal-files', 'fi-desk', 'stock', 'dashboard-overview', 'deals', 'customers', 'leads', 'sales-accountability', 'lead-distribution', 'lead-source-tracking', 'integrations-hub', 'autotrader', 'cars-coza', 'meta-leads', 'finance-applications', 'quotations', 'documents', 'add-vehicle', 'final-summary'],
+    },
+  };
+
+  let selectedTourRoleKey = normalizeTourRoleKey(
+    tourStartupParams.get('role') || window.sessionStorage.getItem(dashboardTourRoleKey) || 'owner'
+  );
+  window.sessionStorage.setItem(dashboardTourRoleKey, selectedTourRoleKey);
+
+  function getSelectedTourRole() {
+    return dashboardTourRoleConfigs[selectedTourRoleKey] || dashboardTourRoleConfigs.owner;
+  }
+
+  function orderTourStepDefinitionsForRole(stepDefinitions, roleKey) {
+    const roleConfig = dashboardTourRoleConfigs[normalizeTourRoleKey(roleKey)] || dashboardTourRoleConfigs.owner;
+    const order = roleConfig.order || [];
+    const definitionMap = new Map(stepDefinitions.map((step) => [step.id, step]));
+    const ordered = [];
+
+    order.forEach((stepId) => {
+      const step = definitionMap.get(stepId);
+      if (step) {
+        ordered.push(step);
+        definitionMap.delete(stepId);
+      }
+    });
+
+    stepDefinitions.forEach((step) => {
+      if (definitionMap.has(step.id)) {
+        ordered.push(step);
+      }
+    });
+
+    return ordered;
+  }
 
   const dashboardTourStepDefinitions = [
     {
@@ -107,9 +171,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       selector: '[data-tour="dashboard-overview"]',
       fallbackSelector: '[data-tour="dashboard-overview"]',
       title: 'Dashboard Overview',
-      description: 'This dashboard gives owners and managers a live view of what is happening in the dealership today.',
-      ownerValue: 'Instead of asking staff for updates, you can immediately see performance, risk areas, and where action is needed.',
-      easeValue: 'The most important numbers are shown first, so it takes only a few seconds to understand the day.',
+      description: 'This dashboard gives owners and managers one live control room for today\'s sales pace, stock pressure, team execution, and operational blockers.',
+      ownerValue: 'Instead of chasing updates through WhatsApp groups, desks, and spreadsheets, you can see where money is moving, where it is leaking, and where intervention is needed.',
+      easeValue: 'The most important numbers, warnings, and actions are grouped into clear blocks so decisions can be made in seconds.',
     },
     {
       id: 'lead-source-tracking',
@@ -150,9 +214,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       selector: '[data-tour="leads-main"]',
       fallbackSelector: '[data-tour="nav-leads"]',
       title: 'Leads',
-      description: 'This page gives Sales Executives and managers a clear queue of the next lead actions that matter most.',
-      ownerValue: 'It stops new and overdue enquiries from disappearing into inboxes, WhatsApp threads, or manual notes.',
-      easeValue: 'The action stack is simple, so the team can move from capture to follow-up without extra admin.',
+      description: 'This page gives Sales Executives and managers a clean queue of the buyer actions that matter most right now.',
+      ownerValue: 'It stops new and overdue enquiries from disappearing into inboxes, WhatsApp threads, or manual notes, which protects response time and lead ownership.',
+      easeValue: 'The action flow is straightforward, so the team can move from capture to follow-up without extra admin or hunting for context.',
     },
     {
       id: 'deals',
@@ -160,9 +224,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       selector: '[data-tour="deals-main"]',
       fallbackSelector: '[data-tour="nav-deals"]',
       title: 'Deals',
-      description: 'Deal Flow keeps negotiations, finance progress, and deal movement visible from first contact to sold.',
-      ownerValue: 'Management can quickly see where deals are stalling and where revenue is at risk.',
-      easeValue: 'It is designed to be read quickly, so the team can act instead of searching for information.',
+      description: 'Deal Flow keeps negotiations, finance progress, and deal movement visible from first contact through to sold.',
+      ownerValue: 'Management can quickly see where deals are stalling, where gross profit is under pressure, and where delivery momentum is at risk.',
+      easeValue: 'It is designed to be read quickly, so the team can act immediately instead of searching through notes, files, and side conversations.',
     },
     {
       id: 'deal-files',
@@ -241,8 +305,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       fallbackSelector: '[data-tour="autotrader-main"]',
       title: 'Integrations Hub',
       description: 'This page brings together the systems that connect stock platforms, marketing enquiries, and dealership operations into one controlled workflow.',
-      ownerValue: 'Owners can see how AutoTrader, Cars.co.za, Meta Leads, and finance workflows support the business without forcing the team into disconnected tools.',
-      easeValue: 'Each connector is presented clearly, so it is easy to understand what is already available and what can be added next.',
+      ownerValue: 'Owners can see how AutoTrader, Cars.co.za, Meta Leads, and finance workflows support the business without forcing the team into disconnected tools or duplicated admin.',
+      easeValue: 'Each connector is presented clearly, so it is easy to understand what is live, what is planned, and how it fits into daily dealership work.',
     },
     {
       id: 'autotrader',
@@ -290,26 +354,28 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       selector: '[data-tour="customers-main"]',
       fallbackSelector: '[data-tour="nav-customers"]',
       title: 'Customers',
-      description: 'Customer records connect buyer details, notes, deal history, follow-up activity, and linked enquiries from other channels.',
-      ownerValue: 'This improves handover between staff, follow-up quality, and long-term customer retention.',
-      easeValue: 'The team can open one customer profile and immediately understand the latest position without checking multiple systems.',
+      description: 'Customer records connect buyer details, notes, deal history, follow-up activity, and linked enquiries from every major channel.',
+      ownerValue: 'This improves handover between staff, follow-up quality, retention, and owner visibility because the latest customer position is not trapped in one person\'s inbox or memory.',
+      easeValue: 'The team can open one customer record and understand the latest position immediately without checking multiple systems.',
     },
     {
       id: 'final-summary',
       routeKey: null,
       selector: null,
       fallbackSelector: null,
-      title: 'Final Summary',
-      description: 'This is a dealership operating system built to centralise action, improve follow-up quality, and give owners stronger daily control.',
-      ownerValue: 'The real value is not only seeing information - it is knowing where leads come from, sharing them fairly, reducing admin confusion, and acting faster across the whole business.',
-      easeValue: 'The platform is designed so dealership owners, managers, and sales teams can use it confidently without complicated training.',
+      title: 'What this changes for the dealership',
+      description: 'PineX gives the dealership one place to manage stock, leads, deals, documents, handovers, integrations, and customer flow.',
+      ownerValue: 'That means fewer lost enquiries, better lead ownership, faster deal movement, cleaner handovers, stronger stock visibility, less admin confusion, and better accountability across the whole team.',
+      easeValue: 'The platform is easier to manage, easier to monitor, and easier to grow because teams can work from one clear operating rhythm without complicated training.',
       bullets: [
-        'Better visibility over daily operations',
-        'Clear view of where leads come from',
-        'Fairer lead distribution across the team',
+        'Fewer lost enquiries',
+        'Better lead ownership',
+        'Faster deal movement',
+        'Cleaner handovers',
+        'Better stock visibility',
+        'Stronger owner control',
         'Less admin confusion',
-        'Faster follow-up and better accountability',
-        'More control for owners and managers'
+        'Better accountability'
       ],
     }
   ];
@@ -376,7 +442,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     return null;
   }
 
-  const dashboardTourSteps = dashboardTourStepDefinitions.map((step) => ({
+  const orderedDashboardTourDefinitions = orderTourStepDefinitionsForRole(dashboardTourStepDefinitions, selectedTourRoleKey);
+
+  const dashboardTourSteps = orderedDashboardTourDefinitions.map((step) => ({
       ...step,
     route: resolveTourStepRoute(step),
     target: step.selector,
@@ -492,12 +560,16 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         <h2 id="tourWelcomeTitle">Welcome to the Dealer Control Room</h2>
         <p class="tour-modal-copy">This system helps you run your dealership from one place, giving you visibility over stock, leads, deals, customer follow-ups, documents, and daily performance.</p>
         <p class="tour-modal-copy">You will now be guided step by step through the system so you can see how easy it is to use and why it helps dealership owners stay in control.</p>
+        <div class="tour-role-summary">
+          <p class="tour-role-label">Demo focus</p>
+          <strong data-tour-role-title>${getSelectedTourRole().label}</strong>
+          <p data-tour-role-focus>${getSelectedTourRole().focus}</p>
+        </div>
         <div class="tour-modal-actions">
           <button type="button" data-tour-action="start" onclick="window.__dealerTourStart && window.__dealerTourStart(event)">Start Guided Tour</button>
           <button type="button" data-tour-action="enter">Enter Dashboard</button>
           <button type="button" data-tour-action="skip">Skip</button>
         </div>
-        <p class="tour-modal-debug">Tour JS: nuclear-start-fix-1</p>
       `;
       console.log('welcome modal rendered');
 
@@ -578,6 +650,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         description: stepCard.querySelector('[data-tour-description]'),
         ownerValue: stepCard.querySelector('[data-tour-owner]'),
         easeValue: stepCard.querySelector('[data-tour-ease]'),
+        roleTitle: welcomeModal.querySelector('[data-tour-role-title]'),
+        roleFocus: welcomeModal.querySelector('[data-tour-role-focus]'),
         fallbackNote: stepCard.querySelector('[data-tour-fallback-note]'),
         bullets: stepCard.querySelector('[data-tour-bullets]'),
         backButton: stepCard.querySelector('[data-tour-action="back"]'),
@@ -593,8 +667,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
   function cleanupWelcomeQuery() {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('tour') !== 'welcome') return;
+    if (params.get('tour') !== 'welcome' && !params.get('role')) return;
     params.delete('tour');
+    params.delete('role');
     const cleanQuery = params.toString();
     const nextUrl = cleanQuery ? `${window.location.pathname}?${cleanQuery}` : window.location.pathname;
     window.history.replaceState({}, '', nextUrl);
@@ -694,6 +769,12 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     hideRouteLoading();
     cleanupWelcomeQuery();
     suspendSkipLink();
+    if (dashboardTourDom.roleTitle) {
+      dashboardTourDom.roleTitle.textContent = getSelectedTourRole().label;
+    }
+    if (dashboardTourDom.roleFocus) {
+      dashboardTourDom.roleFocus.textContent = getSelectedTourRole().focus;
+    }
     dashboardTourDom.welcomeBackdrop.classList.remove('hidden');
     dashboardTourDom.welcomeModal.classList.remove('hidden');
     console.log('welcome modal made visible');
@@ -707,10 +788,15 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
   function positionHighlightBox(target) {
     if (!dashboardTourDom || !target) return;
     const rect = target.getBoundingClientRect();
-    dashboardTourDom.highlightBox.style.left = `${rect.left - 6}px`;
-    dashboardTourDom.highlightBox.style.top = `${rect.top - 6}px`;
-    dashboardTourDom.highlightBox.style.width = `${rect.width + 12}px`;
-    dashboardTourDom.highlightBox.style.height = `${rect.height + 12}px`;
+    const inset = window.innerWidth < 768 ? 4 : 6;
+    const left = Math.max(8, rect.left - inset);
+    const top = Math.max(8, rect.top - inset);
+    const right = Math.min(window.innerWidth - 8, rect.right + inset);
+    const bottom = Math.min(window.innerHeight - 8, rect.bottom + inset);
+    dashboardTourDom.highlightBox.style.left = `${left}px`;
+    dashboardTourDom.highlightBox.style.top = `${top}px`;
+    dashboardTourDom.highlightBox.style.width = `${Math.max(0, right - left)}px`;
+    dashboardTourDom.highlightBox.style.height = `${Math.max(0, bottom - top)}px`;
     dashboardTourDom.highlightBox.classList.remove('hidden');
   }
 
@@ -899,8 +985,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     try {
       if (event?.preventDefault) event.preventDefault();
       if (event?.stopPropagation) event.stopPropagation();
-      console.log('NUCLEAR START BUTTON CLICKED');
-      alert('NUCLEAR START BUTTON CLICKED');
+      console.log('Start Guided Tour clicked');
       console.log('startGuidedTour exists:' + typeof startGuidedTour);
 
       const firstStepIndex = getFirstRealTourStepIndex();
@@ -950,7 +1035,9 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
     dashboardTourIndex = index;
     hideWelcomeModal();
-    hideStepFlow();
+    dashboardTourDom.stepOverlay.classList.remove('hidden');
+    dashboardTourDom.stepCard.classList.remove('hidden');
+    clearTourHighlight();
 
     dashboardTourDom.progress.textContent = `Step ${index + 1} of ${dashboardTourSteps.length}`;
     dashboardTourDom.progressBar.style.width = `${((index + 1) / dashboardTourSteps.length) * 100}%`;
@@ -978,8 +1065,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     const waitForTarget = (attempts = 0) => {
       console.log('Looking for target on current page only after route match');
       const { target, usedFallback } = getTourTarget(step, { allowFallback: true });
-      if (step.selector && !target && attempts < 6) {
-        window.setTimeout(() => waitForTarget(attempts + 1), 60);
+      if (step.selector && !target && attempts < 4) {
+        window.setTimeout(() => waitForTarget(attempts + 1), 40);
         return;
       }
 
@@ -1007,7 +1094,11 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         });
       }
 
-      const revealDelay = target.closest('#sidebar') && window.innerWidth < 1024 ? 120 : 40;
+      const revealDelay = target.closest('#sidebar') && window.innerWidth < 1024 ? 80 : isTargetMostlyInView(target) ? 0 : 24;
+      if (revealDelay === 0) {
+        window.requestAnimationFrame(() => revealDashboardTourStep(step, target));
+        return;
+      }
       window.setTimeout(() => revealDashboardTourStep(step, target), revealDelay);
     };
 
