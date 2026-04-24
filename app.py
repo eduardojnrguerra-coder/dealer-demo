@@ -146,21 +146,21 @@ MODULE_PAGES = {
     "quotations": {
         "title": "Quotations",
         "section": "Sales",
-        "summary": "Build buyer-ready quotations with trade-in allowance, settlement figure, Lic & Reg, and F&I notes.",
+        "summary": "Build buyer-ready quotations with trade-in allowance, settlement figure, Lic & Reg, and F&I notes so margin and deal momentum stay controlled.",
         "actions": ["Create quotation", "Add trade-in", "Send to buyer", "Convert to deal file"],
         "metrics": [("Open quotes", 9), ("Accepted today", 2), ("Awaiting buyer", 4)],
     },
     "documents": {
         "title": "Invoices / Documents",
         "section": "Sales",
-        "summary": "Track OTPs, invoices, Delivery Packs, signed documents, and buyer document gaps.",
+        "summary": "Track OTPs, invoices, Delivery Packs, signed documents, and buyer document gaps before admin confusion slows delivery.",
         "actions": ["Prepare invoice", "Review Delivery Pack", "Request Copy of ID", "Request Proof of Residence"],
         "metrics": [("Docs outstanding", 8), ("Delivery Packs", 5), ("Ready to invoice", 3)],
     },
     "leads": {
         "title": "Leads",
         "section": "Leads / CRM",
-        "summary": "Prioritise new, hot, and overdue leads so Sales Executives know who to call next.",
+        "summary": "Prioritise new, hot, and overdue leads so Sales Executives know who to call next before valuable enquiries are lost.",
         "actions": ["Add lead", "Assign Sales Executive", "Book follow-up", "Send WhatsApp"],
         "metrics": [("Active leads", 21), ("Hot leads", 8), ("Overdue", 4)],
     },
@@ -237,7 +237,7 @@ MODULE_PAGES = {
     "finance-applications": {
         "title": "Finance Applications",
         "section": "Integrations",
-        "summary": "Prepare bank application workflow hooks for F&I submission, document checks, and approval tracking.",
+        "summary": "Prepare bank application workflow hooks for F&I submission, document checks, approval tracking, and finance delay visibility.",
         "actions": ["Review F&I queue", "Check docs", "Submit to bank", "Track approvals"],
         "metrics": [("Pending bank", 4), ("Docs missing", 6), ("Approved", 3)],
     },

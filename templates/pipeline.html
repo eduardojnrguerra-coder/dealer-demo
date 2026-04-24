@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="space-y-6">
-  <section class="panel" data-tour="deals-main">
+  <section class="panel">
     <div class="panel-heading">
       <div>
         <p class="eyebrow">Deal Flow Control</p>
@@ -66,7 +66,7 @@
     </section>
   </div>
 
-  <section class="kanban">
+  <section class="kanban" data-tour="deals-main">
     {% for column in columns %}
     <div class="kanban-column">
       <div class="mb-4 flex items-center justify-between">

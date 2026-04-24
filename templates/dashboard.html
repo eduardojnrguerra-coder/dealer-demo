@@ -2,11 +2,12 @@
 
 {% block content %}
 <div class="space-y-6" data-dashboard-onboarding-root>
-  <section id="tourTodaysPerformance" data-tour="dashboard-overview" class="panel bg-slate-950 text-white">
+  <section id="tourTodaysPerformance" data-tour="dashboard-overview" class="panel dashboard-hero-panel bg-slate-950 text-white">
     <div class="panel-heading">
       <div>
         <p class="eyebrow text-blue-200">Control Room</p>
         <h2 class="text-white">TODAY'S PERFORMANCE</h2>
+        <p class="dashboard-priority-note">Read this first: today’s pace, immediate revenue risk, and the issues that need owner attention now.</p>
       </div>
       <span class="rounded-lg bg-white/10 px-3 py-1 text-sm font-bold text-blue-100">Finance, risk, and operations</span>
     </div>
@@ -34,12 +35,13 @@
     </div>
   </section>
 
-  <div class="grid gap-6 xl:grid-cols-[0.78fr_1.22fr]">
-    <section id="tourLostMoneyEngine" class="panel missed-panel">
+  <div class="grid gap-6 xl:grid-cols-[0.78fr_1.22fr] dashboard-priority-grid">
+    <section id="tourLostMoneyEngine" class="panel missed-panel owner-priority-panel">
       <div class="panel-heading">
         <div>
           <p class="eyebrow text-red-700">Lost Money Engine</p>
           <h2>Revenue at risk - take action now</h2>
+          <p class="dashboard-urgency-copy">These buyers, finance blockers, and missing follow-ups are the fastest places to recover money already in the pipeline.</p>
         </div>
         <span class="red-badge">{{ missed_opportunities.unfollowed_leads }} leads requiring action</span>
       </div>
@@ -72,11 +74,12 @@
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel owner-priority-panel owner-alert-panel">
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Alert Indicators</p>
           <h2>Problems that cost money</h2>
+          <p class="dashboard-urgency-copy">This is where lost leads, stuck deals, and ageing stock become visible before they damage month-end performance.</p>
         </div>
       </div>
       <div class="grid gap-4 md:grid-cols-3">
@@ -104,7 +107,7 @@
     </section>
   </div>
 
-  <section class="panel">
+  <section class="panel dashboard-secondary-panel">
     <div class="panel-heading">
       <div>
         <p class="eyebrow">Dealer Operating System</p>
@@ -133,7 +136,7 @@
   </section>
 
   <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-    <section class="panel">
+    <section class="panel dashboard-secondary-panel">
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Warnings</p>
@@ -151,7 +154,7 @@
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel dashboard-secondary-panel">
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Role Control</p>
