@@ -168,8 +168,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     {
       id: 'dashboard-overview',
       routeKey: 'dashboard',
-      selector: '[data-tour="dashboard-overview"]',
-      fallbackSelector: '[data-tour="dashboard-overview"]',
+      selector: '[data-tour="dashboard-performance"]',
+      fallbackSelector: '[data-tour="dashboard-performance"]',
       title: 'Dashboard Overview',
       description: 'This dashboard gives owners and managers one live control room for today\'s sales pace, stock pressure, team execution, and operational blockers.',
       ownerValue: 'Instead of chasing updates through WhatsApp groups, desks, and spreadsheets, you can see where money is moving, where it is leaking, and where intervention is needed.',
@@ -179,7 +179,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'lead-source-tracking',
       routeKey: 'dashboard',
       selector: '[data-tour="lead-source-tracking"]',
-      fallbackSelector: '[data-tour="dashboard-overview"]',
+      fallbackSelector: '[data-tour="dashboard-performance"]',
       title: 'Lead Source Tracking',
       description: 'This system can capture and label leads by source, so your dealership can see whether buyers came from website forms, social media ads, Google campaigns, WhatsApp, referrals, walk-ins, or manual entry.',
       ownerValue: 'You can finally see which channels are producing real opportunities and which ones are wasting budget.',
@@ -190,7 +190,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'lead-distribution',
       routeKey: 'dashboard',
       selector: '[data-tour="lead-distribution"]',
-      fallbackSelector: '[data-tour="dashboard-overview"]',
+      fallbackSelector: '[data-tour="dashboard-performance"]',
       title: 'Lead Distribution / fair sharing between sales staff',
       description: 'Leads can be assigned automatically or manually, depending on how the dealership operates. They can be shared equally between salespeople, routed by branch, or reassigned if no action is taken.',
       ownerValue: 'This reduces missed leads, removes confusion, and helps prevent unfair lead allocation between staff.',
@@ -201,7 +201,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'sales-accountability',
       routeKey: 'dashboard',
       selector: '[data-tour="sales-accountability"]',
-      fallbackSelector: '[data-tour="dashboard-overview"]',
+      fallbackSelector: '[data-tour="dashboard-performance"]',
       title: 'Sales Accountability',
       description: 'The system shows which salesperson received the lead, how quickly they responded, whether follow-up happened, and how their pipeline is converting.',
       ownerValue: 'Owners and managers can clearly see who is working their leads properly and where deals are being lost.',
@@ -212,7 +212,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'leads',
       routeKey: 'leads',
       selector: '[data-tour="leads-main"]',
-      fallbackSelector: '[data-tour="nav-leads"]',
+      fallbackSelector: '[data-tour="module-main"]',
       title: 'Leads',
       description: 'This page gives Sales Executives and managers a clean queue of the buyer actions that matter most right now, especially new, hot, and overdue enquiries.',
       ownerValue: 'It stops valuable enquiries from disappearing into inboxes, WhatsApp threads, or manual notes, which protects response time, lead ownership, and month-end revenue.',
@@ -222,7 +222,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'deals',
       routeKey: 'deals',
       selector: '[data-tour="deals-main"]',
-      fallbackSelector: '[data-tour="nav-deals"]',
+      fallbackSelector: null,
       title: 'Deals',
       description: 'Deal Flow keeps negotiation, finance progress, and delivery movement visible from first serious conversation through to sold.',
       ownerValue: 'Management can quickly see where deals are stalling, where gross profit is under pressure, and where revenue is at risk before the month closes.',
@@ -232,7 +232,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'deal-files',
       routeKey: 'deal_files',
       selector: '[data-tour="deal-files-main"]',
-      fallbackSelector: '[data-tour="nav-deals"]',
+      fallbackSelector: null,
       title: 'Deal Files',
       description: 'Deal Files bring buyer details, trade-in position, document status, and next operational action into one working file.',
       ownerValue: 'This keeps sales, F&I, and admin aligned on the same deal instead of handing information around informally.',
@@ -242,7 +242,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'fi-desk',
       routeKey: 'fi_desk',
       selector: '[data-tour="fi-desk-main"]',
-      fallbackSelector: '[data-tour="nav-fi-desk"]',
+      fallbackSelector: '[data-tour="finance-applications-main"]',
       title: 'F&I Desk',
       description: 'The F&I Desk keeps approvals, missing documents, settlement figures, and bank progress visible while deals are moving.',
       ownerValue: 'That gives owners and managers control over the finance bottlenecks that slow deliveries and hurt close rate.',
@@ -272,7 +272,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'handover',
       routeKey: 'handover',
       selector: '[data-tour="handover-main"]',
-      fallbackSelector: '[data-tour="nav-deals"]',
+      fallbackSelector: null,
       title: 'Handover Board',
       description: 'The Handover Board shows sold units moving through payment, Roadworthy, Lic & Reg, F&I completion, and final delivery booking.',
       ownerValue: 'That gives management a live view of delivery risk instead of finding problems only on handover day.',
@@ -282,7 +282,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'stock',
       routeKey: 'stock',
       selector: '[data-tour="stock-main"]',
-      fallbackSelector: '[data-tour="nav-stock"]',
+      fallbackSelector: null,
       title: 'All Vehicles / Stock',
       description: 'The stock area helps the dealership manage inventory, ageing units, margins, and listing readiness.',
       ownerValue: 'This gives the owner better control over floor stock exposure, pricing pressure, and slow movers.',
@@ -292,7 +292,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'add-vehicle',
       routeKey: 'add_vehicle',
       selector: '[data-tour="add-vehicle-main"]',
-      fallbackSelector: '[data-tour="nav-add-vehicle"]',
+      fallbackSelector: '[data-tour="module-main"]',
       title: 'Add Vehicle',
       description: 'New units can be added into the system in a structured way so stock records stay accurate from day one.',
       ownerValue: 'It improves stock discipline and reduces admin mistakes before a vehicle even reaches the sales floor.',
@@ -302,7 +302,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'integrations-hub',
       routeKey: 'integrations',
       selector: '[data-tour="integrations-main"]',
-      fallbackSelector: '[data-tour="autotrader-main"]',
+      fallbackSelector: null,
       title: 'Integrations Hub',
       description: 'This page brings together the systems that connect stock platforms, marketing enquiries, and dealership operations into one controlled workflow.',
       ownerValue: 'Owners can see how AutoTrader, Cars.co.za, Meta Leads, and finance workflows support the business without forcing the team into disconnected tools, duplicated admin, or blind spots.',
@@ -341,8 +341,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     {
       id: 'finance-applications',
       routeKey: 'finance_applications',
-      selector: '[data-tour="finance-applications-module-main"]',
-      fallbackSelector: '[data-tour="nav-fi-desk"]',
+      selector: '[data-tour="finance-applications-main"]',
+      fallbackSelector: '[data-tour="module-main"]',
       title: 'Finance Applications',
       description: 'This section keeps finance-related buyer progress visible so the team can track approvals, pending requirements, and deal momentum.',
       ownerValue: 'Finance delays often slow deals down, so keeping this visible improves control and follow-up.',
@@ -352,7 +352,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       id: 'customers',
       routeKey: 'customers',
       selector: '[data-tour="customers-main"]',
-      fallbackSelector: '[data-tour="nav-customers"]',
+      fallbackSelector: null,
       title: 'Customers',
       description: 'Customer records connect buyer details, notes, deal history, follow-up activity, and linked enquiries from every major channel.',
       ownerValue: 'This improves handover between staff, follow-up quality, retention, and owner visibility because the latest customer position is not trapped in one person\'s inbox, notebook, or memory.',
@@ -400,6 +400,44 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
   function getCurrentTourPathname() {
     return normalizeTourRoute(window.location.pathname);
+  }
+
+  function rectToSummary(rect) {
+    if (!rect) return null;
+    return {
+      top: Math.round(rect.top),
+      left: Math.round(rect.left),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    };
+  }
+
+  function isRectTooLarge(rect) {
+    if (!rect) return false;
+    return rect.height > (window.innerHeight * 0.75) || rect.width > (window.innerWidth * 0.95);
+  }
+
+  function isRectTooSmall(rect) {
+    if (!rect) return false;
+    return rect.height < 20 || rect.width < 20;
+  }
+
+  function describeTourElement(element) {
+    if (!element) return null;
+    return {
+      tag: element.tagName?.toLowerCase() || '(unknown)',
+      className: typeof element.className === 'string' ? element.className : '',
+      dataTour: element.getAttribute?.('data-tour') || ''
+    };
+  }
+
+  function findMoreSpecificTourChild(step, target) {
+    if (!step?.childSelector || !target) return null;
+    const childTarget = target.querySelector(step.childSelector);
+    if (!childTarget) return null;
+    const rect = childTarget.getBoundingClientRect();
+    if (isRectTooSmall(rect)) return null;
+    return childTarget;
   }
 
   function resolveTourRouteKey(routeKey) {
@@ -820,7 +858,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
   function positionHighlightBox(target) {
     if (!dashboardTourDom || !target) return;
     const rect = target.getBoundingClientRect();
-    const inset = window.innerWidth < 768 ? 4 : 6;
+    const inset = window.innerWidth < 768 ? 6 : 10;
     const left = Math.max(8, rect.left - inset);
     const top = Math.max(8, rect.top - inset);
     const right = Math.min(window.innerWidth - 8, rect.right + inset);
@@ -909,9 +947,12 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     const { allowFallback = true } = options;
     if (!step?.selector && !step?.fallbackSelector) {
       console.log('Tour target lookup:', {
+        stepId: step?.id || '(unknown)',
         stepTitle: step?.title || '(unknown)',
+        route: resolveTourStepRoute(step) || '(current page)',
         selectorUsed: null,
         targetFound: false,
+        selectedElement: null,
         dimensions: null,
         fallbackUsed: false
       });
@@ -919,19 +960,54 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     }
 
     if (step.selector) {
-      const exactTarget = document.querySelector(step.selector);
+      let exactTarget = document.querySelector(step.selector);
       if (exactTarget) {
-        const rect = exactTarget.getBoundingClientRect();
+        let rect = exactTarget.getBoundingClientRect();
+        if (isRectTooLarge(rect)) {
+          const childTarget = findMoreSpecificTourChild(step, exactTarget);
+          if (childTarget) {
+            exactTarget = childTarget;
+            rect = exactTarget.getBoundingClientRect();
+          }
+        }
+        const tooLarge = isRectTooLarge(rect);
+        const tooSmall = isRectTooSmall(rect);
+        if (tooLarge) {
+          console.warn('Tour target appears too large for precise highlight:', step.id, rectToSummary(rect));
+        }
+        if (tooSmall) {
+          console.warn('Tour target appears too small for precise highlight:', step.id, rectToSummary(rect));
+          if (allowFallback && step.fallbackSelector) {
+            const fallbackTarget = document.querySelector(step.fallbackSelector);
+            if (fallbackTarget) {
+              const fallbackRect = fallbackTarget.getBoundingClientRect();
+              console.warn('Using fallback because exact target is too small:', step.fallbackSelector, 'for step', step.id);
+              console.log('Tour target lookup:', {
+                stepId: step.id,
+                stepTitle: step.title,
+                route: resolveTourStepRoute(step) || '(current page)',
+                selectorUsed: step.fallbackSelector,
+                targetFound: true,
+                selectedElement: describeTourElement(fallbackTarget),
+                dimensions: rectToSummary(fallbackRect),
+                tooLarge: isRectTooLarge(fallbackRect),
+                tooSmall: isRectTooSmall(fallbackRect),
+                fallbackUsed: true
+              });
+              return { target: fallbackTarget, usedFallback: true };
+            }
+          }
+        }
         console.log('Tour target lookup:', {
+          stepId: step.id,
           stepTitle: step.title,
+          route: resolveTourStepRoute(step) || '(current page)',
           selectorUsed: step.selector,
           targetFound: true,
-          dimensions: {
-            width: Math.round(rect.width),
-            height: Math.round(rect.height),
-            top: Math.round(rect.top),
-            left: Math.round(rect.left)
-          },
+          selectedElement: describeTourElement(exactTarget),
+          dimensions: rectToSummary(rect),
+          tooLarge,
+          tooSmall,
           fallbackUsed: false
         });
         return { target: exactTarget, usedFallback: false };
@@ -942,17 +1018,19 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       const fallbackTarget = document.querySelector(step.fallbackSelector);
       if (fallbackTarget) {
         const rect = fallbackTarget.getBoundingClientRect();
+        const tooLarge = isRectTooLarge(rect);
+        const tooSmall = isRectTooSmall(rect);
         console.warn('Fallback target used on correct page:', step.fallbackSelector, 'for step', step.id);
         console.log('Tour target lookup:', {
+          stepId: step.id,
           stepTitle: step.title,
+          route: resolveTourStepRoute(step) || '(current page)',
           selectorUsed: step.fallbackSelector,
           targetFound: true,
-          dimensions: {
-            width: Math.round(rect.width),
-            height: Math.round(rect.height),
-            top: Math.round(rect.top),
-            left: Math.round(rect.left)
-          },
+          selectedElement: describeTourElement(fallbackTarget),
+          dimensions: rectToSummary(rect),
+          tooLarge,
+          tooSmall,
           fallbackUsed: true
         });
         return { target: fallbackTarget, usedFallback: true };
@@ -961,9 +1039,12 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
     console.warn('Tour target not found for step on current route:', step.id);
     console.log('Tour target lookup:', {
+      stepId: step.id,
       stepTitle: step.title,
+      route: resolveTourStepRoute(step) || '(current page)',
       selectorUsed: step.selector || step.fallbackSelector || null,
       targetFound: false,
+      selectedElement: null,
       dimensions: null,
       fallbackUsed: false
     });
@@ -1161,7 +1242,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
       if (!target) {
         console.warn('Tour target missing, using centered fallback', step);
-        dashboardTourDom.fallbackNote.textContent = 'This step is using the nearest available view because a dedicated highlight block was not found on this page.';
+        dashboardTourDom.fallbackNote.textContent = 'A dedicated highlight block was not found on this page, so this step is shown without a page spotlight.';
         dashboardTourDom.fallbackNote.classList.remove('hidden');
         revealDashboardTourStep(step, null);
         return;
@@ -1290,6 +1371,48 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
       }
     });
   }
+
+  function buildTourDebugRecord(step) {
+    const route = resolveTourStepRoute(step) || '(current page)';
+    const routeMatches = !route || route === getCurrentTourPathname();
+    const targetInfo = routeMatches ? getTourTarget(step, { allowFallback: true }) : { target: null, usedFallback: false };
+    const rect = targetInfo.target ? targetInfo.target.getBoundingClientRect() : null;
+    return {
+      stepId: step.id,
+      title: step.title,
+      route,
+      routeMatchesCurrentPage: route === '(current page)' || route === getCurrentTourPathname(),
+      selector: step.selector || '(none)',
+      exists: !!targetInfo.target,
+      tag: targetInfo.target?.tagName?.toLowerCase() || '',
+      className: typeof targetInfo.target?.className === 'string' ? targetInfo.target.className : '',
+      dataTour: targetInfo.target?.getAttribute?.('data-tour') || '',
+      top: rect ? Math.round(rect.top) : null,
+      left: rect ? Math.round(rect.left) : null,
+      width: rect ? Math.round(rect.width) : null,
+      height: rect ? Math.round(rect.height) : null,
+      tooLarge: rect ? isRectTooLarge(rect) : false,
+      tooSmall: rect ? isRectTooSmall(rect) : false,
+      fallbackUsed: !!targetInfo.usedFallback
+    };
+  }
+
+  window.__tourDebugTargets = function() {
+    const records = dashboardTourSteps.map((step) => buildTourDebugRecord(step));
+    console.table(records);
+    return records;
+  };
+
+  window.__tourInspectCurrent = function() {
+    if (dashboardTourIndex < 0 || !dashboardTourSteps[dashboardTourIndex]) {
+      console.warn('No active guided tour step to inspect.');
+      return null;
+    }
+
+    const record = buildTourDebugRecord(dashboardTourSteps[dashboardTourIndex]);
+    console.log('Current tour target:', record);
+    return record;
+  };
 
   function resumeDashboardTourFromState() {
       const state = readDashboardTourState();

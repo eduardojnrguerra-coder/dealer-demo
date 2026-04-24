@@ -1424,10 +1424,15 @@ body {
 }
 
 .business-tour-card {
+  align-self: start;
   background: rgb(248 250 252);
   border: 1px solid rgb(226 232 240);
   border-radius: 8px;
   padding: 1rem;
+}
+
+.tour-focus-block {
+  display: block;
 }
 
 .source-tag-row,
@@ -1713,6 +1718,7 @@ body {
 }
 
 .kanban {
+  align-items: start;
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(9, minmax(280px, 1fr));
@@ -1724,7 +1730,7 @@ body {
   background: rgb(248 250 252);
   border: 1px solid rgb(226 232 240);
   border-radius: 8px;
-  min-height: 440px;
+  min-height: 0;
   padding: 1rem;
 }
 

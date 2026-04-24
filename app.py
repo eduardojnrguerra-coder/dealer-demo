@@ -1150,7 +1150,7 @@ def module_page(slug):
         "add-vehicle": "add-vehicle-main",
         "quotations": "quotations-main",
         "documents": "documents-main",
-        "finance-applications": "finance-applications-module-main",
+        "finance-applications": "finance-applications-main",
     }.get(slug, "module-main")
     return render_template(
         "module_page.html",

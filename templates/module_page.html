@@ -24,20 +24,22 @@
   </div>
 
   <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-  <section class="panel" data-tour="{{ module_tour_target }}">
-      <div class="panel-heading">
-        <div>
-          <p class="eyebrow">Workflow</p>
-          <h2>Next best actions</h2>
+  <section class="panel" data-tour="module-main">
+      <div class="tour-focus-block" data-tour="{{ module_tour_target }}">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Workflow</p>
+            <h2>Next best actions</h2>
+          </div>
         </div>
-      </div>
-      <div class="space-y-3">
-        {% for action in module.actions %}
-        <button class="module-action" type="button" data-confirm-action="{{ action }}">
-          <span>{{ loop.index }}</span>
-          <strong>{{ action }}</strong>
-        </button>
-        {% endfor %}
+        <div class="space-y-3">
+          {% for action in module.actions %}
+          <button class="module-action" type="button" data-confirm-action="{{ action }}">
+            <span>{{ loop.index }}</span>
+            <strong>{{ action }}</strong>
+          </button>
+          {% endfor %}
+        </div>
       </div>
     </section>
 
