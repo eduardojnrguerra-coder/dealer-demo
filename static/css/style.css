@@ -2494,12 +2494,13 @@ textarea.form-input {
 }
 
 .tour-highlight-box {
+  --tour-spotlight-dim: rgba(15, 23, 42, 0.62);
   animation: tourHighlightPulse 1.7s ease-in-out infinite;
   background: transparent;
   border: 1px solid rgba(219, 234, 254, 0.98);
   border-radius: 12px;
   box-shadow:
-    0 0 0 9999px rgba(15, 23, 42, 0.62),
+    0 0 0 9999px var(--tour-spotlight-dim),
     0 0 0 1px rgba(255, 255, 255, 0.92),
     0 0 0 3px rgba(96, 165, 250, 0.88),
     0 20px 48px rgba(15, 23, 42, 0.28),
@@ -2526,7 +2527,7 @@ textarea.form-input {
 @keyframes tourHighlightPulse {
   0%, 100% {
     box-shadow:
-      0 0 0 9999px rgba(15, 23, 42, 0.62),
+      0 0 0 9999px var(--tour-spotlight-dim),
       0 0 0 1px rgba(255, 255, 255, 0.9),
       0 0 0 3px rgba(96, 165, 250, 0.86),
       0 20px 48px rgba(15, 23, 42, 0.28),
@@ -2535,7 +2536,7 @@ textarea.form-input {
   }
   50% {
     box-shadow:
-      0 0 0 9999px rgba(15, 23, 42, 0.62),
+      0 0 0 9999px var(--tour-spotlight-dim),
       0 0 0 1px rgba(255, 255, 255, 0.94),
       0 0 0 4px rgba(125, 211, 252, 0.94),
       0 24px 56px rgba(15, 23, 42, 0.3),
@@ -2626,8 +2627,25 @@ textarea.form-input {
   padding: 1.1rem 1.1rem 0.85rem;
 }
 
+.tour-extended-copy.hidden {
+  display: none;
+}
+
 .tour-copy-block {
   margin-top: 0.85rem;
+}
+
+.tour-details-toggle {
+  align-items: center;
+  background: rgb(239 246 255);
+  border: 1px solid rgb(191 219 254);
+  border-radius: 999px;
+  color: #0f4c81;
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 900;
+  margin-top: 0.85rem;
+  padding: 0.38rem 0.7rem;
 }
 
 .tour-fallback-note {
@@ -2704,6 +2722,71 @@ textarea.form-input {
   z-index: 1;
 }
 
+.tour-step-card.mobile-sheet {
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+  max-height: 40vh;
+}
+
+.tour-step-card.mobile-sheet .tour-step-content {
+  padding: 0.82rem 0.9rem 0.72rem;
+}
+
+.tour-step-card.mobile-sheet h3 {
+  font-size: 1rem;
+  margin-top: 0.35rem;
+}
+
+.tour-step-card.mobile-sheet .tour-step-label,
+.tour-step-card.mobile-sheet .tour-copy-heading {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+
+.tour-step-card.mobile-sheet .tour-copy {
+  font-size: 0.81rem;
+  line-height: 1.55;
+  margin-top: 0.22rem;
+}
+
+.tour-step-card.mobile-sheet .tour-copy-block {
+  margin-top: 0.55rem;
+}
+
+.tour-step-card.mobile-sheet .tour-step-footer {
+  padding: 0.72rem 0.9rem 0.84rem;
+}
+
+.tour-step-card.mobile-sheet .tour-step-actions {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0.72rem;
+}
+
+.tour-step-card.mobile-sheet .tour-link-btn,
+.tour-step-card.mobile-sheet [data-tour-action="restart"] {
+  grid-column: 1 / -1;
+}
+
+.tour-step-card.mobile-sheet .tour-primary-btn,
+.tour-step-card.mobile-sheet .tour-secondary-btn,
+.tour-step-card.mobile-sheet .tour-link-btn {
+  font-size: 0.82rem;
+  min-height: 2.6rem;
+  padding: 0.72rem 0.85rem;
+  width: 100%;
+}
+
+.tour-step-card.mobile-sheet .tour-link-btn {
+  min-height: auto;
+  padding: 0;
+}
+
+.tour-step-card.mobile-sheet.top-sheet {
+  bottom: auto;
+}
+
 @media (max-width: 640px) {
   .tour-welcome-modal {
     max-height: calc(100vh - 1rem);
@@ -2724,17 +2807,6 @@ textarea.form-input {
     width: 100%;
   }
 
-  .tour-step-card {
-    bottom: 1rem;
-    left: 1rem !important;
-    max-height: calc(100vh - 2rem);
-    max-width: none;
-    right: 1rem !important;
-    top: 1rem !important;
-    transform: none !important;
-    width: auto;
-  }
-
   .tour-route-loading {
     bottom: 1rem;
     left: 1rem;
@@ -2744,5 +2816,34 @@ textarea.form-input {
   .tour-route-loading-card {
     justify-content: center;
     width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .tour-overlay {
+    background: rgba(15, 23, 42, 0.4);
+  }
+
+  .tour-highlight-box {
+    --tour-spotlight-dim: rgba(15, 23, 42, 0.4);
+  }
+
+  .tour-step-card.mobile-sheet {
+    left: 12px !important;
+    max-height: 40vh !important;
+    max-width: none;
+    right: 12px !important;
+    transform: none !important;
+    width: auto;
+  }
+
+  .tour-step-card.mobile-sheet:not(.top-sheet) {
+    bottom: 16px !important;
+    top: auto !important;
+  }
+
+  .tour-step-card.mobile-sheet.top-sheet {
+    bottom: auto !important;
+    top: 16px !important;
   }
 }

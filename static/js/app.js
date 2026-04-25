@@ -393,6 +393,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
   let currentSpotlightRect = null;
   let routeLoadingTimer = null;
   let spotlightRefreshFrame = null;
+  let mobileTourExpanded = false;
   const warmedTourRoutes = new Set();
 
   function normalizeTourRoute(route) {
@@ -403,6 +404,10 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
 
   function getCurrentTourPathname() {
     return normalizeTourRoute(window.location.pathname);
+  }
+
+  function isMobileTourViewport() {
+    return window.innerWidth < 768;
   }
 
   function rectToSummary(rect) {
@@ -748,20 +753,23 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         <div class="tour-step-content" data-tour-content>
           <p class="tour-step-label" data-tour-progress>Step 1 of ${dashboardTourSteps.length}</p>
           <h3 data-tour-title>Dashboard Overview</h3>
-          <div class="tour-copy-block">
+          <div class="tour-copy-block" data-tour-description-block>
             <p class="tour-copy-heading">What it does</p>
             <p class="tour-copy" data-tour-description></p>
           </div>
-          <div class="tour-copy-block">
-            <p class="tour-copy-heading">Why it matters</p>
-            <p class="tour-copy" data-tour-owner></p>
-          </div>
-          <div class="tour-copy-block">
-            <p class="tour-copy-heading">Easy to use</p>
-            <p class="tour-copy" data-tour-ease></p>
+          <button type="button" class="tour-details-toggle hidden" data-tour-action="details">More</button>
+          <div class="tour-extended-copy" data-tour-extended>
+            <div class="tour-copy-block" data-tour-owner-block>
+              <p class="tour-copy-heading">Why it matters</p>
+              <p class="tour-copy" data-tour-owner></p>
+            </div>
+            <div class="tour-copy-block" data-tour-ease-block>
+              <p class="tour-copy-heading">Easy to use</p>
+              <p class="tour-copy" data-tour-ease></p>
+            </div>
+            <ul class="tour-step-list hidden" data-tour-bullets></ul>
           </div>
           <p class="tour-fallback-note hidden" data-tour-fallback-note></p>
-          <ul class="tour-step-list hidden" data-tour-bullets></ul>
         </div>
         <div class="tour-step-footer">
           <div class="tour-step-actions">
@@ -799,8 +807,11 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         progressBar: stepCard.querySelector('[data-tour-progress-bar]'),
         title: stepCard.querySelector('[data-tour-title]'),
         description: stepCard.querySelector('[data-tour-description]'),
+        descriptionBlock: stepCard.querySelector('[data-tour-description-block]'),
         ownerValue: stepCard.querySelector('[data-tour-owner]'),
         easeValue: stepCard.querySelector('[data-tour-ease]'),
+        extendedCopy: stepCard.querySelector('[data-tour-extended]'),
+        detailsToggle: stepCard.querySelector('[data-tour-action="details"]'),
         roleTitle: welcomeModal.querySelector('[data-tour-role-title]'),
         roleFocus: welcomeModal.querySelector('[data-tour-role-focus]'),
         fallbackNote: stepCard.querySelector('[data-tour-fallback-note]'),
@@ -993,6 +1004,24 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     const { stepCard } = dashboardTourDom;
     const padding = 20;
 
+    if (isMobileTourViewport()) {
+      const targetRect = target ? (computeSpotlightRect(target) || target.getBoundingClientRect()) : null;
+      const placeAtTop = !!targetRect && targetRect.bottom > (window.innerHeight * 0.58);
+      stepCard.classList.remove('centered');
+      stepCard.classList.add('mobile-sheet');
+      stepCard.classList.toggle('top-sheet', placeAtTop);
+      stepCard.style.left = '12px';
+      stepCard.style.right = '12px';
+      stepCard.style.width = 'auto';
+      stepCard.style.maxHeight = '40vh';
+      stepCard.style.top = placeAtTop ? '16px' : 'auto';
+      stepCard.style.bottom = placeAtTop ? 'auto' : '16px';
+      return;
+    }
+
+    stepCard.classList.remove('mobile-sheet', 'top-sheet');
+    stepCard.style.maxHeight = '';
+
     if (window.innerWidth < 1024) {
       stepCard.classList.remove('centered');
       stepCard.style.left = `${padding}px`;
@@ -1060,6 +1089,7 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     if (dashboardTourIndex < 0 || !dashboardTourDom || dashboardTourDom.stepCard.classList.contains('hidden')) return;
     const step = dashboardTourSteps[dashboardTourIndex];
     if (!step) return;
+    updateMobileTourCardState(step);
     const targetInfo = getTourTarget(step, { allowFallback: true, silent: true });
     currentTourTargetMeta = {
       ...currentTourTargetMeta,
@@ -1092,6 +1122,67 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         refreshActiveTourPresentation(reason);
       });
     });
+  }
+
+  function updateMobileTourCardState(step) {
+    if (!dashboardTourDom) return;
+
+    const hasExtended = Boolean(
+      (step?.whyItMatters || '').trim()
+      || (step?.easyToUse || '').trim()
+      || (step?.bullets?.length)
+    );
+    const isMobile = isMobileTourViewport();
+
+    if (!isMobile) {
+      mobileTourExpanded = true;
+    } else if (!hasExtended) {
+      mobileTourExpanded = false;
+    }
+
+    dashboardTourDom.stepCard.classList.toggle('mobile-sheet', isMobile);
+    dashboardTourDom.stepCard.classList.toggle('mobile-expanded', !isMobile || mobileTourExpanded);
+    dashboardTourDom.extendedCopy?.classList.toggle('hidden', isMobile && !mobileTourExpanded);
+    dashboardTourDom.detailsToggle?.classList.toggle('hidden', !isMobile || !hasExtended);
+
+    if (dashboardTourDom.detailsToggle) {
+      dashboardTourDom.detailsToggle.textContent = mobileTourExpanded ? 'Less' : 'More';
+      dashboardTourDom.detailsToggle.setAttribute('aria-expanded', String(!isMobile || mobileTourExpanded));
+    }
+  }
+
+  function shouldCenterMobileTarget(target) {
+    if (!target || !isMobileTourViewport()) return false;
+    const rect = target.getBoundingClientRect();
+    return rect.top < 96 || rect.bottom > (window.innerHeight - 220);
+  }
+
+  function scrollTargetIntoTourView(target) {
+    if (!target) return 0;
+
+    if (isMobileTourViewport()) {
+      if (!shouldCenterMobileTarget(target)) {
+        return 0;
+      }
+
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+      return 220;
+    }
+
+    if (!isTargetMostlyInView(target)) {
+      target.scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+        inline: 'nearest'
+      });
+      return 10;
+    }
+
+    return 0;
   }
 
   function getTourTarget(step, options = {}) {
@@ -1446,6 +1537,8 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
     dashboardTourDom.restartButton.classList.toggle('hidden', !isFinalStep);
     dashboardTourDom.fallbackNote.classList.add('hidden');
     dashboardTourDom.fallbackNote.textContent = '';
+    mobileTourExpanded = false;
+    updateMobileTourCardState(step);
 
     if (step.bullets?.length) {
       dashboardTourDom.bullets.innerHTML = step.bullets.map((bullet) => `<li>${bullet}</li>`).join('');
@@ -1480,15 +1573,10 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         openSidebar();
       }
 
-      if (!isTargetMostlyInView(target)) {
-        target.scrollIntoView({
-          behavior: 'auto',
-          block: window.innerWidth < 1024 ? 'start' : 'center',
-          inline: 'nearest'
-        });
-      }
-
-      const revealDelay = target.closest('#sidebar') && window.innerWidth < 1024 ? 48 : isTargetMostlyInView(target) ? 0 : 10;
+      const scrollDelay = scrollTargetIntoTourView(target);
+      const revealDelay = target.closest('#sidebar') && window.innerWidth < 1024
+        ? 48
+        : (scrollDelay || (isTargetMostlyInView(target) ? 0 : 10));
       if (revealDelay === 0) {
         window.requestAnimationFrame(() => revealDashboardTourStep(step, targetInfo));
         return;
@@ -1543,6 +1631,16 @@ const hasStoredTourState = window.sessionStorage.getItem('pinexDashboardTourStat
         window.localStorage.setItem(dashboardStorageKey, 'true');
         setDashboardSessionSeen();
         finishDashboardTour();
+        return;
+      }
+
+      if (action === 'details') {
+        mobileTourExpanded = !mobileTourExpanded;
+        const currentStep = dashboardTourSteps[dashboardTourIndex];
+        if (currentStep) {
+          updateMobileTourCardState(currentStep);
+          scheduleTourSpotlightRefresh('details toggle');
+        }
         return;
       }
 
