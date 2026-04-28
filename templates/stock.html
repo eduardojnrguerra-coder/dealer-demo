@@ -8,9 +8,22 @@
         <p class="eyebrow">Vehicle Stock Command</p>
         <h2>Floor stock and profit control</h2>
       </div>
-      <div class="flex flex-wrap gap-2" id="stockFilters">
-        {% for filter in ["All Stock", "Needs Attention", "Aging Stock", "Low Margin", "High Margin", "Fast Movers"] %}
-        <button class="filter-btn {% if loop.first %}active{% endif %}" type="button" data-filter="{{ filter }}">{{ filter }}</button>
+      {% set stock_filters = [
+        ("all", "All Stock"),
+        ("needs-attention", "Needs Attention"),
+        ("aging", "Aging Stock"),
+        ("low-margin", "Low Margin"),
+        ("high-margin", "High Margin"),
+        ("fast-movers", "Fast Movers")
+      ] %}
+      <div class="flex flex-wrap gap-2" id="stockFilters" data-stock-filter-group>
+        {% for key, label in stock_filters %}
+        <button
+          class="filter-btn {% if loop.first %}active{% endif %}"
+          type="button"
+          data-stock-filter="{{ key }}"
+          aria-pressed="{{ 'true' if loop.first else 'false' }}"
+        >{{ label }}</button>
         {% endfor %}
       </div>
     </div>
@@ -18,17 +31,18 @@
     <div class="grid gap-4 lg:grid-cols-3">
       <div class="summary-card">
         <span>Total stock value</span>
-        <strong>{{ stock_profit_summary.total_stock_value|currency }}</strong>
+        <strong data-stock-summary="total-stock-value">{{ stock_profit_summary.total_stock_value|currency }}</strong>
       </div>
       <div class="summary-card">
         <span>Total potential profit</span>
-        <strong>{{ stock_profit_summary.total_potential_profit|currency }}</strong>
+        <strong data-stock-summary="total-potential-profit">{{ stock_profit_summary.total_potential_profit|currency }}</strong>
       </div>
       <div class="summary-card border-red-200 bg-red-50">
         <span class="text-red-700">Estimated profit at risk</span>
-        <strong class="text-red-800">{{ stock_profit_summary.estimated_profit_at_risk|currency }}</strong>
+        <strong class="text-red-800" data-stock-summary="profit-at-risk">{{ stock_profit_summary.estimated_profit_at_risk|currency }}</strong>
       </div>
     </div>
+    <p class="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-500" data-stock-filter-status>{{ stock_vehicles|length }} vehicles in view</p>
   </section>
 
   <section class="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
@@ -50,10 +64,10 @@
     </aside>
 
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <div class="summary-card"><span>Total stock records</span><strong>{{ vehicles|length }}</strong></div>
-      <div class="summary-card"><span>Available floor stock</span><strong>{{ stock_summary["In Stock"] }}</strong></div>
-      <div class="summary-card"><span>Reserved units</span><strong>{{ stock_summary["Reserved"] }}</strong></div>
-      <div class="summary-card"><span>Delivery pack units</span><strong>{{ stock_summary["Sold"] }}</strong></div>
+      <div class="summary-card"><span>Total stock records</span><strong data-stock-summary="total-records">{{ vehicles|length }}</strong></div>
+      <div class="summary-card"><span>Available floor stock</span><strong data-stock-summary="available-floor-stock">{{ stock_summary["In Stock"] }}</strong></div>
+      <div class="summary-card"><span>Reserved units</span><strong data-stock-summary="reserved-units">{{ stock_summary["Reserved"] }}</strong></div>
+      <div class="summary-card"><span>Delivery pack units</span><strong data-stock-summary="delivery-pack-units">{{ stock_summary["Sold"] }}</strong></div>
     </div>
   </section>
 
@@ -92,9 +106,23 @@
             <th class="text-right">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-stock-table-body>
           {% for vehicle in stock_vehicles[:10] %}
-          <tr>
+          <tr
+            data-stock-row
+            data-stock-number="{{ vehicle.stock_number }}"
+            data-status="{{ vehicle.status }}"
+            data-aged="{{ 'true' if vehicle.is_aged else 'false' }}"
+            data-low-margin="{{ 'true' if vehicle.is_low_margin else 'false' }}"
+            data-high-margin="{{ 'true' if vehicle.is_high_margin else 'false' }}"
+            data-fast-mover="{{ 'true' if vehicle.is_fast_mover else 'false' }}"
+            data-needs-attention="{{ 'true' if vehicle.needs_attention else 'false' }}"
+            data-photo-count="{{ vehicle.photo_count }}"
+            data-listing-completeness="{{ vehicle.listing_completeness }}"
+            data-channel-status="{{ vehicle.channel_status|lower }}"
+            data-days-in-stock="{{ vehicle.days_in_stock }}"
+            data-margin="{{ '%.1f'|format(vehicle.margin) }}"
+          >
             <td><input type="checkbox" aria-label="Select {{ vehicle.stock_number }}"></td>
             <td class="font-black">{{ vehicle.stock_number }}<br><span class="text-xs font-semibold text-slate-400">{{ vehicle.registration }}</span></td>
             <td><strong>{{ vehicle.year }} {{ vehicle.make }}</strong><br><span class="text-xs text-slate-500">{{ vehicle.model }}</span></td>
@@ -115,20 +143,35 @@
             </td>
           </tr>
           {% endfor %}
+          <tr class="stock-table-empty-row" data-stock-table-empty hidden>
+            <td colspan="9">
+              <div class="stock-empty-state compact" data-stock-table-empty-message>
+                <strong>No matching vehicles in this command table.</strong>
+                <span>Try another filter to bring active stock back into view.</span>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" id="stockGrid">
+  <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" id="stockGrid" data-stock-cards>
     {% for vehicle in stock_vehicles %}
       <article class="vehicle-card {% if vehicle.needs_attention %}needs-attention-card{% endif %}"
+        data-stock-item="card"
+        data-stock-number="{{ vehicle.stock_number }}"
         data-status="{{ vehicle.status }}"
         data-aged="{{ 'true' if vehicle.is_aged else 'false' }}"
         data-low-margin="{{ 'true' if vehicle.is_low_margin else 'false' }}"
         data-high-margin="{{ 'true' if vehicle.is_high_margin else 'false' }}"
         data-fast-mover="{{ 'true' if vehicle.is_fast_mover else 'false' }}"
         data-needs-attention="{{ 'true' if vehicle.needs_attention else 'false' }}"
+        data-photo-count="{{ vehicle.photo_count }}"
+        data-listing-completeness="{{ vehicle.listing_completeness }}"
+        data-channel-status="{{ vehicle.channel_status|lower }}"
+        data-days-in-stock="{{ vehicle.days_in_stock }}"
+        data-margin="{{ '%.1f'|format(vehicle.margin) }}"
         data-vehicle='{{ vehicle|tojson }}'>
         <div class="relative rounded-lg bg-slate-100 p-4">
           <img class="h-32 w-full object-contain" src="{{ url_for('static', filename='images/' ~ vehicle.image) }}" alt="{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}" loading="lazy">
@@ -162,6 +205,10 @@
       </article>
     {% endfor %}
   </section>
+  <div class="stock-empty-state" data-stock-empty hidden>
+    <strong>No vehicles match this stock command right now.</strong>
+    <span>Try another filter to bring stock, margin, and readiness priorities back into view.</span>
+  </div>
 </div>
 
 <div id="vehicleModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-4">
@@ -185,5 +232,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/stock.js') }}"></script>
+<script src="{{ url_for('static', filename='js/stock.js', v=asset_versions.stock_js) }}"></script>
 {% endblock %}

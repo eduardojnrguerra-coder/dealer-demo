@@ -844,6 +844,7 @@ def inject_globals():
         "asset_versions": {
             "app_js": static_asset_version("js", "app.js"),
             "dashboard_js": static_asset_version("js", "dashboard.js"),
+            "stock_js": static_asset_version("js", "stock.js"),
             "style_css": static_asset_version("css", "style.css"),
         },
     }

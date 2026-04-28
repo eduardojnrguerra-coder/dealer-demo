@@ -1619,10 +1619,16 @@ body {
 }
 
 .filter-btn:hover,
-.filter-btn.active {
+.filter-btn.active,
+.filter-btn[aria-pressed='true'] {
   background: #0f4c81;
   border-color: #0f4c81;
   color: white;
+}
+
+.filter-btn:focus-visible {
+  outline: 2px solid rgba(15, 76, 129, 0.25);
+  outline-offset: 2px;
 }
 
 .vehicle-card {
@@ -1651,6 +1657,40 @@ body {
   color: rgb(15 23 42);
   font-weight: 900;
   margin-top: 0.12rem;
+}
+
+.stock-empty-state {
+  align-items: flex-start;
+  background: rgb(255 255 255);
+  border: 1px dashed rgb(191 219 254);
+  border-radius: 8px;
+  color: rgb(51 65 85);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.stock-empty-state strong {
+  color: rgb(15 23 42);
+  font-size: 0.95rem;
+}
+
+.stock-empty-state span {
+  color: rgb(100 116 139);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.stock-empty-state.compact {
+  margin-top: 0;
+  padding: 0.95rem 1rem;
+}
+
+.stock-table-empty-row td {
+  border-bottom: 0;
+  padding: 0.8rem 0 0;
 }
 
 .stock-action-btn {
